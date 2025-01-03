@@ -12,4 +12,9 @@ public class HomeController {
         model.addAttribute("content", "index");
         return "layout";
     }
+
+    @GetMapping("/login")
+    public String redirectToLogin(Model model) {
+        return "pages/login";
+    }
 }

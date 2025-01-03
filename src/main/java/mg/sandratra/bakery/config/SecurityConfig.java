@@ -2,7 +2,6 @@ package mg.sandratra.bakery.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +21,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity (not recommended for production)
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().authenticated()) // Require authentication for all requests
-            .formLogin(Customizer.withDefaults()) // Enable the default login page provided by Spring Security
+            .formLogin(form -> form
+                .loginPage("/login") // Set the custom login page
+                .permitAll()) // Allow everyone to access the login page
             .logout(LogoutConfigurer::permitAll); // Allow all to log out
 
         return http.build();
