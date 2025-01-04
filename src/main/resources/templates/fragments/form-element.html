@@ -11,16 +11,25 @@
     <div th:fragment="text-input (type, label, name, value)">
         <div>
             <!-- Use th:attr to dynamically set the 'for' attribute -->
-            <label th:for="${name}" th:text="${label}"
+            <label th:for="${name}" th:text="${label}" for=""
                 class="mb-3 block text-sm font-medium text-black dark:text-white">
                 Default Input
             </label>
             <!-- Use th:attr to dynamically set 'type', 'name', and 'value' attributes -->
-            <input th:attr="type=${type}, name=${name}, value=${value}" placeholder="Default Input"
+            <input autocomplete="off" th:attr="type=${type}, name=${name}, value=${value}, placeholder='Input ' + ${label}" placeholder="Default Input"
                 class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
         </div>
     </div>
 
+    <div th:fragment="textarea (label, name, value)">
+        <div>
+            <label th:for="${name}" th:text="${label}" class="mb-3 block text-sm font-medium text-black dark:text-white" for="">
+                Disabled textarea
+            </label>
+            <textarea autocomplete="off" rows="6" th:attr="name=${name}, value=${value}, placeholder='Input ' + ${label}"
+                class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"></textarea>
+        </div>
+    </div>
 </body>
 
 </html>
