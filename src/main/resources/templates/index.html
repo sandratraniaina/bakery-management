@@ -8,6 +8,7 @@
 
 <body>
     <div th:fragment="content">
+        <div th:replace="~{fragments/form-element :: text-input ('text', 'First name', 'first-name', '')}"></div>
         <h1>Welcome to the Dashboard</h1>
     </div>
 </body>

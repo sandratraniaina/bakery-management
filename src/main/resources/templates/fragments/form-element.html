@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body>
+    <div th:fragment="text-input (type, label, name, value)">
+        <div>
+            <!-- Use th:attr to dynamically set the 'for' attribute -->
+            <label th:for="${name}" th:text="${label}"
+                class="mb-3 block text-sm font-medium text-black dark:text-white">
+                Default Input
+            </label>
+            <!-- Use th:attr to dynamically set 'type', 'name', and 'value' attributes -->
+            <input th:attr="type=${type}, name=${name}, value=${value}" placeholder="Default Input"
+                class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+        </div>
+    </div>
+
+</body>
+
+</html>
