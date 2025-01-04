@@ -10,6 +10,7 @@
     <div th:fragment="content">
         <div th:replace="~{fragments/form-element :: text-input ('text', 'First name', 'first-name', '')}"></div>
         <div th:replace="~{fragments/form-element :: textarea ('First name', 'first-name', '')}"></div>
+        <div th:replace="~{fragments/form-element :: select-option ('First name', 'name', ${options}, '1')}"></div>
         <h1>Welcome to the Dashboard</h1>
     </div>
 </body>
