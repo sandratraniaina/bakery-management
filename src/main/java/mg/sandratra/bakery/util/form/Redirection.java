@@ -11,6 +11,7 @@ public class Redirection {
             modelAndView = new ModelAndView();
         }
 
+        modelAndView.setViewName("layout");
         modelAndView.addObject("content", page);
 
         return modelAndView;
