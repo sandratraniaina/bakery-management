@@ -10,7 +10,7 @@
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>mg.sandratra</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>bakery-management</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>bakery-managmenent</name>

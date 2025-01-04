@@ -1,30 +1,26 @@
-CREATE
-OR REPLACE FUNCTION update_stock_on_loss() RETURNS TRIGGER AS $ $ BEGIN IF NEW.loss_type = 'Ingredient' THEN
-UPDATE
-    ingredient
-SET
-    stock_quantity = stock_quantity - NEW.quantity
-WHERE
-    ingredient_id = NEW.reference_id;
+CREATE OR REPLACE FUNCTION update_stock_on_loss() 
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.loss_type = 'Ingredient' THEN
+        UPDATE ingredient
+        SET stock_quantity = stock_quantity - NEW.quantity
+        WHERE id = NEW.reference_id; -- Use `id` instead of `reference_id`
 
-ELSIF NEW.loss_type = 'Product' THEN
-UPDATE
-    product
-SET
-    stock_quantity = stock_quantity - NEW.quantity
-WHERE
-    product_id = NEW.reference_id;
+    ELSIF NEW.loss_type = 'Product' THEN
+        UPDATE product
+        SET stock_quantity = stock_quantity - NEW.quantity
+        WHERE id = NEW.reference_id; -- Use `id` instead of `reference_id`
 
-END IF;
+    END IF;
 
-RETURN NEW;
+    RETURN NEW;
 
 END;
+$$ LANGUAGE plpgsql;
 
-$ $ LANGUAGE plpgsql;
 
 CREATE
-OR REPLACE FUNCTION update_product_stock_on_production() RETURNS TRIGGER AS $ $ BEGIN
+OR REPLACE FUNCTION update_product_stock_on_production() RETURNS TRIGGER AS $$ BEGIN
 UPDATE
     product
 SET
@@ -36,37 +32,37 @@ RETURN NEW;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
-CREATE
-OR REPLACE FUNCTION update_ingredients_stock_on_production() RETURNS TRIGGER AS $ $ BEGIN -- Loop through each ingredient in the recipe of the produced product
-FOR ingredient_record IN (
-    SELECT
-        ri.ingredient_id,
-        ri.quantity
-    FROM
-        recipe_ingredient ri
+CREATE OR REPLACE FUNCTION update_ingredients_stock_on_production() 
+RETURNS TRIGGER AS $$
+DECLARE
+    ingredient_record RECORD; -- Declare the variable as a record type
+BEGIN
+    -- Loop through each ingredient in the recipe of the produced product
+    FOR ingredient_record IN (
+        SELECT
+            ri.ingredient_id,
+            ri.quantity
+        FROM
+            recipe_ingredient ri
         JOIN product p ON p.recipe_id = ri.recipe_id
-    WHERE
-        p.id = NEW.product_id
-) LOOP -- Update the stock quantity of the ingredient
-UPDATE
-    ingredient
-SET
-    stock_quantity = stock_quantity - (ingredient_record.quantity * NEW.quantity)
-WHERE
-    id = ingredient_record.ingredient_id;
+        WHERE
+            p.id = NEW.product_id
+    ) LOOP
+        -- Update the stock quantity of the ingredient
+        UPDATE ingredient
+        SET stock_quantity = stock_quantity - (ingredient_record.quantity * NEW.quantity)
+        WHERE id = ingredient_record.ingredient_id;
+    END LOOP;
 
-END LOOP;
-
-RETURN NEW;
-
+    RETURN NEW;
 END;
+$$ LANGUAGE plpgsql;
 
-$ $ LANGUAGE plpgsql;
 
 CREATE
-OR REPLACE FUNCTION update_ingredient_stock_on_supply() RETURNS TRIGGER AS $ $ BEGIN -- Update the stock quantity of the ingredient
+OR REPLACE FUNCTION update_ingredient_stock_on_supply() RETURNS TRIGGER AS $$ BEGIN -- Update the stock quantity of the ingredient
 UPDATE
     ingredient
 SET
@@ -83,10 +79,10 @@ RETURN NEW;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 CREATE
-OR REPLACE FUNCTION calculate_ingredient_cost(product_id INT, quantity INT) RETURNS NUMERIC AS $ $ DECLARE total_cost NUMERIC := 0;
+OR REPLACE FUNCTION calculate_ingredient_cost(product_id INT, quantity INT) RETURNS NUMERIC AS $$ DECLARE total_cost NUMERIC := 0;
 
 BEGIN -- Calculate the total ingredient cost for the given product and quantity
 SELECT
@@ -111,7 +107,7 @@ RETURN total_cost;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 CREATE
 OR REPLACE FUNCTION calculate_profit_by_period(start_date DATE, end_date DATE) RETURNS TABLE (
@@ -120,7 +116,7 @@ OR REPLACE FUNCTION calculate_profit_by_period(start_date DATE, end_date DATE) R
     total_income NUMERIC,
     total_cost_of_production NUMERIC,
     profit NUMERIC
-) AS $ $ BEGIN RETURN QUERY
+) AS $$ BEGIN RETURN QUERY
 SELECT
     p.id AS product_id,
     p.name AS product_name,
@@ -143,10 +139,10 @@ ORDER BY
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 CREATE
-OR REPLACE FUNCTION insert_turnover_on_sale() RETURNS TRIGGER AS $ $ BEGIN
+OR REPLACE FUNCTION insert_turnover_on_sale() RETURNS TRIGGER AS $$ BEGIN
 INSERT INTO
     turnover (
         turnover_type,
@@ -166,10 +162,10 @@ RETURN NEW;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 CREATE
-OR REPLACE FUNCTION insert_turnover_on_production() RETURNS TRIGGER AS $ $ BEGIN
+OR REPLACE FUNCTION insert_turnover_on_production() RETURNS TRIGGER AS $$ BEGIN
 INSERT INTO
     turnover (
         turnover_type,
@@ -196,10 +192,10 @@ RETURN NEW;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 CREATE
-OR REPLACE FUNCTION insert_turnover_on_supply() RETURNS TRIGGER AS $ $ BEGIN
+OR REPLACE FUNCTION insert_turnover_on_supply() RETURNS TRIGGER AS $$ BEGIN
 INSERT INTO
     turnover (
         turnover_type,
@@ -226,10 +222,10 @@ RETURN NEW;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 CREATE
-OR REPLACE FUNCTION insert_turnover_on_loss() RETURNS TRIGGER AS $ $ DECLARE loss_amount numeric(10, 2);
+OR REPLACE FUNCTION insert_turnover_on_loss() RETURNS TRIGGER AS $$ DECLARE loss_amount numeric(10, 2);
 
 item_name text;
 
@@ -275,7 +271,7 @@ RETURN NEW;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- Function to calculate average daily ingredient usage for each ingredient
 CREATE
@@ -285,7 +281,7 @@ OR REPLACE FUNCTION calculate_average_daily_usage(start_date DATE, end_date DATE
     avg_daily_usage NUMERIC,
     current_stock NUMERIC,
     minimum_stock NUMERIC
-) AS $ $ BEGIN RETURN QUERY WITH daily_usage AS (
+) AS $$ BEGIN RETURN QUERY WITH daily_usage AS (
     SELECT
         v.ingredient_id,
         v.ingredient_name,
@@ -314,7 +310,7 @@ GROUP BY
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- Function to generate ingredient forecasts for the next N days
 CREATE
@@ -329,7 +325,7 @@ OR REPLACE FUNCTION generate_ingredient_forecast(
     current_stock NUMERIC,
     minimum_stock NUMERIC,
     needs_reorder BOOLEAN
-) AS $ $ DECLARE start_date DATE;
+) AS $$ DECLARE start_date DATE;
 
 end_date DATE;
 
@@ -376,14 +372,14 @@ ORDER BY
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- Function to save forecasts to ingredient_forecast table
 CREATE
 OR REPLACE FUNCTION save_ingredient_forecast(
     days_to_forecast INTEGER,
     lookback_days INTEGER DEFAULT 30
-) RETURNS void AS $ $ BEGIN -- Clear existing forecasts for the forecast period
+) RETURNS void AS $$ BEGIN -- Clear existing forecasts for the forecast period
 DELETE FROM
     ingredient_forecast
 WHERE
@@ -406,7 +402,7 @@ FROM
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 CREATE
 OR REPLACE VIEW v_daily_ingredient_usage AS
@@ -514,42 +510,42 @@ WHERE
 ORDER BY
     ingredient_name;
 
-CREATE TRIGGER trg_update_stock_on_loss
+CREATE OR REPLACE TRIGGER trg_update_stock_on_loss
 AFTER
 INSERT
     ON loss FOR EACH ROW EXECUTE FUNCTION update_stock_on_loss();
 
-CREATE TRIGGER trg_update_product_stock_on_production
+CREATE OR REPLACE TRIGGER trg_update_product_stock_on_production
 AFTER
 INSERT
     ON breadmaking FOR EACH ROW EXECUTE FUNCTION update_product_stock_on_production();
 
-CREATE TRIGGER trg_update_ingredients_stock_on_production
+CREATE OR REPLACE TRIGGER trg_update_ingredients_stock_on_production
 AFTER
 INSERT
     ON breadmaking FOR EACH ROW EXECUTE FUNCTION update_ingredients_stock_on_production();
 
-CREATE TRIGGER trg_update_ingredient_stock_on_supply
+CREATE OR REPLACE TRIGGER trg_update_ingredient_stock_on_supply
 AFTER
 INSERT
     ON ingredient_supply FOR EACH ROW EXECUTE FUNCTION update_ingredient_stock_on_supply();
 
-CREATE TRIGGER trg_insert_turnover_on_sale
+CREATE OR REPLACE TRIGGER trg_insert_turnover_on_sale
 AFTER
 INSERT
     ON sale FOR EACH ROW EXECUTE FUNCTION insert_turnover_on_sale();
 
-CREATE TRIGGER trg_insert_turnover_on_production
+CREATE OR REPLACE TRIGGER trg_insert_turnover_on_production
 AFTER
 INSERT
     ON breadmaking FOR EACH ROW EXECUTE FUNCTION insert_turnover_on_production();
 
-CREATE TRIGGER trg_insert_turnover_on_supply
+CREATE OR REPLACE TRIGGER trg_insert_turnover_on_supply
 AFTER
 INSERT
     ON ingredient_supply FOR EACH ROW EXECUTE FUNCTION insert_turnover_on_supply();
 
-CREATE TRIGGER trg_insert_turnover_on_loss
+CREATE OR REPLACE TRIGGER trg_insert_turnover_on_loss
 AFTER
 INSERT
     ON loss FOR EACH ROW EXECUTE FUNCTION insert_turnover_on_loss();
