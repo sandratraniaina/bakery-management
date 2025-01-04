@@ -25,16 +25,16 @@
 
     <div class="flex h-screen overflow-hidden">
         <!-- Include Sidebar -->
-        <div th:replace="fragments/sidebar"></div>
+        <div th:replace="~{fragments/sidebar}"></div>
 
         <!-- Main Content Area -->
         <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
             <!-- Include Header -->
-            <div th:replace="fragments/header"></div>
+            <div th:replace="~{fragments/header}"></div>
 
             <!-- Page Content -->
             <main>
-                <div th:insert="${content}"></div>
+                <div th:insert="~{${content}}"></div>
             </main>
         </div>
     </div>
