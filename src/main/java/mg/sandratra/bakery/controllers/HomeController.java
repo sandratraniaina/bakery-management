@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import mg.sandratra.bakery.util.form.Option;
-import mg.sandratra.bakery.util.form.Redirection;
 
 @Controller
-public class HomeController {
+public class HomeController extends BaseController {
 
     @GetMapping("/")
     public ModelAndView redirectToIndex() {
@@ -25,11 +24,11 @@ public class HomeController {
             new Option("3", "This is option 3")
         ));
 
-        return Redirection.redirect(model, "index");
+        return redirect(model, "index", false);
     }
 
     @GetMapping("/login")
-    public String redirectToLogin(Model model) {
-        return "pages/login";
+    public ModelAndView redirectToLogin(Model model) {
+        return redirect(null, "pages/login", false);
     }
 }
