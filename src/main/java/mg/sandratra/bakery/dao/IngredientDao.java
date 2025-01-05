@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import mg.sandratra.bakery.enums.Unit;
 import mg.sandratra.bakery.models.Ingredient;
 
 @Repository
@@ -21,7 +21,20 @@ public class IngredientDao extends BaseDao<Ingredient> {
 
     @Override
     protected RowMapper<Ingredient> getRowMapper() {
-        return new BeanPropertyRowMapper<>(Ingredient.class);
+        return new RowMapper<Ingredient>() {
+            @Override
+            public Ingredient mapRow(java.sql.ResultSet rs, int rowNum) throws java.sql.SQLException {
+                Ingredient ingredient = new Ingredient();
+                ingredient.setId(rs.getInt("id"));
+                ingredient.setName(rs.getString("name"));
+                ingredient.setUnit(Unit.valueOf(rs.getString("unit").toUpperCase()));
+                ingredient.setCostPerUnit(rs.getDouble("cost_per_unit"));
+                ingredient.setStockQuantity(rs.getDouble("stock_quantity"));
+                ingredient.setMinimumStock(rs.getDouble("minimum_stock"));
+                ingredient.setLastUpdated(rs.getTimestamp("last_updated"));
+                return ingredient;
+            }
+        };
     }
     
     public List<Ingredient> findAll() {
