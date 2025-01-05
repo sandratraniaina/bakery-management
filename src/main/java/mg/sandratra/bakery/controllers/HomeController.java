@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.controller;
+package mg.sandratra.bakery.controllers;
 
 import java.util.List;
 
