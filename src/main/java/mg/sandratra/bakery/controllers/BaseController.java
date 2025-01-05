@@ -11,7 +11,8 @@ public class BaseController {
         if (isRedirect) {
             modelAndView.setViewName("redirect:/" + viewName);
         } else {
-            modelAndView.setViewName(viewName);
+            modelAndView.addObject("content", viewName);
+            modelAndView.setViewName("layout");
         }
 
         return modelAndView;
