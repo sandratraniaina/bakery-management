@@ -15,7 +15,7 @@ public class Ingredient {
     private String name;
     private Unit unit;
     private double costPerUnit;
-    private double stockQuanity;
+    private double stockQuantity;
     private double minimumStock;
     private Timestamp lastUpdated;
 }
