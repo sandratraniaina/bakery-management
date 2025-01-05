@@ -29,6 +29,9 @@ public class HomeController extends BaseController {
 
     @GetMapping("/login")
     public ModelAndView redirectToLogin(Model model) {
-        return redirect(null, "pages/login", false);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("pages/login");
+
+        return modelAndView;
     }
 }
