@@ -24,7 +24,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()) // Require authentication for all other requests
             .formLogin(form -> form
                 .loginPage("/login") // Set the custom login page
-                .permitAll()) // Allow everyone to access the login page
+                .permitAll()  // Allow everyone to access the login page
+                .defaultSuccessUrl("/", true))
             .logout(LogoutConfigurer::permitAll); // Allow all to log out
 
         return http.build();
