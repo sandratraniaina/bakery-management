@@ -17,7 +17,7 @@
             </label>
 
             <!-- Dynamically bind the form input to the 'name' property of the form object -->
-            <input autocomplete="off" th:field="*{${name}}" th:attr="type=${type}, placeholder='Input ' + ${label}"
+            <input autocomplete="off" th:field="*{__${name}__}" th:attr="type=${type}, placeholder='Input ' + ${label}"
                 class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
         </div>
     </div>
@@ -43,7 +43,7 @@
             <div x-data="{ isOptionSelected: selectedValue !== '' }" class="relative z-20 bg-white dark:bg-form-input">
                 <select title="f"
                     class="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 pl-5 pr-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                    :class="isOptionSelected && 'text-black dark:text-white'" th:field="${selectedValue}">
+                    :class="isOptionSelected && 'text-black dark:text-white'" th:field="*{__${selectedValue}__}">
                     <!-- Empty option to act as placeholder -->
                     <option class="text-body" value="">
                         Select an option
