@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.RequiredArgsConstructor;
+import mg.sandratra.bakery.enums.Unit;
 import mg.sandratra.bakery.models.Ingredient;
 import mg.sandratra.bakery.services.IngredientService;
 
@@ -34,6 +35,7 @@ public class IngredientController extends BaseController {
     public ModelAndView showCreateForm() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("ingredient", new Ingredient());
+        modelAndView.addObject("units", Unit.values());
         return redirect(modelAndView, "pages/ingredient/form", false); // Redirect to ingredient form page
     }
 
