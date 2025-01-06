@@ -8,17 +8,16 @@
 </head>
 
 <body>
-    <div th:fragment="text-input (type, label, name, value)">
+    <div th:fragment="text-input (type, label, name)">
         <div>
-            <!-- Use th:attr to dynamically set the 'for' attribute -->
-            <label th:for="${name}" th:text="${label}" for=""
+            <!-- Dynamically set 'for' and 'text' in the label -->
+            <label for="" th:for="${name}" th:text="${label}"
                 class="mb-3 block text-sm font-medium text-black dark:text-white">
                 Default Input
             </label>
-            <!-- Use th:attr to dynamically set 'type', 'name', and 'value' attributes -->
-            <input autocomplete="off"
-                th:attr="type=${type}, name=${name}, value=${value}, placeholder='Input ' + ${label}"
-                placeholder="Default Input"
+
+            <!-- Dynamically bind the form input to the 'name' property of the form object -->
+            <input autocomplete="off" th:field="*{${name}}" th:attr="type=${type}, placeholder='Input ' + ${label}"
                 class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
         </div>
     </div>
@@ -35,19 +34,23 @@
         </div>
     </div>
 
-    <div th:fragment="select-option (label, name, options, defaultValue)">
-
+    <div th:fragment="select-option (options, fieldValue, fieldText, selectedValue, label)">
         <div>
-            <label th:text="${label}" th:for="${name}" for=""
-                class="mb-3 block text-sm font-medium text-black dark:text-white">
-                Select Option
+            <!-- Dynamic Label -->
+            <label for="" class="mb-3 block text-sm font-medium text-black dark:text-white">
+                <span th:text="${label}">Select Option</span>
             </label>
-            <div x-data="{ isOptionSelected: defaultValue !== '' }" class="relative z-20 bg-white dark:bg-form-input">
-                <select th:attr="name=${name}" title="f"
+            <div x-data="{ isOptionSelected: selectedValue !== '' }" class="relative z-20 bg-white dark:bg-form-input">
+                <select title="f"
                     class="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 pl-5 pr-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                    :class="isOptionSelected && 'text-black dark:text-white'" @change="isOptionSelected = true">
-                    <option th:each="option : ${options}" th:value="${option.value}"
-                        th:selected="${option.value == defaultValue}" th:text="${option.text}" class="text-body">
+                    :class="isOptionSelected && 'text-black dark:text-white'" th:field="${selectedValue}">
+                    <!-- Empty option to act as placeholder -->
+                    <option class="text-body" value="">
+                        Select an option
+                    </option>
+                    <!-- Iterate over the list of options -->
+                    <option th:each="item : ${options}" th:value="${item[fieldValue]}" th:text="${item[fieldText]}"
+                        th:selected="${item[fieldValue] == selectedValue}">
                     </option>
                 </select>
                 <span class="absolute right-4 top-1/2 z-10 -translate-y-1/2">
@@ -62,6 +65,7 @@
             </div>
         </div>
     </div>
+
 </body>
 
 </html>
