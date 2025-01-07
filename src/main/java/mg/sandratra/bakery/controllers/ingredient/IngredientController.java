@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.controllers;
+package mg.sandratra.bakery.controllers.ingredient;
 
 import java.util.List;
 
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.RequiredArgsConstructor;
+import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.enums.Unit;
 import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.services.IngredientService;
