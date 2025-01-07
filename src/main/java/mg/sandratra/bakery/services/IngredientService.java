@@ -22,7 +22,11 @@ public class IngredientService {
     }
 
     public int saveOrUpdate(Ingredient ingredient) {
-        return ingredientDao.saveOrUpdate(ingredient);
+        if (ingredient.getId() == 0) {
+            return ingredientDao.save(ingredient);
+        } else {
+            return ingredientDao.update(ingredient);
+        }
     }
 
     public int deleteById(Long id) {
