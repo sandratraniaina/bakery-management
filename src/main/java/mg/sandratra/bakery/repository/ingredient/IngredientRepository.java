@@ -43,12 +43,12 @@ public class IngredientRepository extends BaseRepository<Ingredient> {
 
     public List<Ingredient> findAll() {
         String sql = "SELECT * FROM ingredient";
-        return findAll(sql);
+        return jdbcTemplate.query(sql, getRowMapper());
     }
 
     public Ingredient findById(Long id) {
         String sql = "SELECT * FROM ingredient WHERE id = ?";
-        return findById(sql, id);
+        return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
     // Save method: Inserts a new ingredient record
@@ -57,7 +57,7 @@ public class IngredientRepository extends BaseRepository<Ingredient> {
                 +
                 "VALUES (:name, CAST(:unit AS unit), :cost_per_unit, :stock_quantity, :minimum_stock)";
 
-        return saveOrUpdate(sql, new BeanPropertySqlParameterSource(ingredient));
+        return namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(ingredient));
     }
 
     // Update method: Updates an existing ingredient record
@@ -77,11 +77,11 @@ public class IngredientRepository extends BaseRepository<Ingredient> {
                 .addValue("minimum_stock", ingredient.getMinimumStock())
                 .addValue("last_updated", Timestamp.valueOf(LocalDateTime.now()));
 
-        return saveOrUpdate(sql, params);
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 
     public int deleteById(Long id) {
         String sql = "DELETE FROM ingredient WHERE id = ?";
-        return deleteById(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 }
