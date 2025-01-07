@@ -52,6 +52,7 @@ public class IngredientController extends BaseController {
         Ingredient ingredient = ingredientService.findById(id);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("ingredient", ingredient);
+        modelAndView.addObject("units", Unit.values());
         return redirect(modelAndView, "pages/ingredient/form", false); // Redirect to ingredient form page
     }
 
