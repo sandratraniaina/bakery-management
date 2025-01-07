@@ -1,6 +1,6 @@
 -- Clear existing data (if needed)
 TRUNCATE TABLE turnover, sale, loss, breadmaking, ingredient_supply, 
-             product, recipe_ingredient, recipe, ingredient, lmp_user CASCADE;
+             product, recipe_ingredient, recipe, ingredient, bm_user CASCADE;
 
 -- Reset sequences
 ALTER SEQUENCE turnover_id_seq RESTART WITH 1;
@@ -12,13 +12,18 @@ ALTER SEQUENCE product_id_seq RESTART WITH 1;
 ALTER SEQUENCE recipe_id_seq RESTART WITH 1;
 ALTER SEQUENCE recipe_ingredient_id_seq RESTART WITH 1;
 ALTER SEQUENCE ingredient_id_seq RESTART WITH 1;
-ALTER SEQUENCE lmp_user_id_seq RESTART WITH 1;
+ALTER SEQUENCE bm_user_id_seq RESTART WITH 1;
 
 -- 1. Create users with different roles
-INSERT INTO lmp_user (username, password_hash, role) VALUES
-('admin', 'admin', 'ADMIN'),
-('manager', 'manager', 'MANAGER'),
-('staff', 'staff', 'STAFF');
+INSERT INTO
+    bm_user (username, password_hash, role, created_at)
+VALUES
+    (
+        'aina',
+        '$2a$10$WJTut1yB6q6.ql3cUIyxGuhruO/uOhCHadQPeEYq5FrzxVUFv4M6G',
+        'ADMIN',
+        CURRENT_TIMESTAMP
+    );
 
 -- 2. Add ingredients with different units
 INSERT INTO ingredient (name, unit, cost_per_unit, stock_quantity, minimum_stock) VALUES

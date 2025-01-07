@@ -61,7 +61,7 @@ CREATE TABLE bm_user(
   "role" "role" NOT NULL,
   enabled boolean NOT NULL DEFAULT true,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT lmp_user_pkey PRIMARY KEY(id)
+  CONSTRAINT bm_user_pkey PRIMARY KEY(id)
 );
 
 CREATE TABLE loss(
@@ -152,11 +152,11 @@ ALTER TABLE breadmaking
 
 ALTER TABLE breadmaking
   ADD CONSTRAINT breadmaking_created_by_fkey
-    FOREIGN KEY (created_by) REFERENCES lmp_user (id) ON DELETE Set null;
+    FOREIGN KEY (created_by) REFERENCES bm_user (id) ON DELETE Set null;
 
 ALTER TABLE sale
   ADD CONSTRAINT sale_created_by_fkey
-    FOREIGN KEY (created_by) REFERENCES lmp_user (id);
+    FOREIGN KEY (created_by) REFERENCES bm_user (id);
 
 ALTER TABLE ingredient_forecast
   ADD CONSTRAINT ingredient_forecast_ingredient_id_fkey
@@ -164,7 +164,7 @@ ALTER TABLE ingredient_forecast
 
 ALTER TABLE loss
   ADD CONSTRAINT loss_reported_by_fkey
-    FOREIGN KEY (reported_by) REFERENCES lmp_user (id) ON DELETE Set null;
+    FOREIGN KEY (reported_by) REFERENCES bm_user (id) ON DELETE Set null;
 
 ALTER TABLE ingredient_supply
   ADD CONSTRAINT ingredient_supply_ingredient_id_fkey1
