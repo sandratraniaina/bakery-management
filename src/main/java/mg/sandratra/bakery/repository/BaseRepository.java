@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.dao;
+package mg.sandratra.bakery.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,13 +9,13 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseDao<T> {
+public abstract class BaseRepository<T> {
 
     protected JdbcTemplate jdbcTemplate;
     protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     // Constructor to initialize JdbcTemplate and NamedParameterJdbcTemplate
-    protected BaseDao(DataSource dataSource) {
+    protected BaseRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }

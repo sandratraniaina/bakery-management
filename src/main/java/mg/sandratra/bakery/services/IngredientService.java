@@ -1,7 +1,7 @@
 package mg.sandratra.bakery.services;
 
-import mg.sandratra.bakery.dao.IngredientDao;
 import mg.sandratra.bakery.models.Ingredient;
+import mg.sandratra.bakery.repository.ingredient.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IngredientService {
 
-    private final IngredientDao ingredientDao;
+    private final IngredientRepository ingredientDao;
 
     public List<Ingredient> findAll() {
         return ingredientDao.findAll();

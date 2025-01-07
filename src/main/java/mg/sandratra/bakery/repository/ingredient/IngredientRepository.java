@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.dao;
+package mg.sandratra.bakery.repository.ingredient;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -14,11 +14,12 @@ import org.springframework.stereotype.Repository;
 
 import mg.sandratra.bakery.enums.Unit;
 import mg.sandratra.bakery.models.Ingredient;
+import mg.sandratra.bakery.repository.BaseRepository;
 
 @Repository
-public class IngredientDao extends BaseDao<Ingredient> {
+public class IngredientRepository extends BaseRepository<Ingredient> {
 
-    public IngredientDao(DataSource dataSource) {
+    public IngredientRepository(DataSource dataSource) {
         super(dataSource);
     }
 
