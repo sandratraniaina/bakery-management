@@ -2,6 +2,7 @@ package mg.sandratra.bakery.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import javax.sql.DataSource;
@@ -11,10 +12,12 @@ import java.util.Map;
 public abstract class BaseDao<T> {
 
     protected JdbcTemplate jdbcTemplate;
+    protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     // Constructor to initialize JdbcTemplate and NamedParameterJdbcTemplate
     protected BaseDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     /**
@@ -38,12 +41,12 @@ public abstract class BaseDao<T> {
 
     // Save or Update (Named Parameters)
     public int saveOrUpdate(String sql, SqlParameterSource params) {
-        return jdbcTemplate.update(sql, params);
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 
     // Save or Update (Map)
     public int saveOrUpdate(String sql, Map<String, Object> params) {
-        return jdbcTemplate.update(sql, params);
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 
     // Delete by ID
