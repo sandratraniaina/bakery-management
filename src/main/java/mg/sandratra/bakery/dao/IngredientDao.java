@@ -1,10 +1,13 @@
 package mg.sandratra.bakery.dao;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -36,7 +39,7 @@ public class IngredientDao extends BaseDao<Ingredient> {
             }
         };
     }
-    
+
     public List<Ingredient> findAll() {
         String sql = "SELECT * FROM ingredient";
         return findAll(sql);
@@ -47,19 +50,31 @@ public class IngredientDao extends BaseDao<Ingredient> {
         return findById(sql, id);
     }
 
-    public int saveOrUpdate(Ingredient ingredient) {
-        String sql = "INSERT INTO ingredient (name, unit, cost_per_unit, stock_quantity, minimum_stock, last_updated) " +
-                     "VALUES (:name, :unit, :cost_per_unit, :stock_quantity, :minimum_stock, :last_updated) " +
-                     "ON CONFLICT(id) DO UPDATE SET " +
-                     "name = :name, unit = :unit, cost_per_unit = :cost_per_unit, stock_quantity = :stock_quantity, " +
-                     "minimum_stock = :minimum_stock, last_updated = :last_updated";
+    // Save method: Inserts a new ingredient record
+    public int save(Ingredient ingredient) {
+        String sql = "INSERT INTO ingredient (name, unit, cost_per_unit, stock_quantity, minimum_stock) "
+                +
+                "VALUES (:name, CAST(:unit AS unit), :cost_per_unit, :stock_quantity, :minimum_stock)";
+
+        return saveOrUpdate(sql, new BeanPropertySqlParameterSource(ingredient));
+    }
+
+    // Update method: Updates an existing ingredient record
+    public int update(Ingredient ingredient) {
+        String sql = "UPDATE ingredient SET " +
+                "name = :name, unit = CAST(:unit AS unit), cost_per_unit = :cost_per_unit, " +
+                "stock_quantity = :stock_quantity, minimum_stock = :minimum_stock, " +
+                "last_updated = :last_updated " +
+                "WHERE id = :id";
+
         SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", ingredient.getId()) // Assuming `id` is provided for updates
                 .addValue("name", ingredient.getName())
                 .addValue("unit", ingredient.getUnit().toString())
                 .addValue("cost_per_unit", ingredient.getCostPerUnit())
                 .addValue("stock_quantity", ingredient.getStockQuantity())
                 .addValue("minimum_stock", ingredient.getMinimumStock())
-                .addValue("last_updated", ingredient.getLastUpdated());
+                .addValue("last_updated", Timestamp.valueOf(LocalDateTime.now()));
 
         return saveOrUpdate(sql, params);
     }
