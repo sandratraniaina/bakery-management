@@ -20,6 +20,8 @@
                     <div class="mb-6">
                         <div th:replace="~{fragments/form-element :: text-input('text', 'Name', 'name')}">
                         </div>
+                        <div th:replace="~{fragments/form-element :: text-input('hidden', '', 'id')}">
+                        </div>
                         <div
                             th:replace="~{fragments/form-element :: text-input('text', 'Cost Per Unit', 'costPerUnit')}">
                         </div>
