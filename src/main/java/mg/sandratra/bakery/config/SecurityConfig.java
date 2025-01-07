@@ -20,10 +20,12 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity (not recommended for production)
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().authenticated()) // Require authentication for all requests
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll() // Allow access to static resources
+                .anyRequest().authenticated()) // Require authentication for all other requests
             .formLogin(form -> form
                 .loginPage("/login") // Set the custom login page
-                .permitAll()) // Allow everyone to access the login page
+                .permitAll()  // Allow everyone to access the login page
+                .defaultSuccessUrl("/", true))
             .logout(LogoutConfigurer::permitAll); // Allow all to log out
 
         return http.build();

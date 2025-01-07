@@ -8,30 +8,23 @@
 </head>
 
 <body>
-    <div th:fragment="fields">
-        <div th:replace="~{fragments/form-element :: text-input ('text', 'First name', 'first-name', '')}"></div>
-        <div th:replace="~{fragments/form-element :: textarea ('First name', 'first-name', '')}"></div>
-        <div th:replace="~{fragments/form-element :: select-option ('First name', 'name', ${options}, '1')}"></div>
-    </div>
-
-    <div th:fragment="form-container (title, url, method, content)">
+    <div >
         <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
-                <h3 th:text="${title}" class="font-medium text-black dark:text-white">
+                <h2 class="font-medium text-black dark:text-white">
                     Form
-                </h3>
+                </h2>
             </div>
-            <form th:attr="action=${url}, method=${method}">
+            <form >
                 <div class="p-6.5">
                     <div class="mb-6">
-                        <div th:replace="fragments/container :: fields"></div>
+                        <!-- Place you form content here -->
                     </div>
                     <button
                         class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90  m-2">
                         Submit
                     </button>
                 </div>
-
             </form>
         </div>
     </div>
