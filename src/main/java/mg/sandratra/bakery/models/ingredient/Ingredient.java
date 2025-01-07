@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.models;
+package mg.sandratra.bakery.models.ingredient;
 
 import java.sql.Timestamp;
 

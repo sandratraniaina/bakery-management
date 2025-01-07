@@ -1,6 +1,6 @@
 package mg.sandratra.bakery.services;
 
-import mg.sandratra.bakery.models.Ingredient;
+import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.repository.ingredient.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

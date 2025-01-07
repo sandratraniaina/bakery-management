@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import mg.sandratra.bakery.enums.Unit;
-import mg.sandratra.bakery.models.Ingredient;
+import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.repository.BaseRepository;
 
 @Repository
