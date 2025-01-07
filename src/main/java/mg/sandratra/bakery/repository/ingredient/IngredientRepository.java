@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.dao;
+package mg.sandratra.bakery.repository.ingredient;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -13,12 +13,13 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import mg.sandratra.bakery.enums.Unit;
-import mg.sandratra.bakery.models.Ingredient;
+import mg.sandratra.bakery.models.ingredient.Ingredient;
+import mg.sandratra.bakery.repository.BaseRepository;
 
 @Repository
-public class IngredientDao extends BaseDao<Ingredient> {
+public class IngredientRepository extends BaseRepository<Ingredient> {
 
-    public IngredientDao(DataSource dataSource) {
+    public IngredientRepository(DataSource dataSource) {
         super(dataSource);
     }
 
@@ -42,12 +43,12 @@ public class IngredientDao extends BaseDao<Ingredient> {
 
     public List<Ingredient> findAll() {
         String sql = "SELECT * FROM ingredient";
-        return findAll(sql);
+        return jdbcTemplate.query(sql, getRowMapper());
     }
 
     public Ingredient findById(Long id) {
         String sql = "SELECT * FROM ingredient WHERE id = ?";
-        return findById(sql, id);
+        return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
     // Save method: Inserts a new ingredient record
@@ -56,7 +57,7 @@ public class IngredientDao extends BaseDao<Ingredient> {
                 +
                 "VALUES (:name, CAST(:unit AS unit), :cost_per_unit, :stock_quantity, :minimum_stock)";
 
-        return saveOrUpdate(sql, new BeanPropertySqlParameterSource(ingredient));
+        return namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(ingredient));
     }
 
     // Update method: Updates an existing ingredient record
@@ -76,11 +77,11 @@ public class IngredientDao extends BaseDao<Ingredient> {
                 .addValue("minimum_stock", ingredient.getMinimumStock())
                 .addValue("last_updated", Timestamp.valueOf(LocalDateTime.now()));
 
-        return saveOrUpdate(sql, params);
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 
     public int deleteById(Long id) {
         String sql = "DELETE FROM ingredient WHERE id = ?";
-        return deleteById(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 }
