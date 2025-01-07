@@ -7,7 +7,6 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -57,7 +56,15 @@ public class IngredientRepository extends BaseRepository<Ingredient> {
                 +
                 "VALUES (:name, CAST(:unit AS unit), :cost_per_unit, :stock_quantity, :minimum_stock)";
 
-        return namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(ingredient));
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", ingredient.getId()) // Assuming `id` is provided for updates
+                .addValue("name", ingredient.getName())
+                .addValue("unit", ingredient.getUnit().toString())
+                .addValue("cost_per_unit", ingredient.getCostPerUnit())
+                .addValue("stock_quantity", ingredient.getStockQuantity())
+                .addValue("minimum_stock", ingredient.getMinimumStock());
+
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 
     // Update method: Updates an existing ingredient record
