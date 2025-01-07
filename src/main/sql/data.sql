@@ -31,12 +31,12 @@ INSERT INTO
         minimum_stock
     )
 VALUES
-    ('Flour', 'kg', 2.00, 50.00, 10.00),
-    ('Water', 'l', 0.10, 100.00, 20.00),
-    ('Yeast', 'g', 0.05, 500.00, 50.00),
-    ('Salt', 'g', 0.02, 200.00, 20.00),
-    ('Sugar', 'g', 0.03, 300.00, 30.00),
-    ('Milk', 'l', 1.50, 20.00, 5.00);
+    ('Flour', 'KG', 2.00, 50.00, 10.00),
+    ('Water', 'L', 0.10, 100.00, 20.00),
+    ('Yeast', 'G', 0.05, 500.00, 50.00),
+    ('Salt', 'G', 0.02, 200.00, 20.00),
+    ('Sugar', 'G', 0.03, 300.00, 30.00),
+    ('Milk', 'L', 1.50, 20.00, 5.00);
 
 -- Insert ingredients into recipe_ingredient table
 INSERT INTO
