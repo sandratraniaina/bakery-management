@@ -1,7 +1,7 @@
 package mg.sandratra.bakery.dto.product;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
