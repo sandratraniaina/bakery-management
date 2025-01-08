@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+</head>
+
+<body>
+    <!-- alertFragment.html -->
+    <div th:fragment="alert(successMessage, errorMessage)">
+        <!-- Success Alert -->
+
+        <div class="w-full" th:if="${successMessage}">
+            <h5 class="mb-3 text-lg font-bold text-black dark:text-[#34D399]">
+                <span th:text="${successMessage}">Message Sent Successfully</span>
+            </h5>
+        </div>
+
+        <!-- Error Alert -->
+        <div class="w-full" th:if="${errorMessage}">
+            <h5 class="mb-3 font-bold text-[#B45454]">
+                <span th:text="${errorMessage}" >There were errors with your submission</span>
+            </h5>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
