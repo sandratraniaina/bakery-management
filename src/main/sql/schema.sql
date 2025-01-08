@@ -9,6 +9,16 @@ CREATE TYPE turnover_type AS ENUM ('Income', 'Expense');
 
 CREATE TYPE loss_type AS ENUM ('Product', 'Ingredient');
 
+CREATE TABLE bm_user(
+  id serial NOT NULL,
+  username varchar(50) NOT NULL UNIQUE,
+  password_hash text NOT NULL,
+  "role" "role" NOT NULL,
+  enabled boolean NOT NULL DEFAULT true,
+  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT bm_user_pkey PRIMARY KEY(id)
+);
+
 CREATE TABLE breadmaking(
   id serial NOT NULL,
   product_id integer NOT NULL,
@@ -54,16 +64,6 @@ CREATE TABLE ingredient_supply(
   CONSTRAINT ingredient_supply_pkey1 PRIMARY KEY(id)
 );
 
-CREATE TABLE bm_user(
-  id serial NOT NULL,
-  username varchar(50) NOT NULL UNIQUE,
-  password_hash text NOT NULL,
-  "role" "role" NOT NULL,
-  enabled boolean NOT NULL DEFAULT true,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT bm_user_pkey PRIMARY KEY(id)
-);
-
 CREATE TABLE loss(
   id serial NOT NULL,
   reported_by integer NOT NULL,
@@ -96,11 +96,10 @@ CREATE TABLE recipe(
 );
 
 CREATE TABLE recipe_ingredient(
-  id serial NOT NULL,
   recipe_id integer NOT NULL,
   ingredient_id integer NOT NULL,
   quantity numeric(10, 2) NOT NULL,
-  CONSTRAINT recipe_ingredient_pkey PRIMARY KEY(recipe_id, ingredient_id, id)
+  CONSTRAINT recipe_ingredient_pkey PRIMARY KEY(recipe_id, ingredient_id)
 );
 
 CREATE TABLE sale(
