@@ -6,6 +6,7 @@ import mg.sandratra.bakery.models.recipe.Recipe;
 import mg.sandratra.bakery.repository.recipe.RecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class RecipeService {
     }
 
     public int saveOrUpdate(Recipe recipe) {
+        validateRecipe(recipe);
         if (recipe.getId() == null) {
             return recipeDao.save(recipe);
         } else {
@@ -60,5 +62,11 @@ public class RecipeService {
 
     public int deleteById(Long id) {
         return recipeDao.deleteById(id);
+    }
+
+    public void validateRecipe(Recipe recipe) {
+        Assert.hasText(recipe.getName(), "Recipe name must not be empty");
+        Assert.hasText(recipe.getDescription(), "Recipe description must not be empty");
+        Assert.notNull(recipe.getCreatedAt(), "Recipe createdAt must not be null");
     }
 }
