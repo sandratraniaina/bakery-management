@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecipeIngredient {
-    private Long id;
     private Long recipeId;
     private Long ingredientId;
     private BigDecimal quantity;
