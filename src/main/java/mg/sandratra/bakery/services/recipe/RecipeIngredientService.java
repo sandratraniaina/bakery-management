@@ -21,6 +21,10 @@ public class RecipeIngredientService {
         return recipeIngredientDao.findById(recipeId, ingredientId);
     }
 
+    public RecipeIngredient findByRecipeId(Long recipeId) {
+        return recipeIngredientDao.findByRecipeId(recipeId);
+    }
+
     public int saveOrUpdate(RecipeIngredient recipeIngredient) {
         if (findById(recipeIngredient.getRecipeId(), recipeIngredient.getIngredientId()) == null) {
             return recipeIngredientDao.save(recipeIngredient);
