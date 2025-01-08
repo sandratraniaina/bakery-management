@@ -76,6 +76,7 @@ public class ProductService {
     public void validateProduct(Product product) {
         Assert.hasText(product.getName(), "Product name must not be empty");
         Assert.notNull(product.getPrice(), "Product price must not be null");
+        Assert.notNull(product.getRecipeId(), "Recipe cannot be null");
         Assert.isTrue(product.getPrice().compareTo(BigDecimal.ZERO) > 0, "Product price must be greater than zero");
         Assert.notNull(product.getStockQuantity(), "Stock quantity must not be null");
         Assert.isTrue(product.getStockQuantity() >= 0, "Stock quantity must not be negative");
