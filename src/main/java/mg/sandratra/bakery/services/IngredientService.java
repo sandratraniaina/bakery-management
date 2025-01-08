@@ -22,7 +22,7 @@ public class IngredientService {
     }
 
     public int saveOrUpdate(Ingredient ingredient) {
-        if (ingredient.getId() == 0) {
+        if (ingredient.getId() == null) {
             return ingredientDao.save(ingredient);
         } else {
             return ingredientDao.update(ingredient);
