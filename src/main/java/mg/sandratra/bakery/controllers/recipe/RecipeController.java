@@ -51,13 +51,20 @@ public class RecipeController extends BaseController{
     @PostMapping("/save")
     public ModelAndView saveRecipe(@ModelAttribute Recipe recipe, RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
+
+        String page = "recipes";
+        boolean isRedirect = true;
         try {
             recipeService.saveOrUpdate(recipe); // This will call validation
             redirectAttributes.addFlashAttribute("message", "Recipe saved successfully");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage()); // Catch validation error
+            modelAndView.addObject("error", e.getMessage()); // Catch validation error
+            modelAndView.addObject("recipe", recipe); // Catch validation error
+
+            page = "pages/recipe/form";
+            isRedirect = false;
         }
-        return redirect(modelAndView, "recipes", true); // Redirect to recipes list page after saving
+        return redirect(modelAndView, page, isRedirect); // Redirect to recipes list page after saving
     }
 
     // Delete a recipe
