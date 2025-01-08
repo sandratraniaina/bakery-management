@@ -67,6 +67,5 @@ public class RecipeService {
     public void validateRecipe(Recipe recipe) {
         Assert.hasText(recipe.getName(), "Recipe name must not be empty");
         Assert.hasText(recipe.getDescription(), "Recipe description must not be empty");
-        Assert.notNull(recipe.getCreatedAt(), "Recipe createdAt must not be null");
     }
 }
