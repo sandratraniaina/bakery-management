@@ -36,7 +36,7 @@ public class RecipeService {
     // Map RecipeDto to Recipe
     public Recipe mapToModel(RecipeDto recipeDto) {
         return new Recipe(
-                recipeDto.getIt(),
+                recipeDto.getId(),
                 recipeDto.getName(),
                 recipeDto.getDescription(),
                 recipeDto.getCreatedAt());
