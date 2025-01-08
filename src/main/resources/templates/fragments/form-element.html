@@ -22,14 +22,14 @@
         </div>
     </div>
 
-    <div th:fragment="textarea (label, name, value)">
+    <div th:fragment="textarea (label, name)">
         <div>
             <label th:for="${name}" th:text="${label}" class="mb-3 block text-sm font-medium text-black dark:text-white"
                 for="">
                 Disabled textarea
             </label>
-            <textarea autocomplete="off" rows="6"
-                th:attr="name=${name}, value=${value}, placeholder='Input ' + ${label}"
+            <textarea autocomplete="off" rows="6" th:field="*{__${name}__}"
+                th:attr="placeholder='Input ' + ${label}"
                 class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"></textarea>
         </div>
     </div>
