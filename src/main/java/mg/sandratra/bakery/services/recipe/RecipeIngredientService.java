@@ -26,7 +26,7 @@ public class RecipeIngredientService {
         return recipeIngredientDao.findById(recipeId, ingredientId);
     }
 
-    public RecipeIngredient findByRecipeId(Long recipeId) {
+    public List<RecipeIngredient> findByRecipeId(Long recipeId) {
         return recipeIngredientDao.findByRecipeId(recipeId);
     }
 

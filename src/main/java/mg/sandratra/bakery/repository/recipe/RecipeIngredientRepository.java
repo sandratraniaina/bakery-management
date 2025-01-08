@@ -38,9 +38,9 @@ public class RecipeIngredientRepository extends BaseRepository<RecipeIngredient>
         return jdbcTemplate.queryForObject(sql, getRowMapper(), recipeId, ingredientId);
     }
     
-    public RecipeIngredient findByRecipeId(Long recipeId) {
+    public List<RecipeIngredient> findByRecipeId(Long recipeId) {
         String sql = "SELECT * FROM recipe_ingredient WHERE recipe_id = ?";
-        return jdbcTemplate.queryForObject(sql, getRowMapper(), recipeId);
+        return jdbcTemplate.query(sql, getRowMapper(), recipeId);
     }
 
     public int save(RecipeIngredient recipeIngredient) {
