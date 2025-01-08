@@ -47,6 +47,7 @@ public class ProductController extends BaseController {
         Product product = productService.findById(id);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("product", product);
+        modelAndView.addObject("recipes", recipeService.findAll());
         return redirect(modelAndView, "pages/product/form", false); // Redirect to edit form
     }
 
@@ -63,6 +64,7 @@ public class ProductController extends BaseController {
         } catch (Exception e) {
             modelAndView.addObject("error", e.getMessage()); // Catch validation error
             modelAndView.addObject("product", product); // Preserve the submitted product data
+            modelAndView.addObject("recipes", recipeService.findAll());
 
             page = "pages/product/form";
             isRedirect = false;
