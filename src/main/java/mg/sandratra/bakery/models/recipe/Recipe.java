@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Recipe {
-    private int id;
+    private Long id;
     private String name;
     private String description;
     private Timestamp createdAt;
