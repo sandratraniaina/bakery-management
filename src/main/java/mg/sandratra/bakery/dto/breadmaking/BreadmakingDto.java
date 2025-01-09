@@ -12,7 +12,7 @@ import mg.sandratra.bakery.dto.product.ProductDto;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BreadmakingDto {
-        private Long id;
+    private Long id;
     private ProductDto product;
     private Long createdBy;
     private Long quantity;
