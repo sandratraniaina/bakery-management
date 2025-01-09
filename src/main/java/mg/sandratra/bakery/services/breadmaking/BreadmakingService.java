@@ -60,7 +60,7 @@ public class BreadmakingService {
 
     public List<BreadmakingDto> findByIngredientId(Long ingredientId) {
         if (ingredientId != null) {
-            return List.of(mapToDto(breadmakingDao.findByIngredientId(ingredientId)));
+            return breadmakingDao.findByIngredientId(ingredientId).stream().map(this::mapToDto).toList();
         } else {
             return findAll().stream()
                     .map(this::mapToDto)

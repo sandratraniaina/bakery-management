@@ -47,9 +47,9 @@ public class BreadmakingRepository extends BaseRepository<Breadmaking> {
         return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
-    public Breadmaking findByIngredientId(Long ingredientId) {
+    public List<Breadmaking> findByIngredientId(Long ingredientId) {
         String sql = "SELECT * FROM v_breadmaking_ingredients WHERE ingredient_id = ?";
-        return jdbcTemplate.queryForObject(sql, getRowMapper(), ingredientId);
+        return jdbcTemplate.query(sql, getRowMapper(), ingredientId);
     }
 
     // Save method: Inserts a new breadmaking record
