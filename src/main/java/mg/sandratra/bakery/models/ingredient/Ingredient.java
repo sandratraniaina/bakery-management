@@ -1,5 +1,6 @@
 package mg.sandratra.bakery.models.ingredient;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
@@ -11,11 +12,11 @@ import mg.sandratra.bakery.enums.Unit;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ingredient {
-    private int id;
+    private Long id;
     private String name;
     private Unit unit;
-    private double costPerUnit;
-    private double stockQuantity;
-    private double minimumStock;
+    private BigDecimal costPerUnit;
+    private BigDecimal stockQuantity;
+    private BigDecimal minimumStock;
     private Timestamp lastUpdated;
 }

@@ -28,12 +28,12 @@ public class IngredientRepository extends BaseRepository<Ingredient> {
             @Override
             public Ingredient mapRow(java.sql.ResultSet rs, int rowNum) throws java.sql.SQLException {
                 Ingredient ingredient = new Ingredient();
-                ingredient.setId(rs.getInt("id"));
+                ingredient.setId(rs.getLong("id"));
                 ingredient.setName(rs.getString("name"));
                 ingredient.setUnit(Unit.valueOf(rs.getString("unit").toUpperCase()));
-                ingredient.setCostPerUnit(rs.getDouble("cost_per_unit"));
-                ingredient.setStockQuantity(rs.getDouble("stock_quantity"));
-                ingredient.setMinimumStock(rs.getDouble("minimum_stock"));
+                ingredient.setCostPerUnit(rs.getBigDecimal("cost_per_unit"));
+                ingredient.setStockQuantity(rs.getBigDecimal("stock_quantity"));
+                ingredient.setMinimumStock(rs.getBigDecimal("minimum_stock"));
                 ingredient.setLastUpdated(rs.getTimestamp("last_updated"));
                 return ingredient;
             }
