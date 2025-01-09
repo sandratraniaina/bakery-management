@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Breadmaking {
     private Long id;
     private Long productId;
-    private Long createdBy;
+    private Long createdBy = Long.valueOf(1);
     private Long quantity;
     private Date productionDate;
     private BigDecimal ingredientCost;
