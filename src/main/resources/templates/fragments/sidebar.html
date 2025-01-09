@@ -191,6 +191,52 @@
                                 </div>
                                 <!-- Dropdown Menu End -->
                             </li>
+
+                            <!-- Breadmaking -->
+                            <li>
+                                <a class="group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
+                                    href="#" @click.prevent="selected = (selected === 'Breadmaking' ? '':'Breadmaking')"
+                                    :class="{ 'bg-graydark dark:bg-meta-4': (selected === 'Breadmaking') || (page === 'breadmaking-list' || page === 'breadmaking-form') }">
+
+
+
+                                    <svg class="fill-current" width="18" height="18" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                        <path
+                                            d="M416 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zm0 128A96 96 0 1 0 416 0a96 96 0 1 0 0 192zM96 112c0-26.5 21.5-48 48-48s48 21.5 48 48V276.5c0 17.3 7.1 31.9 15.3 42.5C217.8 332.6 224 349.5 224 368c0 44.2-35.8 80-80 80s-80-35.8-80-80c0-18.5 6.2-35.4 16.7-48.9C88.9 308.4 96 293.8 96 276.5V112zM144 0C82.1 0 32 50.2 32 112V276.5c0 .1-.1 .3-.2 .6c-.2 .6-.8 1.6-1.7 2.8C11.2 304.2 0 334.8 0 368c0 79.5 64.5 144 144 144s144-64.5 144-144c0-33.2-11.2-63.8-30.1-88.1c-.9-1.2-1.5-2.2-1.7-2.8c-.1-.3-.2-.5-.2-.6V112C256 50.2 205.9 0 144 0zm0 416c26.5 0 48-21.5 48-48c0-20.9-13.4-38.7-32-45.3V112c0-8.8-7.2-16-16-16s-16 7.2-16 16V322.7c-18.6 6.6-32 24.4-32 45.3c0 26.5 21.5 48 48 48z" />
+                                    </svg>
+
+                                    Breadmaking
+
+                                    <svg class="absolute right-4 top-1/2 -translate-y-1/2 fill-current"
+                                        :class="{ 'rotate-180': (selected === 'Breadmaking') }" width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M4.41107 6.9107C4.73651 6.58527 5.26414 6.58527 5.58958 6.9107L10.0003 11.3214L14.4111 6.91071C14.7365 6.58527 15.2641 6.58527 15.5896 6.91071C15.915 7.23614 15.915 7.76378 15.5896 8.08922L10.5896 13.0892C10.2641 13.4147 9.73651 13.4147 9.41107 13.0892L4.41107 8.08922C4.08563 7.76378 4.08563 7.23614 4.41107 6.9107Z"
+                                            fill="" />
+                                    </svg>
+                                </a>
+
+                                <!-- Dropdown Menu Start -->
+                                <div class="translate transform overflow-hidden"
+                                    :class="(selected === 'Breadmaking') ? 'block' :'hidden'">
+                                    <ul class="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
+                                        <li>
+                                            <a class="group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
+                                                href="/breadmaking"
+                                                :class="page === 'breadmaking-list' && '!text-white'">
+                                                List</a>
+                                        </li>
+                                        <li>
+                                            <a class="group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
+                                                href="/breadmaking/form"
+                                                :class="page === 'breadmaking-form' && '!text-white'">
+                                                Add new Product</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Dropdown Menu End -->
+                            </li>
                         </ul>
                     </div>
 
