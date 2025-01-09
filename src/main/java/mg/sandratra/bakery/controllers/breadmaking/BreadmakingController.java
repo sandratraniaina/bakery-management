@@ -3,6 +3,7 @@ package mg.sandratra.bakery.controllers.breadmaking;
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.breadmaking.BreadmakingDto;
 import mg.sandratra.bakery.models.breadmaking.Breadmaking;
+import mg.sandratra.bakery.services.IngredientService;
 import mg.sandratra.bakery.services.breadmaking.BreadmakingService;
 import mg.sandratra.bakery.services.product.ProductService;
 
@@ -22,14 +23,17 @@ public class BreadmakingController extends BaseController {
 
     private final BreadmakingService breadmakingService;
     private final ProductService productService;
+    private final IngredientService ingredientService;
 
     // Display all breadmaking records
     @GetMapping
-    public ModelAndView getAllBreadmakings() {
-        List<BreadmakingDto> breadmakings = breadmakingService.findAll().stream().map(breadmakingService::mapToDto).toList();
+    public ModelAndView getAllBreadmakings(@RequestParam(required = false, name = "ingredient-id") Long ingredientId) {
+        List<BreadmakingDto> breadmakings = breadmakingService.findByIngredientId(ingredientId);
         
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("breadmakings", breadmakings);
+        modelAndView.addObject("ingredients", ingredientService.findAll());
+        modelAndView.addObject("ingredientId", ingredientId);
         return redirect(modelAndView, "pages/breadmaking/list", false); // Redirect to breadmaking list page
     }
 
