@@ -39,6 +39,12 @@
                                 Ingredients
                             </th>
                             <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                                Ingredient Cost
+                            </th>
+                            <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                                Other Cost
+                            </th>
+                            <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
                                 Cost Per Unit
                             </th>
                             <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
@@ -64,6 +70,14 @@
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                                 <p th:text="${breadmaking.product.recipe.getIngredientNames()}" class="text-black dark:text-white">Jan
+                                    13,2023</p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${breadmaking.ingredientCost}" class="text-black dark:text-white">Jan
+                                    13,2023</p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${breadmaking.otherCost}" class="text-black dark:text-white">Jan
                                     13,2023</p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
