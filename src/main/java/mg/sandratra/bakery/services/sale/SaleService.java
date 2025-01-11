@@ -1,10 +1,14 @@
 package mg.sandratra.bakery.services.sale;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import mg.sandratra.bakery.dto.sale.SaleDto;
 import mg.sandratra.bakery.dto.sale.SaleDetailsDto;
+import mg.sandratra.bakery.models.product.Product;
 import mg.sandratra.bakery.models.sale.Sale;
 import mg.sandratra.bakery.repository.sale.SaleRepository;
+import mg.sandratra.bakery.services.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -15,6 +19,7 @@ public class SaleService {
 
     private final SaleRepository saleRepository;
     private final SaleDetailsService saleDetailsService;
+    private final ProductService productService;
 
     // Map Sale to SaleDto
     public SaleDto mapToDto(Sale sale) {
@@ -42,6 +47,23 @@ public class SaleService {
                 saleDto.getTotalAmount(),
                 saleDto.getSaleDate(),
                 saleDto.getCreatedAt());
+    }
+
+    public SaleDto generateSaleDto() {
+        List<Product> products = productService.findAll();
+
+        List<SaleDetailsDto> saleDetails = new ArrayList<>();
+
+        for (Product product : products) {
+            SaleDetailsDto saleDetailsDto = new SaleDetailsDto();
+            saleDetailsDto.setProduct(product);
+            saleDetailsDto.setQuantity(0);
+            saleDetailsDto.setUnitPrice(product.getPrice());
+            saleDetailsDto.setSubTotal(BigDecimal.ZERO);
+            saleDetails.add(saleDetailsDto);
+        }
+
+        return new SaleDto(null, null, null, saleDetails, null, null, null);
     }
 
     public List<Sale> findAll() {
