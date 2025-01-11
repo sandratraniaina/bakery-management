@@ -45,6 +45,11 @@ public class SaleDetailsRepository extends BaseRepository<SaleDetails> {
         return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
+    public List<SaleDetails> findBySaleId(Long saleId) {
+        String sql = "SELECT * FROM sale_details WHERE sale_id = ?";
+        return jdbcTemplate.query(sql, getRowMapper(), saleId);
+    }
+
     // Save method: Inserts a new sale details record
     public int save(SaleDetails saleDetails) {
         String sql = "INSERT INTO sale_details (sale_id, product_id, quantity, unit_price) "
