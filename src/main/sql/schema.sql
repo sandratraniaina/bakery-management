@@ -41,7 +41,7 @@ CREATE TABLE bm_user(
 CREATE TABLE breadmaking(
   id serial NOT NULL,
   product_id integer NOT NULL,
-  created_by integer,
+  created_by integer DEFAULT 1,
   quantity integer NOT NULL,
   production_date date NOT NULL,
   ingredient_cost numeric(10, 2) NOT NULL,
