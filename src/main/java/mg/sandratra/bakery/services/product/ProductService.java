@@ -32,6 +32,7 @@ public class ProductService {
                 product.getId(),
                 recipeDto,
                 product.getName(),
+                product.getProductType(),
                 product.getPrice(),
                 product.getStockQuantity(),
                 product.getCreatedAt()
@@ -46,6 +47,7 @@ public class ProductService {
                 productDto.getId(),
                 recipeId,
                 productDto.getName(),
+                productDto.getProductType(),
                 productDto.getPrice(),
                 productDto.getStockQuantity(),
                 productDto.getCreatedAt()
