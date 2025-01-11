@@ -81,6 +81,7 @@ public class ProductService {
         Assert.notNull(product.getRecipeId(), "Recipe cannot be null");
         Assert.isTrue(product.getPrice().compareTo(BigDecimal.ZERO) > 0, "Product price must be greater than zero");
         Assert.notNull(product.getStockQuantity(), "Stock quantity must not be null");
+        Assert.notNull(product.getProductType(), "Product type must not be null");
         Assert.isTrue(product.getStockQuantity() >= 0, "Stock quantity must not be negative");
     }
 }
