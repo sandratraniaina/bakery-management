@@ -9,6 +9,25 @@ CREATE TYPE turnover_type AS ENUM ('Income', 'Expense');
 
 CREATE TYPE loss_type AS ENUM ('Product', 'Ingredient');
 
+CREATE TYPE product_type AS ENUM (
+    'VIENNOISERIE',
+    'AUTRE'
+);
+ 
+
+CREATE TYPE ingredient_type AS ENUM (
+    'ADD-INS',
+    'FLOUR',
+    'BASE'
+);
+ 
+
+CREATE TYPE movement_type AS ENUM (
+    'ENTRY',
+    'EXIT'
+);
+ 
+
 CREATE TABLE bm_user(
   id serial NOT NULL,
   username varchar(50) NOT NULL UNIQUE,
@@ -36,6 +55,7 @@ CREATE TABLE breadmaking(
 CREATE TABLE ingredient(
   id serial NOT NULL,
   "name" varchar(100) NOT NULL,
+  ingredient_type ingredient_type NOT NULL,
   unit unit NOT NULL,
   cost_per_unit numeric(10, 2) NOT NULL,
   stock_quantity numeric(10, 2) NOT NULL,
@@ -53,38 +73,39 @@ CREATE TABLE ingredient_forecast(
   CONSTRAINT ingredient_forecast_pkey PRIMARY KEY(id)
 );
 
-CREATE TABLE ingredient_supply(
+CREATE TABLE ingredient_movement(
   id serial NOT NULL,
   ingredient_id integer,
+  movement_type movement_type NOT NULL DEFAULT 'ENTRY',
   quantity numeric(10, 2) NOT NULL,
   supply_date date NOT NULL,
   cost_per_unit numeric(10, 2) NOT NULL,
   total_cost numeric(10, 2) GENERATED ALWAYS AS (quantity * cost_per_unit) STORED,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT ingredient_supply_pkey1 PRIMARY KEY(id)
-);
-
-CREATE TABLE loss(
-  id serial NOT NULL,
-  reported_by integer NOT NULL,
-  loss_type loss_type NOT NULL,
-  reference_id integer,
-  reference_name text,
-  quantity numeric(10, 2) NOT NULL,
-  reason text NOT NULL,
-  loss_date date NOT NULL,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT loss_pkey PRIMARY KEY(id)
+  CONSTRAINT ingredient_movement_pkey PRIMARY KEY(id)
 );
 
 CREATE TABLE product(
   id serial NOT NULL,
   recipe_id integer,
   "name" varchar(100) NOT NULL,
+  product_type product_type DEFAULT 'VIENNOISERIE',
   price numeric(10, 2) NOT NULL,
   stock_quantity integer NOT NULL,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT product_pkey1 PRIMARY KEY(id)
+);
+
+CREATE TABLE product_movement(
+  id serial NOT NULL,
+  product_id integer NOT NULL,
+  movement_type movement_type NOT NULL DEFAULT 'ENTRY',
+  quantity numeric(10, 2) NOT NULL,
+  movement_date date NOT NULL,
+  cost_per_unit numeric(10, 2) NOT NULL,
+  total_cost numeric(10, 2) GENERATED ALWAYS AS (quantity * cost_per_unit) STORED,
+  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT product_movement_pkey PRIMARY KEY(id)
 );
 
 CREATE TABLE recipe(
@@ -105,6 +126,7 @@ CREATE TABLE recipe_ingredient(
 CREATE TABLE sale(
   id serial NOT NULL,
   created_by integer,
+  client_name varchar(100),
   total_amount numeric(10, 2) NOT NULL,
   sale_date date NOT NULL,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -161,12 +183,8 @@ ALTER TABLE ingredient_forecast
   ADD CONSTRAINT ingredient_forecast_ingredient_id_fkey
     FOREIGN KEY (ingredient_id) REFERENCES ingredient (id) ON DELETE Cascade;
 
-ALTER TABLE loss
-  ADD CONSTRAINT loss_reported_by_fkey
-    FOREIGN KEY (reported_by) REFERENCES bm_user (id) ON DELETE Set null;
-
-ALTER TABLE ingredient_supply
-  ADD CONSTRAINT ingredient_supply_ingredient_id_fkey1
+ALTER TABLE ingredient_movement
+  ADD CONSTRAINT ingredient_movement_ingredient_id_fkey
     FOREIGN KEY (ingredient_id) REFERENCES ingredient (id) ON DELETE Set null;
 
 ALTER TABLE sale_details
@@ -177,78 +195,38 @@ ALTER TABLE sale_details
   ADD CONSTRAINT sale_details_product_id_fkey
     FOREIGN KEY (product_id) REFERENCES product (id);
 
-CREATE OR REPLACE FUNCTION update_stock_on_loss()
-RETURNS TRIGGER AS $$
+ALTER TABLE product_movement
+  ADD CONSTRAINT product_movement_product_id_fkey
+    FOREIGN KEY (product_id) REFERENCES product (id);
+
+CREATE OR REPLACE FUNCTION update_ingredient_stock_on_movement()
+RETURNS TRIGGER AS $$ 
 BEGIN
-    IF NEW.loss_type = 'Ingredient' THEN
+    -- Update the stock quantity of the ingredient based on the movement type
+    IF NEW.movement_type = 'ENTRY' THEN
+        -- For entry (supply), increase stock quantity
         UPDATE ingredient
-        SET stock_quantity = stock_quantity - NEW.quantity
-        WHERE id = NEW.reference_id;
-    ELSIF NEW.loss_type = 'Product' THEN
-        UPDATE product
-        SET stock_quantity = stock_quantity - NEW.quantity
-        WHERE id = NEW.reference_id;
+        SET 
+            stock_quantity = stock_quantity + NEW.quantity,
+            cost_per_unit = CASE
+                WHEN NEW.cost_per_unit > cost_per_unit THEN NEW.cost_per_unit
+                ELSE cost_per_unit
+            END,
+            last_updated = CURRENT_TIMESTAMP
+        WHERE id = NEW.ingredient_id;
+
+    ELSIF NEW.movement_type = 'EXIT' THEN
+        -- For exit (usage), decrease stock quantity
+        UPDATE ingredient
+        SET 
+            stock_quantity = stock_quantity - NEW.quantity,
+            last_updated = CURRENT_TIMESTAMP
+        WHERE id = NEW.ingredient_id;
     END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION update_product_stock_on_production()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE product
-    SET stock_quantity = stock_quantity + NEW.quantity
-    WHERE id = NEW.product_id;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION update_ingredients_stock_on_production()
-RETURNS TRIGGER AS $$
-DECLARE
-    ingredient_id INT;
-    ingredient_quantity NUMERIC;
-BEGIN
-    -- Loop through each ingredient in the recipe of the produced product
-    FOR ingredient_id, ingredient_quantity IN (
-        SELECT ri.ingredient_id, ri.quantity
-        FROM recipe_ingredient ri
-        JOIN product p ON p.recipe_id = ri.recipe_id
-        WHERE p.id = NEW.product_id
-    )
-    LOOP
-        -- Update the stock quantity of the ingredient
-        UPDATE ingredient
-        SET stock_quantity = stock_quantity - (ingredient_quantity * NEW.quantity)
-        WHERE id = ingredient_id;
-    END LOOP;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION update_ingredient_stock_on_supply()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Update the stock quantity of the ingredient
-    UPDATE ingredient
-    SET 
-        stock_quantity = stock_quantity + NEW.quantity,
-        cost_per_unit = CASE
-            WHEN NEW.cost_per_unit > cost_per_unit THEN NEW.cost_per_unit
-            ELSE cost_per_unit
-        END,
-        last_updated = CURRENT_TIMESTAMP
-    WHERE id = NEW.ingredient_id;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
 
 CREATE OR REPLACE FUNCTION calculate_ingredient_cost(product_id INT, batch_size INT)
 RETURNS NUMERIC AS $$
@@ -318,94 +296,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
-CREATE OR REPLACE FUNCTION insert_turnover_on_sale()
-RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO turnover (
-        turnover_type,
-        amount,
-        description,
-        turnover_date
-    ) VALUES (
-        'Income',
-        NEW.total_amount,
-        'Sale invoice #' || NEW.id || ' for ' || COALESCE(NEW.customer_name, 'Walk-in Customer'),
-        NEW.sale_date
-    );
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION insert_turnover_on_production()
-RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO turnover (
-        turnover_type,
-        amount,
-        description,
-        turnover_date
-    ) VALUES (
-        'Expense',
-        NEW.quantity * NEW.cost_per_unit,
-        'Production cost for ' || NEW.quantity || 'x ' || (SELECT name FROM product WHERE id = NEW.product_id),
-        NEW.production_date
-    );
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION insert_turnover_on_supply()
-RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO turnover (
-        turnover_type,
-        amount,
-        description,
-        turnover_date
-    ) VALUES (
-        'Expense',
-        NEW.total_cost,
-        'Supply of ' || NEW.quantity || ' ' || 
-        (SELECT unit || ' of ' || name FROM ingredient WHERE id = NEW.ingredient_id),
-        NEW.supply_date
-    );
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION insert_turnover_on_loss()
-RETURNS TRIGGER AS $$
-DECLARE
-    loss_amount numeric(10,2);
-    item_name text;
-BEGIN
-    -- Calculate loss amount and get item name based on loss type
-    IF NEW.loss_type = 'Product' THEN
-        SELECT price * NEW.quantity, name INTO loss_amount, item_name
-        FROM product
-        WHERE id = NEW.reference_id;
-    ELSE -- Ingredient loss
-        SELECT cost_per_unit * NEW.quantity, name INTO loss_amount, item_name
-        FROM ingredient
-        WHERE id = NEW.reference_id;
-    END IF;
-
-    INSERT INTO turnover (
-        turnover_type,
-        amount,
-        description,
-        turnover_date
-    ) VALUES (
-        'Expense',
-        loss_amount,
-        'Loss of ' || NEW.quantity || ' ' || NEW.loss_type || ': ' || item_name || 
-        ' - Reason: ' || NEW.reason,
-        NEW.loss_date
-    );
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION calculate_average_daily_usage(
     start_date DATE,
@@ -517,26 +407,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION update_product_stock_on_sale()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE product
-    SET stock_quantity = stock_quantity - NEW.quantity
-    WHERE id = NEW.product_id;
-    
-    -- Update the total_amount in the sale table
-    UPDATE sale
-    SET total_amount = (
-        SELECT SUM(subtotal)
-        FROM sale_details
-        WHERE sale_id = NEW.sale_id
-    )
-    WHERE id = NEW.sale_id;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
 -- Function to check if there's enough ingredient stock for production
 CREATE OR REPLACE FUNCTION check_ingredient_stock_for_production(
     product_id_param INTEGER,
@@ -581,6 +451,159 @@ BEGIN
     -- If there are any insufficient ingredients, raise an error
     IF insufficient_ingredients IS NOT NULL THEN
         RAISE EXCEPTION 'Insufficient stock for production: %', insufficient_ingredients;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION generate_ingredient_movement_on_production() 
+RETURNS TRIGGER AS $$
+DECLARE
+    rec_ingredient record;
+    breadmaking_ingredient_cost numeric(10, 2);
+BEGIN
+    -- Loop through each ingredient in the breadmaking recipe
+    FOR rec_ingredient IN
+        SELECT ri.ingredient_id, ri.quantity
+        FROM recipe_ingredient ri
+        JOIN breadmaking bm ON bm.product_id = ri.recipe_id
+        WHERE bm.id = NEW.id
+    LOOP
+        -- Insert a new ingredient movement for each ingredient
+        INSERT INTO ingredient_movement (
+            ingredient_id,
+            movement_type,
+            quantity,
+            supply_date,
+            cost_per_unit
+        )
+        VALUES (
+            rec_ingredient.ingredient_id,
+            'ENTRY',  -- Assuming the breadmaking adds ingredients to the stock
+            rec_ingredient.quantity * NEW.quantity,  -- Quantity for the breadmaking batch
+            NEW.production_date,
+            (SELECT cost_per_unit FROM ingredient WHERE id = rec_ingredient.ingredient_id)  -- Get cost per unit
+        );
+    END LOOP;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION update_product_stock_on_movement()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Check the type of movement and adjust stock quantity accordingly
+    IF NEW.movement_type = 'ENTRY' THEN
+        UPDATE product
+        SET stock_quantity = stock_quantity + NEW.quantity
+        WHERE id = NEW.product_id;
+
+    ELSIF NEW.movement_type = 'EXIT' THEN
+        UPDATE product
+        SET stock_quantity = stock_quantity - NEW.quantity
+        WHERE id = NEW.product_id;
+
+    ELSIF NEW.movement_type = 'LOSS' THEN
+        UPDATE product
+        SET stock_quantity = stock_quantity - NEW.quantity
+        WHERE id = NEW.product_id;
+
+    ELSE
+        RAISE EXCEPTION 'Unknown movement type: %', NEW.movement_type;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION generate_movement_on_production()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Insert a new product movement with type 'ENTRY' for the produced bread
+    INSERT INTO product_movement (
+        product_id,
+        movement_type,
+        quantity,
+        movement_date,
+        cost_per_unit
+    )
+    VALUES (
+        NEW.product_id,
+        'ENTRY',
+        NEW.quantity,
+        NEW.production_date,
+        NEW.cost_per_unit
+    );
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION generate_movement_on_sale()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Insert a new product movement with type 'EXIT' for the sold product
+    INSERT INTO product_movement (
+        product_id,
+        movement_type,
+        quantity,
+        movement_date,
+        cost_per_unit
+    )
+    VALUES (
+        NEW.product_id,               -- Product being sold
+        'EXIT',                       -- Movement type is 'EXIT'
+        NEW.quantity,                 -- Quantity sold
+        (SELECT sale_date FROM sale WHERE id = NEW.sale_id), -- Sale date
+        NEW.unit_price                -- Unit price of the product sold
+    );
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to handle turnover creation on product movement
+CREATE OR REPLACE FUNCTION create_turnover_on_product_movement()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Insert a turnover record into the turnover table
+    INSERT INTO turnover (turnover_type, amount, description, turnover_date, created_at)
+    VALUES (
+        CASE
+            WHEN NEW.movement_type = 'EXIT' THEN 'Income'   -- Income for EXIT movements (sales)
+            WHEN NEW.movement_type = 'ENTRY' THEN 'Expense'  -- Expense for ENTRY movements (restocking)
+        END,
+        NEW.total_cost,                                     -- Amount is the total cost of the movement
+        'Product Movement: ' || NEW.product_id || ' - ' || NEW.movement_type,
+        NEW.movement_date,                                  -- Use the movement date for the turnover date
+        CURRENT_TIMESTAMP                                    -- Timestamp when the turnover is created
+    );
+    
+    -- Return the new row to complete the trigger action
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION create_turnover_on_ingredient_supply()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Check for ingredient supply (ENTRY)
+    IF NEW.movement_type = 'ENTRY' THEN
+        INSERT INTO turnover (
+            turnover_type,                      -- Type of turnover (Expense for purchase)
+            amount,                              -- Amount is the total cost of the ingredient
+            description,                         -- Description of the supply (ingredient ID and name)
+            turnover_date                        -- Date of the supply (supply date from the movement)
+        ) VALUES (
+            'Expense',                           -- Turnover type (Expense)
+            NEW.total_cost,                      -- Amount (total cost of the ingredient supply)
+            'Ingredient purchase for ' || NEW.ingredient_id, -- Description (you can adjust this)
+            NEW.supply_date                      -- Turnover date based on the supply date
+        );
     END IF;
 
     RETURN NEW;
@@ -675,55 +698,64 @@ FROM forecast
 WHERE current_stock - forecast_usage_7_days < minimum_stock
 ORDER BY ingredient_name;
 
-CREATE TRIGGER 
-trg_update_stock_on_loss
-AFTER INSERT ON loss
-FOR EACH ROW
-EXECUTE FUNCTION 
-update_stock_on_loss();
+CREATE OR REPLACE VIEW v_breadmaking_ingredients AS
+SELECT 
+    bm.id AS id,
+    bm.product_id,
+    bm.quantity AS quantity,
+    bm.production_date,
+    bm.created_by,
+    bm.ingredient_cost,
+    bm.other_cost,
+    bm.cost_per_unit,
+    i.id AS ingredient_id
+FROM 
+    breadmaking bm
+JOIN product p ON bm.product_id = p.id
+JOIN recipe r ON p.recipe_id = r.id
+JOIN recipe_ingredient ri ON r.id = ri.recipe_id
+JOIN ingredient i ON ri.ingredient_id = i.id
+ORDER BY bm.production_date, bm.id, i.name;
 
-CREATE TRIGGER trg_update_product_stock_on_production
-AFTER INSERT ON breadmaking
+CREATE TRIGGER trg_update_ingredient_stock_on_movement
+AFTER INSERT ON ingredient_movement
 FOR EACH ROW
-EXECUTE FUNCTION update_product_stock_on_production();
-
-CREATE TRIGGER trg_update_ingredients_stock_on_production
-AFTER INSERT ON breadmaking
-FOR EACH ROW
-EXECUTE FUNCTION update_ingredients_stock_on_production();
-
-CREATE TRIGGER trg_update_ingredient_stock_on_supply
-AFTER INSERT ON ingredient_supply
-FOR EACH ROW
-EXECUTE FUNCTION update_ingredient_stock_on_supply();
-
-
-CREATE TRIGGER trg_insert_turnover_on_sale
-AFTER INSERT ON sale
-FOR EACH ROW
-EXECUTE FUNCTION insert_turnover_on_sale();
-
-CREATE TRIGGER trg_insert_turnover_on_production
-AFTER INSERT ON breadmaking
-FOR EACH ROW
-EXECUTE FUNCTION insert_turnover_on_production();
-
-CREATE TRIGGER trg_insert_turnover_on_supply
-AFTER INSERT ON ingredient_supply
-FOR EACH ROW
-EXECUTE FUNCTION insert_turnover_on_supply();
-
-CREATE TRIGGER trg_insert_turnover_on_loss
-AFTER INSERT ON loss
-FOR EACH ROW
-EXECUTE FUNCTION insert_turnover_on_loss();
-
-CREATE TRIGGER trg_update_product_stock_on_sale_details
-AFTER INSERT ON sale_details
-FOR EACH ROW
-EXECUTE FUNCTION update_product_stock_on_sale();
+EXECUTE FUNCTION update_ingredient_stock_on_movement();
 
 CREATE TRIGGER trg_validate_production_stock
 BEFORE INSERT ON breadmaking
 FOR EACH ROW
 EXECUTE FUNCTION validate_production_stock();
+
+CREATE TRIGGER after_breadmaking_insert
+AFTER INSERT ON breadmaking
+FOR EACH ROW
+EXECUTE FUNCTION generate_ingredient_movement_on_production();
+
+CREATE TRIGGER tgr_update_product_stock_on_movement
+AFTER INSERT ON product_movement
+FOR EACH ROW
+EXECUTE FUNCTION update_product_stock_on_movement();
+
+CREATE TRIGGER tgr_generate_movement_on_production
+AFTER INSERT ON breadmaking
+FOR EACH ROW
+EXECUTE FUNCTION generate_movement_on_production();
+
+CREATE TRIGGER tgr_generate_movement_on_sale
+AFTER INSERT ON sale_details
+FOR EACH ROW
+EXECUTE FUNCTION generate_movement_on_sale();
+
+-- Trigger to call the function after a product movement is inserted
+CREATE TRIGGER trg_create_turnover_on_product_movement
+AFTER INSERT ON product_movement
+FOR EACH ROW
+EXECUTE FUNCTION create_turnover_on_product_movement();
+
+
+CREATE TRIGGER trigger_create_turnover_on_ingredient_supply
+AFTER INSERT ON ingredient_movement
+FOR EACH ROW
+EXECUTE FUNCTION create_turnover_on_ingredient_supply();
+
