@@ -27,6 +27,7 @@
                         <div th:replace="~{fragments/form-element :: text-input ('number', 'Stock Quantity', 'stockQuantity')}">
                         </div>
                         <div th:replace="~{fragments/form-element :: select-option (${recipes}, 'id', 'name', 'recipeId', 'Recipe')}"></div>
+                        <div th:replace="~{fragments/form-element :: select-option (${productTypes}, 'value', 'value', 'productType', 'Product Type')}"></div>
                     </div>
                     <div th:replace="~{fragments/alerts :: alert(${message}, ${error})}">
 
