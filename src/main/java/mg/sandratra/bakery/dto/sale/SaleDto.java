@@ -23,6 +23,16 @@ public class SaleDto {
     private Date saleDate;
     private Timestamp createdAt;
 
+    public BigDecimal calculateTotalAmount() {
+        if (saleDetails == null || saleDetails.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        return saleDetails.stream()
+                .map(SaleDetailsDto::calculateSubTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     /**
      * Returns a string with the product names and their types in the format:
      * "productName(productType)" separated by commas.
