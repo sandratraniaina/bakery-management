@@ -32,6 +32,7 @@
                             th:replace="~{fragments/form-element :: text-input('text', 'Minimum Stock', 'minimumStock')}">
                         </div>
                         <div th:replace="~{fragments/form-element :: select-option (${units}, 'value', 'value', 'unit', 'Unit')}"></div>
+                        <div th:replace="~{fragments/form-element :: select-option (${ingredientTypes}, 'value', 'displayValue', 'ingredientType', 'Ingredient Type')}"></div>
                     </div>
                     <button
                         class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90  m-2">

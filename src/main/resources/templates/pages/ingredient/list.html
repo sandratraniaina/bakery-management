@@ -23,6 +23,9 @@
                             Id
                         </th>
                         <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                            Type
+                        </th>
+                        <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
                             Name
                         </th>
                         <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
@@ -43,6 +46,9 @@
                     <tr th:each="ingredient : ${ingredients}">
                         <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                             <p th:text="${ingredient.id}" class="text-black dark:text-white">Jan 13,2023</p>
+                        </td>
+                        <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                            <p th:text="${ingredient.ingredientType.getDisplayValue()}" class="text-black dark:text-white">Jan 13,2023</p>
                         </td>
                         <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                             <p th:text="${ingredient.name}" class="text-black dark:text-white">Jan 13,2023</p>
