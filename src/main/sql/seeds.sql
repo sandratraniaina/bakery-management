@@ -44,14 +44,14 @@ VALUES
 INSERT INTO ingredient (name, ingredient_type, unit, cost_per_unit, stock_quantity, minimum_stock) VALUES
 ('All-Purpose Flour', 'FLOUR', 'KG', 2500.00, 50.00, 10.00),
 ('Whole Wheat Flour', 'FLOUR', 'KG', 3000.00, 30.00, 8.00),
-('Sugar', 'ADD-INS', 'KG', 3000.00, 30.00, 5.00),
-('Salt', 'ADD-INS', 'KG', 1500.00, 10.00, 2.00),
-('Active Dry Yeast', 'ADD-INS', 'G', 150.00, 1000.00, 200.00),
+('Sugar', 'ADD_INS', 'KG', 3000.00, 30.00, 5.00),
+('Salt', 'ADD_INS', 'KG', 1500.00, 10.00, 2.00),
+('Active Dry Yeast', 'ADD_INS', 'G', 150.00, 1000.00, 200.00),
 ('Butter', 'BASE', 'KG', 12000.00, 20.00, 5.00),
 ('Fresh Milk', 'BASE', 'L', 4000.00, 30.00, 5.00),
 ('Eggs', 'BASE', 'G', 25.00, 5000.00, 1000.00),
-('Chocolate Chips', 'ADD-INS', 'G', 35.00, 2000.00, 500.00),
-('Vanilla Extract', 'ADD-INS', 'ML', 100.00, 1000.00, 200.00);
+('Chocolate Chips', 'ADD_INS', 'G', 35.00, 2000.00, 500.00),
+('Vanilla Extract', 'ADD_INS', 'ML', 100.00, 1000.00, 200.00);
 
 -- Insert Recipes
 INSERT INTO recipe (name, description) VALUES
