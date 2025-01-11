@@ -2,6 +2,7 @@ package mg.sandratra.bakery.controllers.product;
 
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.product.ProductDto;
+import mg.sandratra.bakery.enums.ProductType;
 import mg.sandratra.bakery.models.product.Product;
 import mg.sandratra.bakery.services.product.ProductService;
 import mg.sandratra.bakery.services.recipe.RecipeService;
@@ -38,6 +39,7 @@ public class ProductController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("product", new Product());
         modelAndView.addObject("recipes", recipeService.findAll());
+        modelAndView.addObject("productTypes", ProductType.values());
         return redirect(modelAndView, "pages/product/form", false); // Redirect to create form
     }
 
@@ -48,6 +50,7 @@ public class ProductController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("product", product);
         modelAndView.addObject("recipes", recipeService.findAll());
+        modelAndView.addObject("productTypes", ProductType.values());
         return redirect(modelAndView, "pages/product/form", false); // Redirect to edit form
     }
 
@@ -65,6 +68,7 @@ public class ProductController extends BaseController {
             modelAndView.addObject("error", e.getMessage()); // Catch validation error
             modelAndView.addObject("product", product); // Preserve the submitted product data
             modelAndView.addObject("recipes", recipeService.findAll());
+            modelAndView.addObject("productTypes", ProductType.values());
 
             page = "pages/product/form";
             isRedirect = false;
