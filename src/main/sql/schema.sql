@@ -480,7 +480,7 @@ BEGIN
         )
         VALUES (
             rec_ingredient.ingredient_id,
-            'ENTRY',  -- Assuming the breadmaking adds ingredients to the stock
+            'EXIT',  -- Assuming the breadmaking remove ingredients to the stock
             rec_ingredient.quantity * NEW.quantity,  -- Quantity for the breadmaking batch
             NEW.production_date,
             (SELECT cost_per_unit FROM ingredient WHERE id = rec_ingredient.ingredient_id)  -- Get cost per unit
@@ -573,8 +573,8 @@ BEGIN
     INSERT INTO turnover (turnover_type, amount, description, turnover_date, created_at)
     VALUES (
         CASE
-            WHEN NEW.movement_type = 'EXIT' THEN 'Income'   -- Income for EXIT movements (sales)
-            WHEN NEW.movement_type = 'ENTRY' THEN 'Expense'  -- Expense for ENTRY movements (restocking)
+            WHEN NEW.movement_type = 'EXIT' THEN CAST('Income' AS turnover_type)   -- Income for EXIT movements (sales)
+            WHEN NEW.movement_type = 'ENTRY' THEN CAST('Expense' AS turnover_type)  -- Expense for ENTRY movements (restocking)
         END,
         NEW.total_cost,                                     -- Amount is the total cost of the movement
         'Product Movement: ' || NEW.product_id || ' - ' || NEW.movement_type,

@@ -68,6 +68,7 @@ public class BreadmakingController extends BaseController {
             breadmakingService.saveOrUpdate(breadmaking); // This will call validation
             redirectAttributes.addFlashAttribute("message", "Breadmaking record saved successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             modelAndView.addObject("error", e.getMessage()); // Catch validation error
             modelAndView.addObject("breadmaking", breadmaking); // Preserve the submitted breadmaking data
             modelAndView.addObject("products", productService.findAll());
