@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lombok.RequiredArgsConstructor;
 import mg.sandratra.bakery.controllers.BaseController;
+import mg.sandratra.bakery.enums.IngredientType;
 import mg.sandratra.bakery.enums.Unit;
 import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.services.IngredientService;
@@ -37,6 +38,7 @@ public class IngredientController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("ingredient", new Ingredient());
         modelAndView.addObject("units", Unit.values());
+        modelAndView.addObject("ingredientTypes", IngredientType.values());
         return redirect(modelAndView, "pages/ingredient/form", false); // Redirect to ingredient form page
     }
 
@@ -54,6 +56,7 @@ public class IngredientController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("ingredient", ingredient);
         modelAndView.addObject("units", Unit.values());
+        modelAndView.addObject("ingredientTypes", IngredientType.values());
         return redirect(modelAndView, "pages/ingredient/form", false); // Redirect to ingredient form page
     }
 
