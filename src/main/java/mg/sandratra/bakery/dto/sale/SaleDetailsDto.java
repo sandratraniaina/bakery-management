@@ -18,4 +18,8 @@ public class SaleDetailsDto {
     private BigDecimal unitPrice;
     private BigDecimal subTotal;
     private Timestamp createdAt;
+
+    public BigDecimal calculateSubTotal() {
+        return unitPrice.multiply(BigDecimal.valueOf(quantity));
+    }
 }
