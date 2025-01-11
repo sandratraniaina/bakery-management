@@ -9,6 +9,8 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import mg.sandratra.bakery.models.sale.Sale;
@@ -48,7 +50,7 @@ public class SaleRepository extends BaseRepository<Sale> {
         return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
-    public int save(Sale sale) {
+    public Long save(Sale sale) {
         String sql = "INSERT INTO sale (created_by, client_name, total_amount, sale_date) "
                 + "VALUES (:created_by, :client_name, :total_amount, :sale_date)";
 
@@ -58,7 +60,11 @@ public class SaleRepository extends BaseRepository<Sale> {
                 .addValue("total_amount", sale.getTotalAmount())
                 .addValue("sale_date", sale.getSaleDate());
 
-        return namedParameterJdbcTemplate.update(sql, params);
+        KeyHolder holder = new GeneratedKeyHolder();
+
+        namedParameterJdbcTemplate.update(sql, params, holder, new String[] { "id" });
+
+        return holder.getKey().longValue();
     }
 
     public int update(Sale sale) {
