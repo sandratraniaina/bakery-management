@@ -1,18 +1,33 @@
--- Clear existing data (if needed)
-TRUNCATE TABLE turnover, sale, loss, breadmaking, ingredient_supply, 
-             product, recipe_ingredient, recipe, ingredient, bm_user CASCADE;
+-- Disable triggers temporarily
+SET session_replication_role = 'replica';
 
--- Reset sequences
-ALTER SEQUENCE turnover_id_seq RESTART WITH 1;
-ALTER SEQUENCE sale_id_seq RESTART WITH 1;
-ALTER SEQUENCE loss_id_seq RESTART WITH 1;
+-- Truncate tables in order of dependencies
+TRUNCATE TABLE 
+    breadmaking,
+    recipe_ingredient,
+    product,
+    recipe,
+    ingredient,
+    product_movement,
+    ingredient_forecast,
+    ingredient_movement,
+    sale,
+    bm_user
+CASCADE;
+
+-- Reset all sequences
 ALTER SEQUENCE breadmaking_id_seq RESTART WITH 1;
-ALTER SEQUENCE ingredient_supply_id_seq RESTART WITH 1;
 ALTER SEQUENCE product_id_seq RESTART WITH 1;
 ALTER SEQUENCE recipe_id_seq RESTART WITH 1;
-ALTER SEQUENCE recipe_ingredient_id_seq RESTART WITH 1;
 ALTER SEQUENCE ingredient_id_seq RESTART WITH 1;
-ALTER SEQUENCE bm_user_id_seq RESTART WITH 1;
+ALTER SEQUENCE product_movement_id_seq RESTART WITH 1;
+ALTER SEQUENCE ingredient_forecast_id_seq RESTART WITH 1;
+ALTER SEQUENCE ingredient_movement_id_seq RESTART WITH 1;
+ALTER SEQUENCE sale_id_seq RESTART WITH 1;
+ALTER SEQUENCE bm_user_id_seq RESTART WITH 2; -- Start at 2 since user 1 exists
+
+-- Re-enable triggers
+SET session_replication_role = 'origin';
 
 -- 1. Create users with different roles
 INSERT INTO
@@ -25,49 +40,101 @@ VALUES
         CURRENT_TIMESTAMP
     );
 
--- 2. Add ingredients with different units
-INSERT INTO ingredient (name, unit, cost_per_unit, stock_quantity, minimum_stock) VALUES
-('Wheat Flour', 'KG', 4500, 100.00, 20.00),         -- Premium flour
-('Brown Sugar', 'KG', 6000, 50.00, 10.00),          -- Local brown sugar
-('Salt', 'KG', 2000, 25.00, 5.00),                  -- Iodized salt
-('Active Dry Yeast', 'KG', 25000, 5.00, 1.00),      -- Imported yeast
-('Fresh Milk', 'L', 4000, 50.00, 10.00),            -- Local fresh milk
-('Purified Water', 'L', 1500, 100.00, 20.00),       -- Filtered water
-('Butter', 'KG', 22000, 30.00, 5.00),               -- Local butter
-('Vanilla Extract', 'L', 35000, 2.00, 0.50);        -- Premium vanilla
+-- Insert Ingredients
+INSERT INTO ingredient (name, ingredient_type, unit, cost_per_unit, stock_quantity, minimum_stock) VALUES
+('All-Purpose Flour', 'FLOUR', 'KG', 2500.00, 50.00, 10.00),
+('Whole Wheat Flour', 'FLOUR', 'KG', 3000.00, 30.00, 8.00),
+('Sugar', 'ADD-INS', 'KG', 3000.00, 30.00, 5.00),
+('Salt', 'ADD-INS', 'KG', 1500.00, 10.00, 2.00),
+('Active Dry Yeast', 'ADD-INS', 'G', 150.00, 1000.00, 200.00),
+('Butter', 'BASE', 'KG', 12000.00, 20.00, 5.00),
+('Fresh Milk', 'BASE', 'L', 4000.00, 30.00, 5.00),
+('Eggs', 'BASE', 'G', 25.00, 5000.00, 1000.00),
+('Chocolate Chips', 'ADD-INS', 'G', 35.00, 2000.00, 500.00),
+('Vanilla Extract', 'ADD-INS', 'ML', 100.00, 1000.00, 200.00);
 
--- 3. Create recipes with ingredients
+-- Insert Recipes
 INSERT INTO recipe (name, description) VALUES
-('Pain Maison', 'Traditional Malagasy home-style bread'),
-('Vanilla Cookies', 'Sweet vanilla-flavored cookies'),
-('Milk Bread', 'Soft and fluffy milk bread');
+('Classic Baguette', 'Traditional French bread with crispy exterior and chewy interior. 4-hour fermentation process required.'),
+('Butter Croissant', 'Flaky layers of buttery pastry made over 3 days with traditional French folding technique.'),
+('Chocolate Chip Cookies', 'Classic American cookies studded with premium chocolate chips. Crispy edges, chewy center.'),
+('Vanilla Pound Cake', 'Rich, buttery cake infused with Madagascar vanilla. Perfect density and moisture.'),
+('Japanese Milk Bread', 'Ultra-soft Asian-style bread using tangzhong method. Pillowy texture.'),
+('Danish Pastry', 'Light and flaky pastry with 24 delicate layers. Versatile base for various fillings.'),
+('Classic Muffins', 'Perfectly domed breakfast muffins. Tender crumb with crispy top.'),
+('Chocolate Brownies', 'Fudgy, rich chocolate squares made with premium cocoa. Dense and moist.'),
+('French Bread', 'Traditional French bread with scored top. Long fermentation for best flavor.'),
+('Butter Cookies', 'Crisp, delicate cookies with rich butter flavor. Perfect with tea or coffee.');
 
--- Add ingredients to recipes
-INSERT INTO recipe_ingredient (recipe_id, ingredient_id, quantity) VALUES
--- Pain Maison (makes 10 loaves)
-(1, 1, 2.50),     -- 2.5kg Wheat Flour
-(1, 2, 0.15),     -- 150g Brown Sugar
-(1, 3, 0.05),     -- 50g Salt
-(1, 4, 0.03),     -- 30g Yeast
-(1, 6, 1.50),     -- 1.5L Water
-
--- Vanilla Cookies (makes 50 cookies)
-(2, 1, 1.00),     -- 1kg Wheat Flour
-(2, 2, 0.50),     -- 500g Brown Sugar
-(2, 3, 0.01),     -- 10g Salt
-(2, 7, 0.50),     -- 500g Butter
-(2, 8, 0.02),     -- 20ml Vanilla Extract
-
--- Milk Bread (makes 8 loaves)
-(3, 1, 2.00),     -- 2kg Wheat Flour
-(3, 2, 0.20),     -- 200g Brown Sugar
-(3, 3, 0.04),     -- 40g Salt
-(3, 4, 0.025),    -- 25g Yeast
-(3, 5, 0.75),     -- 750ml Fresh Milk
-(3, 7, 0.30);     -- 300g Butter
-
--- 4. Create products linked to recipes
+-- Insert Products
 INSERT INTO product (recipe_id, name, price, stock_quantity) VALUES
-(1, 'Pain Maison', 2500, 0),             -- Traditional bread
-(2, 'Vanilla Cookies (10pc)', 6000, 0),  -- Cookie pack
-(3, 'Milk Bread', 3500, 0);              -- Premium milk bread
+(1, 'Baguette', 2500, 0),
+(2, 'Croissant', 3000, 0),
+(3, 'Chocolate Chip Cookies (6pc)', 6000, 0),
+(4, 'Vanilla Cake', 25000, 0),
+(5, 'Milk Bread', 3500, 0),
+(6, 'Danish Pastry', 4000, 0),
+(7, 'Classic Muffins', 3000, 0),
+(8, 'Chocolate Brownies', 4500, 0),
+(9, 'French Bread', 3000, 0),
+(10, 'Butter Cookies (8pc)', 5000, 0);
+
+-- Insert Recipe Ingredients
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, quantity) VALUES
+-- Baguette
+(1, 1, 0.500),   -- All-Purpose Flour
+(1, 4, 0.010),   -- Salt
+(1, 5, 0.007),   -- Yeast
+
+-- Croissant
+(2, 1, 0.500),   -- Flour
+(2, 6, 0.250),   -- Butter
+(2, 7, 0.125),   -- Milk
+(2, 5, 0.010),   -- Yeast
+
+-- Chocolate Chip Cookies
+(3, 1, 0.250),   -- Flour
+(3, 6, 0.150),   -- Butter
+(3, 3, 0.150),   -- Sugar
+(3, 9, 0.200),   -- Chocolate Chips
+
+-- Vanilla Cake
+(4, 1, 0.400),   -- Flour
+(4, 6, 0.250),   -- Butter
+(4, 3, 0.300),   -- Sugar
+(4, 10, 0.015),  -- Vanilla
+
+-- Milk Bread
+(5, 1, 0.400),   -- Flour
+(5, 7, 0.200),   -- Milk
+(5, 6, 0.080),   -- Butter
+(5, 5, 0.007),   -- Yeast
+
+-- Danish
+(6, 1, 0.400),   -- Flour
+(6, 6, 0.250),   -- Butter
+(6, 3, 0.050),   -- Sugar
+(6, 5, 0.007),   -- Yeast
+
+-- Muffins
+(7, 1, 0.300),   -- Flour
+(7, 3, 0.150),   -- Sugar
+(7, 6, 0.120),   -- Butter
+(7, 7, 0.200),   -- Milk
+
+-- Brownies
+(8, 1, 0.200),   -- Flour
+(8, 9, 0.300),   -- Chocolate
+(8, 3, 0.250),   -- Sugar
+(8, 6, 0.200),   -- Butter
+
+-- French Bread
+(9, 1, 0.500),   -- Flour
+(9, 4, 0.010),   -- Salt
+(9, 5, 0.007),   -- Yeast
+
+-- Butter Cookies
+(10, 1, 0.300),  -- Flour
+(10, 6, 0.200),  -- Butter
+(10, 3, 0.150),  -- Sugar
+(10, 10, 0.005); -- Vanilla
