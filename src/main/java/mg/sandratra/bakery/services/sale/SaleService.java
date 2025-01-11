@@ -1,6 +1,7 @@
 package mg.sandratra.bakery.services.sale;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import mg.sandratra.bakery.dto.sale.SaleDto;
@@ -11,6 +12,7 @@ import mg.sandratra.bakery.repository.sale.SaleRepository;
 import mg.sandratra.bakery.services.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 @Service
@@ -63,23 +65,41 @@ public class SaleService {
             saleDetails.add(saleDetailsDto);
         }
 
-        return new SaleDto(null, null, null, saleDetails, null, null, null);
+        return new SaleDto(null, null, "A client", saleDetails, null, null, null);
     }
 
     public List<Sale> findAll() {
         return saleRepository.findAll();
     }
 
+    @Transactional(rollbackFor = { Exception.class, SQLException.class })
+    public Long saveSale(SaleDto saleDto) {
+        Sale sale = mapToModel(saleDto);
+        sale.setTotalAmount(saleDto.calculateTotalAmount());
+        Long result = saleRepository.save(sale);
+
+        if (result > 0) {
+            for (SaleDetailsDto saleDetailsDto : saleDto.getSaleDetails()) {
+                if (saleDetailsDto.getQuantity() == 0) {
+                    continue;
+                }
+                saleDetailsService.saveOrUpdate(saleDetailsService.mapToModel(saleDetailsDto, result));
+            }
+        }
+
+        return result;
+    }
+
     public Sale findById(Long id) {
         return saleRepository.findById(id);
     }
 
-    public int saveOrUpdate(Sale sale) {
+    public Long saveOrUpdate(Sale sale) {
         validateSale(sale);
         if (sale.getId() == null) {
             return saleRepository.save(sale);
         } else {
-            return saleRepository.update(sale);
+            return Long.valueOf(saleRepository.update(sale));
         }
     }
 
@@ -88,7 +108,6 @@ public class SaleService {
     }
 
     private void validateSale(Sale sale) {
-        Assert.notNull(sale.getCreatedBy(), "CreatedBy field must not be null");
         Assert.hasText(sale.getClientName(), "Client name must not be empty");
         Assert.notNull(sale.getTotalAmount(), "Total amount must not be null");
         Assert.notNull(sale.getSaleDate(), "Sale date must not be null");

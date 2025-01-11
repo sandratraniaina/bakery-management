@@ -58,8 +58,7 @@ public class SaleController extends BaseController {
         String page = MAIN_PAGE;
         boolean isRedirect = true;
         try {
-            Sale sale = saleService.mapToModel(saleDto);
-            saleService.saveOrUpdate(sale);
+            saleService.saveSale(saleDto);
             redirectAttributes.addFlashAttribute("message", "Sale saved successfully");
         } catch (Exception e) {
             modelAndView.addObject("error", e.getMessage());
