@@ -4,19 +4,23 @@ import mg.sandratra.bakery.dto.recipe.RecipeDto;
 import mg.sandratra.bakery.dto.recipe.RecipeIngredientDto;
 import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.models.recipe.Recipe;
+import mg.sandratra.bakery.models.recipe.RecipeIngredient;
 import mg.sandratra.bakery.repository.recipe.RecipeRepository;
 import mg.sandratra.bakery.services.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class RecipeService {
 
-    private final RecipeRepository recipeDao;
+    private final RecipeRepository recipeRepository;
 
     private final RecipeIngredientService recipeIngredientService;
     private final IngredientService ingredientService;
@@ -47,24 +51,48 @@ public class RecipeService {
     }
 
     public List<Recipe> findAll() {
-        return recipeDao.findAll();
+        return recipeRepository.findAll();
     }
 
     public Recipe findById(Long id) {
-        return recipeDao.findById(id);
+        return recipeRepository.findById(id);
     }
 
-    public int saveOrUpdate(Recipe recipe) {
+    @Transactional(rollbackFor = { Exception.class, SQLException.class })
+    public Long saveRecipeDto(RecipeDto recipeDto) {
+        Recipe recipe = mapToModel(recipeDto);
+        Long result = recipe.getId();
+
+        if (recipe.getId() != null) {
+            recipeRepository.update(recipe);
+        } else {
+            result = recipeRepository.save(recipe);
+        }
+
+        if (result > 0) {
+            for (RecipeIngredientDto recipeIngredientDto : recipeDto.getRecipeIngredients()) {
+                if (recipeIngredientDto.getQuantity().compareTo(new BigDecimal(0)) <= 0) {
+                    continue;
+                }
+                RecipeIngredient recipeIngredient = recipeIngredientService.mapToModel(recipeIngredientDto, result);
+                recipeIngredientService.saveOrUpdate(recipeIngredient);
+            }
+        }
+
+        return result;
+    }
+
+    public Long saveOrUpdate(Recipe recipe) {
         validateRecipe(recipe);
         if (recipe.getId() == null) {
-            return recipeDao.save(recipe);
+            return recipeRepository.save(recipe);
         } else {
-            return recipeDao.update(recipe);
+            return recipeRepository.update(recipe);
         }
     }
 
     public int deleteById(Long id) {
-        return recipeDao.deleteById(id);
+        return recipeRepository.deleteById(id);
     }
 
     public RecipeDto generateRecipeDto() {
