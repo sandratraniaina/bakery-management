@@ -57,6 +57,11 @@ public class RecipeIngredientService {
         return recipeIngredientDtos;
     }
 
+    public List<RecipeIngredientDto> getNotAssigneDtos(Long recipeId) {
+        List<Ingredient> ingredients = ingredientService.getNotRecipeAssigned(recipeId);
+        return generaIngredientDtosFromIngredients(ingredients);
+    }
+
     public RecipeIngredientDto mapToDto(RecipeIngredient recipeIngredient) {
         if (recipeIngredient == null) {
             return null;
