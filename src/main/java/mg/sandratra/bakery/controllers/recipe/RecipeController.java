@@ -3,6 +3,8 @@ package mg.sandratra.bakery.controllers.recipe;
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.recipe.RecipeDto;
 import mg.sandratra.bakery.models.recipe.Recipe;
+import mg.sandratra.bakery.services.ingredient.IngredientService;
+import mg.sandratra.bakery.services.recipe.RecipeIngredientService;
 import mg.sandratra.bakery.services.recipe.RecipeService;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class RecipeController extends BaseController{
 
     private final RecipeService recipeService;
+    private final RecipeIngredientService recipeIngredientService;
 
     // Display all recipes
     @GetMapping
@@ -42,8 +45,12 @@ public class RecipeController extends BaseController{
     @GetMapping("/edit/{id}")
     public ModelAndView showEditForm(@PathVariable("id") Long id) {
         Recipe recipe = recipeService.findById(id);
+        RecipeDto recipeDto = recipeService.mapToDto(recipe);
+
+        recipeDto.getRecipeIngredients().addAll(recipeIngredientService.getNotAssigneDtos(id));
+
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("recipe", recipe);
+        modelAndView.addObject("recipe", recipeDto);
         return redirect(modelAndView, "pages/recipe/form", false); // Redirect to edit form
     }
 
