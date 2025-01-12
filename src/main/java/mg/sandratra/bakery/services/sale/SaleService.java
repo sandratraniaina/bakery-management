@@ -1,8 +1,6 @@
 package mg.sandratra.bakery.services.sale;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import mg.sandratra.bakery.dto.sale.SaleDto;
@@ -56,16 +54,7 @@ public class SaleService {
     public SaleDto generateSaleDto() {
         List<Product> products = productService.findAll();
 
-        List<SaleDetailsDto> saleDetails = new ArrayList<>();
-
-        for (Product product : products) {
-            SaleDetailsDto saleDetailsDto = new SaleDetailsDto();
-            saleDetailsDto.setProduct(product);
-            saleDetailsDto.setQuantity(0);
-            saleDetailsDto.setUnitPrice(product.getPrice());
-            saleDetailsDto.setSubTotal(BigDecimal.ZERO);
-            saleDetails.add(saleDetailsDto);
-        }
+        List<SaleDetailsDto> saleDetails = saleDetailsService.generateSaleDetailsDtoFromProducts(products);
 
         return new SaleDto(null, null, "A client", saleDetails, null, null, null);
     }
