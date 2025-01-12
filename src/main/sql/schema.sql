@@ -717,11 +717,6 @@ BEGIN
             NEW.unit_price
         );
         
-        -- Update product stock (reduce)
-        UPDATE product
-        SET stock_quantity = stock_quantity - NEW.quantity
-        WHERE id = NEW.product_id;
-        
         RETURN NEW;
         
     -- Handle UPDATE
@@ -760,22 +755,6 @@ BEGIN
                 NEW.unit_price
             );
             
-            -- Update product stock
-            IF OLD.product_id = NEW.product_id THEN
-                -- Same product, just update quantity difference
-                UPDATE product
-                SET stock_quantity = stock_quantity + OLD.quantity - NEW.quantity
-                WHERE id = NEW.product_id;
-            ELSE
-                -- Different products, handle each separately
-                UPDATE product
-                SET stock_quantity = stock_quantity + OLD.quantity
-                WHERE id = OLD.product_id;
-                
-                UPDATE product
-                SET stock_quantity = stock_quantity - NEW.quantity
-                WHERE id = NEW.product_id;
-            END IF;
         END IF;
         
         RETURN NEW;
@@ -797,11 +776,6 @@ BEGIN
             (SELECT sale_date FROM sale WHERE id = OLD.sale_id),
             OLD.unit_price
         );
-        
-        -- Update product stock (increase)
-        UPDATE product
-        SET stock_quantity = stock_quantity + OLD.quantity
-        WHERE id = OLD.product_id;
         
         RETURN OLD;
     END IF;
