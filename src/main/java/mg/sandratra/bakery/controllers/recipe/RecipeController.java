@@ -49,17 +49,17 @@ public class RecipeController extends BaseController{
 
     // Handle the form submission to save or update a recipe
     @PostMapping("/save")
-    public ModelAndView saveRecipe(@ModelAttribute Recipe recipe, RedirectAttributes redirectAttributes) {
+    public ModelAndView saveRecipe(@ModelAttribute("recipe") RecipeDto recipeDto, RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
 
         String page = "recipes";
         boolean isRedirect = true;
         try {
-            recipeService.saveOrUpdate(recipe); // This will call validation
+            recipeService.saveRecipeDto(recipeDto); // This will call validation
             redirectAttributes.addFlashAttribute("message", "Recipe saved successfully");
         } catch (Exception e) {
             modelAndView.addObject("error", e.getMessage()); // Catch validation error
-            modelAndView.addObject("recipe", recipe); // Catch validation error
+            modelAndView.addObject("recipe", recipeDto); // Catch validation error
 
             page = "pages/recipe/form";
             isRedirect = false;
