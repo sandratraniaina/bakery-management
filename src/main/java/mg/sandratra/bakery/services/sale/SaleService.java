@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import mg.sandratra.bakery.dto.sale.SaleDto;
 import mg.sandratra.bakery.dto.sale.SaleDetailsDto;
 import mg.sandratra.bakery.models.product.Product;
 import mg.sandratra.bakery.models.sale.Sale;
 import mg.sandratra.bakery.repository.sale.SaleRepository;
 import mg.sandratra.bakery.services.product.ProductService;
+import mg.sandratra.bakery.utils.filter.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,15 +74,19 @@ public class SaleService {
         return saleRepository.findAll();
     }
 
+    public List<Sale> search(Filter filter) {
+        return saleRepository.search(filter);
+    }
+
     @Transactional(rollbackFor = { Exception.class, SQLException.class })
     public Long saveSale(SaleDto saleDto) {
         Sale sale = mapToModel(saleDto);
         sale.setTotalAmount(saleDto.calculateTotalAmount());
-        Long result = Long.valueOf(0);
+        Long result;
 
         if (sale.getId() != null) {
             saleRepository.update(sale);
-            result = Long.valueOf(sale.getId());
+            result = sale.getId();
         } else {
             result = saleRepository.save(sale);
         }
@@ -106,7 +112,7 @@ public class SaleService {
         if (sale.getId() == null) {
             return saleRepository.save(sale);
         } else {
-            return Long.valueOf(saleRepository.update(sale));
+            return saleRepository.update(sale);
         }
     }
 
