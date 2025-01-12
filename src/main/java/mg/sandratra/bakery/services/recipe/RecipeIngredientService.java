@@ -51,7 +51,7 @@ public class RecipeIngredientService {
             RecipeIngredientDto recipeIngredientDto = new RecipeIngredientDto();
             recipeIngredientDto.setIngredient(ingredient);
             recipeIngredientDto.setQuantity(BigDecimal.ZERO);
-            recipeIngredientDtos.add(recipeIngredientDto);   
+            recipeIngredientDtos.add(recipeIngredientDto);
         }
 
         return recipeIngredientDtos;

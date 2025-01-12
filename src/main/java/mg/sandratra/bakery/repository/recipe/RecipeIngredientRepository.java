@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+
 import java.util.List;
 
 @Repository
@@ -35,7 +36,13 @@ public class RecipeIngredientRepository extends BaseRepository<RecipeIngredient>
 
     public RecipeIngredient findById(Long recipeId, Long ingredientId) {
         String sql = "SELECT * FROM recipe_ingredient WHERE recipe_id = ? AND ingredient_id = ?";
-        return jdbcTemplate.queryForObject(sql, getRowMapper(), recipeId, ingredientId);
+
+        List<RecipeIngredient> recipeIngredients = jdbcTemplate.query(sql, getRowMapper(), recipeId, ingredientId);
+        if (recipeIngredients.isEmpty()) {
+            return null;
+        } else {
+            return recipeIngredients.get(0);
+        }
     }
     
     public List<RecipeIngredient> findByRecipeId(Long recipeId) {
