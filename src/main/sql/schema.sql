@@ -735,7 +735,7 @@ BEGIN
                 OLD.product_id,
                 'ENTRY',
                 OLD.quantity,
-                (SELECT sale_date FROM sale WHERE id = OLD.id),
+                (SELECT sale_date FROM sale WHERE id = OLD.sale_id),
                 OLD.unit_price
             );
             
@@ -933,6 +933,18 @@ JOIN recipe r ON p.recipe_id = r.id
 JOIN recipe_ingredient ri ON r.id = ri.recipe_id
 JOIN ingredient i ON ri.ingredient_id = i.id
 ORDER BY bm.production_date, bm.id, i.name;
+
+CREATE OR REPLACE VIEW v_product_nature AS
+SELECT 
+    p.*,
+    NOT EXISTS (
+        SELECT 1 
+        FROM recipe_ingredient ri
+        JOIN ingredient i ON ri.ingredient_id = i.id
+        WHERE ri.recipe_id = p.recipe_id 
+        AND i.ingredient_type = 'ADD_INS'
+    ) as is_nature
+FROM product p;
 
 CREATE TRIGGER trg_update_ingredient_stock_on_movement
 AFTER INSERT ON ingredient_movement
