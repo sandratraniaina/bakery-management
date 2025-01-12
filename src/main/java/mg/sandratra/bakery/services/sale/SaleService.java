@@ -1,6 +1,7 @@
 package mg.sandratra.bakery.services.sale;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import mg.sandratra.bakery.dto.sale.SaleDto;
@@ -28,6 +29,8 @@ public class SaleService {
         List<SaleDetailsDto> saleDetails = saleDetailsService.findBySaleId(sale.getId()).stream()
                 .map(saleDetailsService::mapToDto)
                 .toList();
+
+        saleDetails = new ArrayList<>(saleDetails);
 
         // Map Sale to SaleDto
         return new SaleDto(
