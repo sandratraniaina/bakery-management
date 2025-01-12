@@ -2,8 +2,10 @@ package mg.sandratra.bakery.services.recipe;
 
 import mg.sandratra.bakery.dto.recipe.RecipeDto;
 import mg.sandratra.bakery.dto.recipe.RecipeIngredientDto;
+import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.models.recipe.Recipe;
 import mg.sandratra.bakery.repository.recipe.RecipeRepository;
+import mg.sandratra.bakery.services.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -17,6 +19,7 @@ public class RecipeService {
     private final RecipeRepository recipeDao;
 
     private final RecipeIngredientService recipeIngredientService;
+    private final IngredientService ingredientService;
 
     // Map Recipe to RecipeDto
     public RecipeDto mapToDto(Recipe recipe) {
@@ -62,6 +65,14 @@ public class RecipeService {
 
     public int deleteById(Long id) {
         return recipeDao.deleteById(id);
+    }
+
+    public RecipeDto generateRecipeDto() {
+        List<Ingredient> ingredients = ingredientService.findAll();
+        
+        List<RecipeIngredientDto> recipeIngredients = recipeIngredientService.generaIngredientDtosFromIngredients(ingredients); 
+
+        return new RecipeDto(null, null, null, recipeIngredients, null);
     }
 
     public void validateRecipe(Recipe recipe) {
