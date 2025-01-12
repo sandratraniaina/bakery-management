@@ -1,5 +1,7 @@
 package mg.sandratra.bakery.dto.sale;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,14 @@ import mg.sandratra.bakery.utils.filter.Filter;
 public class SaleFilter implements Filter {
     private BooleanValue nature;
     private ProductType productType;
+
+    public List<BooleanValue> getBooleanValues() {
+        return List.of(
+            new BooleanValue("All", null),
+            new BooleanValue("Nature", true),
+            new BooleanValue("Non-nature", false)
+        );
+    }
 
     @Override
     public String buildQuery() {
