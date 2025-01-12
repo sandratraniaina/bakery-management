@@ -4,7 +4,7 @@ import mg.sandratra.bakery.dto.recipe.RecipeIngredientDto;
 import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.models.recipe.RecipeIngredient;
 import mg.sandratra.bakery.repository.recipe.RecipeIngredientRepository;
-import mg.sandratra.bakery.services.IngredientService;
+import mg.sandratra.bakery.services.ingredient.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

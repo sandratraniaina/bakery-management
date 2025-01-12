@@ -6,7 +6,7 @@ import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.models.recipe.Recipe;
 import mg.sandratra.bakery.models.recipe.RecipeIngredient;
 import mg.sandratra.bakery.repository.recipe.RecipeRepository;
-import mg.sandratra.bakery.services.IngredientService;
+import mg.sandratra.bakery.services.ingredient.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

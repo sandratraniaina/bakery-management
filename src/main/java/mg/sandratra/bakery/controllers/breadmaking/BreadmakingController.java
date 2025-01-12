@@ -3,8 +3,8 @@ package mg.sandratra.bakery.controllers.breadmaking;
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.breadmaking.BreadmakingDto;
 import mg.sandratra.bakery.models.breadmaking.Breadmaking;
-import mg.sandratra.bakery.services.IngredientService;
 import mg.sandratra.bakery.services.breadmaking.BreadmakingService;
+import mg.sandratra.bakery.services.ingredient.IngredientService;
 import mg.sandratra.bakery.services.product.ProductService;
 
 import java.util.List;

@@ -15,7 +15,7 @@ import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.enums.IngredientType;
 import mg.sandratra.bakery.enums.Unit;
 import mg.sandratra.bakery.models.ingredient.Ingredient;
-import mg.sandratra.bakery.services.IngredientService;
+import mg.sandratra.bakery.services.ingredient.IngredientService;
 
 @Controller
 @RequiredArgsConstructor
