@@ -16,7 +16,7 @@ CREATE TYPE product_type AS ENUM (
  
 
 CREATE TYPE ingredient_type AS ENUM (
-    'ADD-INS',
+    'ADD_INS',
     'FLOUR',
     'BASE'
 );
