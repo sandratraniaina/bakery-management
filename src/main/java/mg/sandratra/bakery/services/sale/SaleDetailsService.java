@@ -60,7 +60,7 @@ public class SaleDetailsService {
             saleDetailsDto.setSubTotal(BigDecimal.ZERO);
             saleDetails.add(saleDetailsDto);
         }
-
+        
         return saleDetails;
     }
 
