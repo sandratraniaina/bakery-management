@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import mg.sandratra.bakery.dto.sale.SaleDto;
 import mg.sandratra.bakery.dto.sale.SaleDetailsDto;
 import mg.sandratra.bakery.models.product.Product;
 import mg.sandratra.bakery.models.sale.Sale;
 import mg.sandratra.bakery.repository.sale.SaleRepository;
 import mg.sandratra.bakery.services.product.ProductService;
+import mg.sandratra.bakery.utils.filter.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +72,10 @@ public class SaleService {
 
     public List<Sale> findAll() {
         return saleRepository.findAll();
+    }
+
+    public List<Sale> search(Filter filter) {
+        return saleRepository.search(filter);
     }
 
     @Transactional(rollbackFor = { Exception.class, SQLException.class })

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import mg.sandratra.bakery.models.sale.Sale;
 import mg.sandratra.bakery.repository.BaseRepository;
+import mg.sandratra.bakery.utils.filter.Filter;
 
 @Repository
 public class SaleRepository extends BaseRepository<Sale> {
@@ -42,6 +43,11 @@ public class SaleRepository extends BaseRepository<Sale> {
 
     public List<Sale> findAll() {
         String sql = "SELECT * FROM sale";
+        return jdbcTemplate.query(sql, getRowMapper());
+    }
+
+    public List<Sale> search(Filter filter) {
+        String sql = filter.buildQuery();
         return jdbcTemplate.query(sql, getRowMapper());
     }
 
