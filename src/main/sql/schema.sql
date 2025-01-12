@@ -946,6 +946,23 @@ SELECT
     ) as is_nature
 FROM product p;
 
+CREATE OR REPLACE VIEW v_breadmaking_product_nature AS
+SELECT 
+    bm.*,
+    vp.name,
+    vp.product_type,
+    vp.price,
+    vp.stock_quantity,
+    vp.recipe_id,
+    vp.created_at as product_created_at,
+    vp.is_nature
+FROM 
+    breadmaking bm
+JOIN v_product_nature vp ON bm.product_id = vp.id
+ORDER BY 
+    bm.production_date, 
+    bm.id;
+
 CREATE TRIGGER trg_update_ingredient_stock_on_movement
 AFTER INSERT ON ingredient_movement
 FOR EACH ROW
