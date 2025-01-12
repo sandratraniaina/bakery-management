@@ -21,6 +21,10 @@ public class IngredientService {
         return ingredientDao.findById(id);
     }
 
+    public List<Ingredient> getNotRecipeAssigned(Long recipeId) { 
+        return ingredientDao.getNotRecipeAssigned(recipeId);
+    }
+
     public int saveOrUpdate(Ingredient ingredient) {
         if (ingredient.getId() == null) {
             return ingredientDao.save(ingredient);
