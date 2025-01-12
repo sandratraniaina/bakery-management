@@ -13,12 +13,15 @@ import mg.sandratra.bakery.utils.filter.Filter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SaleFilter implements Filter {
-    private BooleanValue nature;
+    private Boolean isNature;
     private ProductType productType;
 
-    public List<BooleanValue> getBooleanValues() {
+    public Boolean getIsNature() {
+        return isNature;
+    }
+
+    public static List<BooleanValue> getBooleanValues() {
         return List.of(
-            new BooleanValue("All", null),
             new BooleanValue("Nature", true),
             new BooleanValue("Non-nature", false)
         );
@@ -30,7 +33,7 @@ public class SaleFilter implements Filter {
 
         query.append("SELECT * FROM v_sale_product_nature spn ");
 
-        if (productType != null) {
+        if (productType != null || isNature != null) {
             query.append("WHERE 1=1 ");
 
             if (productType != null) {
@@ -39,10 +42,13 @@ public class SaleFilter implements Filter {
                         .append("' ");
             }
 
-            if (nature.getValue() != null) {
-                query.append("AND spn.is_nature = true ");
+            if (isNature != null) {
+                query.append("AND spn.is_nature = ");
+                query.append(isNature + " ");
             }
         }
+
+        System.out.println(query.toString());
 
         return query.toString();
     }
