@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.services;
+package mg.sandratra.bakery.services.ingredient;
 
 import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.repository.ingredient.IngredientRepository;
@@ -19,6 +19,10 @@ public class IngredientService {
 
     public Ingredient findById(Long id) {
         return ingredientDao.findById(id);
+    }
+
+    public List<Ingredient> getNotRecipeAssigned(Long recipeId) { 
+        return ingredientDao.getNotRecipeAssigned(recipeId);
     }
 
     public int saveOrUpdate(Ingredient ingredient) {

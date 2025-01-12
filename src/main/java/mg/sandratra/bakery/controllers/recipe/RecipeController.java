@@ -3,6 +3,8 @@ package mg.sandratra.bakery.controllers.recipe;
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.recipe.RecipeDto;
 import mg.sandratra.bakery.models.recipe.Recipe;
+import mg.sandratra.bakery.services.ingredient.IngredientService;
+import mg.sandratra.bakery.services.recipe.RecipeIngredientService;
 import mg.sandratra.bakery.services.recipe.RecipeService;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class RecipeController extends BaseController{
 
     private final RecipeService recipeService;
+    private final RecipeIngredientService recipeIngredientService;
 
     // Display all recipes
     @GetMapping
@@ -34,7 +37,7 @@ public class RecipeController extends BaseController{
     @GetMapping("/form")
     public ModelAndView showCreateForm() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("recipe", new Recipe());
+        modelAndView.addObject("recipe", recipeService.generateRecipeDto());
         return redirect(modelAndView, "pages/recipe/form", false); // Redirect to create form
     }
 
@@ -42,24 +45,28 @@ public class RecipeController extends BaseController{
     @GetMapping("/edit/{id}")
     public ModelAndView showEditForm(@PathVariable("id") Long id) {
         Recipe recipe = recipeService.findById(id);
+        RecipeDto recipeDto = recipeService.mapToDto(recipe);
+
+        recipeDto.getRecipeIngredients().addAll(recipeIngredientService.getNotAssigneDtos(id));
+
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("recipe", recipe);
+        modelAndView.addObject("recipe", recipeDto);
         return redirect(modelAndView, "pages/recipe/form", false); // Redirect to edit form
     }
 
     // Handle the form submission to save or update a recipe
     @PostMapping("/save")
-    public ModelAndView saveRecipe(@ModelAttribute Recipe recipe, RedirectAttributes redirectAttributes) {
+    public ModelAndView saveRecipe(@ModelAttribute("recipe") RecipeDto recipeDto, RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
 
         String page = "recipes";
         boolean isRedirect = true;
         try {
-            recipeService.saveOrUpdate(recipe); // This will call validation
+            recipeService.saveRecipeDto(recipeDto); // This will call validation
             redirectAttributes.addFlashAttribute("message", "Recipe saved successfully");
         } catch (Exception e) {
             modelAndView.addObject("error", e.getMessage()); // Catch validation error
-            modelAndView.addObject("recipe", recipe); // Catch validation error
+            modelAndView.addObject("recipe", recipeDto); // Catch validation error
 
             page = "pages/recipe/form";
             isRedirect = false;

@@ -4,10 +4,12 @@ import mg.sandratra.bakery.dto.recipe.RecipeIngredientDto;
 import mg.sandratra.bakery.models.ingredient.Ingredient;
 import mg.sandratra.bakery.models.recipe.RecipeIngredient;
 import mg.sandratra.bakery.repository.recipe.RecipeIngredientRepository;
-import mg.sandratra.bakery.services.IngredientService;
+import mg.sandratra.bakery.services.ingredient.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,6 +42,24 @@ public class RecipeIngredientService {
 
     public int deleteById(Long recipeId, Long ingredientId) {
         return recipeIngredientDao.deleteById(recipeId, ingredientId);
+    }
+
+    public List<RecipeIngredientDto> generaIngredientDtosFromIngredients(List<Ingredient> ingredients) {
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+
+        for(Ingredient ingredient : ingredients) {
+            RecipeIngredientDto recipeIngredientDto = new RecipeIngredientDto();
+            recipeIngredientDto.setIngredient(ingredient);
+            recipeIngredientDto.setQuantity(BigDecimal.ZERO);
+            recipeIngredientDtos.add(recipeIngredientDto);
+        }
+
+        return recipeIngredientDtos;
+    }
+
+    public List<RecipeIngredientDto> getNotAssigneDtos(Long recipeId) {
+        List<Ingredient> ingredients = ingredientService.getNotRecipeAssigned(recipeId);
+        return generaIngredientDtosFromIngredients(ingredients);
     }
 
     public RecipeIngredientDto mapToDto(RecipeIngredient recipeIngredient) {

@@ -9,6 +9,8 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import mg.sandratra.bakery.models.recipe.Recipe;
@@ -43,7 +45,7 @@ public class RecipeRepository extends BaseRepository<Recipe> {
         return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
-    public int save(Recipe recipe) {
+    public Long save(Recipe recipe) {
         String sql = "INSERT INTO recipe (name, description, created_at) " +
                 "VALUES (:name, :description, :created_at)";
 
@@ -53,10 +55,14 @@ public class RecipeRepository extends BaseRepository<Recipe> {
                 .addValue("created_at",
                         recipe.getCreatedAt() != null ? recipe.getCreatedAt() : Timestamp.valueOf(LocalDateTime.now()));
 
-        return namedParameterJdbcTemplate.update(sql, params);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[] { "id" });
+
+        return keyHolder.getKey().longValue();
     }
 
-    public int update(Recipe recipe) {
+    public Long update(Recipe recipe) {
         String sql = "UPDATE recipe SET " +
                 "name = :name, description = :description, created_at = :created_at " +
                 "WHERE id = :id";
@@ -68,7 +74,7 @@ public class RecipeRepository extends BaseRepository<Recipe> {
                 .addValue("created_at",
                         recipe.getCreatedAt() != null ? recipe.getCreatedAt() : Timestamp.valueOf(LocalDateTime.now()));
 
-        return namedParameterJdbcTemplate.update(sql, params);
+        return Long.valueOf(namedParameterJdbcTemplate.update(sql, params)); 
     }
 
     public int deleteById(Long id) {
