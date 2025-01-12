@@ -1,30 +1,35 @@
--- Disable triggers temporarily
+-- Disable all triggers temporarily
 SET session_replication_role = 'replica';
 
--- Truncate tables in order of dependencies
-TRUNCATE TABLE 
-    breadmaking,
-    recipe_ingredient,
-    product,
-    recipe,
-    ingredient,
-    product_movement,
-    ingredient_forecast,
-    ingredient_movement,
-    sale,
-    bm_user
-CASCADE;
+-- Clear all tables in the correct order to handle foreign key constraints
+-- First, clear junction/child tables
+TRUNCATE TABLE sale_details CASCADE;
+TRUNCATE TABLE sale CASCADE;
+TRUNCATE TABLE product_movement CASCADE;
+TRUNCATE TABLE ingredient_movement CASCADE;
+TRUNCATE TABLE ingredient_forecast CASCADE;
+TRUNCATE TABLE breadmaking CASCADE;
+TRUNCATE TABLE recipe_ingredient CASCADE;
+
+-- Then clear main tables
+TRUNCATE TABLE product CASCADE;
+TRUNCATE TABLE recipe CASCADE;
+TRUNCATE TABLE ingredient CASCADE;
+TRUNCATE TABLE turnover CASCADE;
+TRUNCATE TABLE bm_user CASCADE;
 
 -- Reset all sequences
+ALTER SEQUENCE sale_details_id_seq RESTART WITH 1;
+ALTER SEQUENCE sale_id_seq RESTART WITH 1;
+ALTER SEQUENCE product_movement_id_seq RESTART WITH 1;
+ALTER SEQUENCE ingredient_movement_id_seq RESTART WITH 1;
+ALTER SEQUENCE ingredient_forecast_id_seq RESTART WITH 1;
 ALTER SEQUENCE breadmaking_id_seq RESTART WITH 1;
 ALTER SEQUENCE product_id_seq RESTART WITH 1;
 ALTER SEQUENCE recipe_id_seq RESTART WITH 1;
 ALTER SEQUENCE ingredient_id_seq RESTART WITH 1;
-ALTER SEQUENCE product_movement_id_seq RESTART WITH 1;
-ALTER SEQUENCE ingredient_forecast_id_seq RESTART WITH 1;
-ALTER SEQUENCE ingredient_movement_id_seq RESTART WITH 1;
-ALTER SEQUENCE sale_id_seq RESTART WITH 1;
-ALTER SEQUENCE bm_user_id_seq RESTART WITH 2; -- Start at 2 since user 1 exists
+ALTER SEQUENCE turnover_id_seq RESTART WITH 1;
+ALTER SEQUENCE bm_user_id_seq RESTART WITH 1;
 
 -- Re-enable triggers
 SET session_replication_role = 'origin';
