@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class RecipeIngredient {
     private Long recipeId;
     private Long ingredientId;
-    private BigDecimal quantity;
+    private BigDecimal quantity = new BigDecimal(0);
 }

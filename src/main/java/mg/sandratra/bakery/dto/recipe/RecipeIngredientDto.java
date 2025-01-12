@@ -11,6 +11,6 @@ import mg.sandratra.bakery.models.ingredient.Ingredient;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecipeIngredientDto {
-    private BigDecimal quantity;
+    private BigDecimal quantity = new BigDecimal(0);
     private Ingredient ingredient;
 }
