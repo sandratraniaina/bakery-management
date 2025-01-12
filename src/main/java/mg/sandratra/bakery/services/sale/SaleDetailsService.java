@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,8 +29,7 @@ public class SaleDetailsService {
                 saleDetails.getQuantity(),
                 saleDetails.getUnitPrice(),
                 saleDetails.getSubTotal(),
-                saleDetails.getCreatedAt()
-        );
+                saleDetails.getCreatedAt());
     }
 
     public SaleDetails mapToModel(SaleDetailsDto saleDetailsDto, Long saleId) {
@@ -41,8 +41,27 @@ public class SaleDetailsService {
                 saleDetailsDto.getQuantity(),
                 saleDetailsDto.getUnitPrice(),
                 saleDetailsDto.getUnitPrice().multiply(BigDecimal.valueOf(saleDetailsDto.getQuantity())),
-                saleDetailsDto.getCreatedAt()
-        );
+                saleDetailsDto.getCreatedAt());
+    }
+
+    public List<SaleDetailsDto> getSaleDetailsNotAssignedProduct(Long saleId) {
+        List<Product> notAssignedProduct = productRepository.getNotAssignedProduct(saleId);
+        return generateSaleDetailsDtoFromProducts(notAssignedProduct);
+    }
+
+    public List<SaleDetailsDto> generateSaleDetailsDtoFromProducts(List<Product> products) {
+        List<SaleDetailsDto> saleDetails = new ArrayList<>();
+
+        for (Product product : products) {
+            SaleDetailsDto saleDetailsDto = new SaleDetailsDto();
+            saleDetailsDto.setProduct(product);
+            saleDetailsDto.setQuantity(0);
+            saleDetailsDto.setUnitPrice(product.getPrice());
+            saleDetailsDto.setSubTotal(BigDecimal.ZERO);
+            saleDetails.add(saleDetailsDto);
+        }
+        
+        return saleDetails;
     }
 
     public List<SaleDetails> findAll() {
@@ -73,6 +92,7 @@ public class SaleDetailsService {
     public void validateSaleDetails(SaleDetails saleDetails) {
         Assert.notNull(saleDetails.getProductId(), "Product ID must not be null");
         Assert.isTrue(saleDetails.getQuantity() > 0, "Quantity must be greater than zero");
-        Assert.isTrue(saleDetails.getUnitPrice().compareTo(BigDecimal.ZERO) > 0, "Unit price must be greater than zero");
+        Assert.isTrue(saleDetails.getUnitPrice().compareTo(BigDecimal.ZERO) > 0,
+                "Unit price must be greater than zero");
     }
 }
