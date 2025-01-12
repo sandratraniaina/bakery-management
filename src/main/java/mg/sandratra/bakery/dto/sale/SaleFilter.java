@@ -17,13 +17,20 @@ public class SaleFilter implements Filter {
     public String buildQuery() {
         StringBuilder query = new StringBuilder();
 
-        query.append("SELECT * FROM v_breadmaking_product_nature bmpn ")
-                .append("WHERE bmpn.is_nature = ").append(isNature).append(" ");
+        query.append("SELECT * FROM v_breadmaking_product_nature bmpn ");
 
-        if (productType != null) {
-            query.append("AND bmpn.product_type = '")
-                    .append(productType.name())
-                    .append("' ");
+        if (productType != null || isNature) {
+            query.append("WHERE 1=1 ");
+
+            if (productType != null) {
+                query.append("AND bmpn.product_type = '")
+                        .append(productType.name())
+                        .append("' ");
+            }
+
+            if (isNature) {
+                query.append("AND bmpn.is_nature = true ");
+            }
         }
 
         query.append("ORDER BY bmpn.production_date, bmpn.id");
