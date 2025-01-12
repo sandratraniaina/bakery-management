@@ -20,6 +20,30 @@
 
             </div>
             <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+                    <h3 class="font-medium text-black dark:text-white">
+                        Search sale
+                    </h3>
+                </div>
+                <form method="get" th:object="${saleFilter}" th:action="@{/sales}"
+                    class="flex items-center justify-center gap-10 p-6.5">
+
+                    <div
+                        th:replace="~{fragments/form-element :: select-option(${booleanValues}, 'value', 'text', 'isNature', 'Nature')}">
+                    </div>
+
+                    <div
+                        th:replace="~{fragments/form-element :: select-option (${productType}, 'value', 'value', 'productType', 'Product Type')}">
+                    </div>
+                    <button
+                        class="flex flex-grow-0 items-center rounded bg-primary h-12 px-6 font-medium text-gray hover:bg-opacity-90 m-2">
+                        Search
+                    </button>
+
+                </form>
+            </div>
+
+            <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <table class="w-full table-auto">
                     <thead>
                         <tr class="bg-gray-2 text-left dark:bg-meta-4">
