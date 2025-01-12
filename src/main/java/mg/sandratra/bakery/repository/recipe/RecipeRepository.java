@@ -62,7 +62,7 @@ public class RecipeRepository extends BaseRepository<Recipe> {
         return keyHolder.getKey().longValue();
     }
 
-    public int update(Recipe recipe) {
+    public Long update(Recipe recipe) {
         String sql = "UPDATE recipe SET " +
                 "name = :name, description = :description, created_at = :created_at " +
                 "WHERE id = :id";
@@ -74,7 +74,7 @@ public class RecipeRepository extends BaseRepository<Recipe> {
                 .addValue("created_at",
                         recipe.getCreatedAt() != null ? recipe.getCreatedAt() : Timestamp.valueOf(LocalDateTime.now()));
 
-        return namedParameterJdbcTemplate.update(sql, params);
+        return Long.valueOf(namedParameterJdbcTemplate.update(sql, params)); 
     }
 
     public int deleteById(Long id) {
