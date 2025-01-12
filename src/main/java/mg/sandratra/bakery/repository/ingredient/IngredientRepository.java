@@ -55,7 +55,7 @@ public class IngredientRepository extends BaseRepository<Ingredient> {
     public List<Ingredient> getNotRecipeAssigned(Long recipeId) {
         String sql = """
                 SELECT i.* FROM ingredient i
-                LEFT JOIN recipe_ingredients ri ON i.id = ri.ingredient_id
+                LEFT JOIN recipe_ingredient ri ON i.id = ri.ingredient_id
                 AND ri.recipe_id = ?
                 WHERE ri.ingredient_id IS NULL
                 """;
