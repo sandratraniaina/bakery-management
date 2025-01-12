@@ -26,7 +26,7 @@
         <div x-data="{ checkboxToggle: false }">
             <label th:for="${name}" class="flex cursor-pointer select-none items-center text-sm font-medium">
                 <div class="relative">
-                    <input type="checkbox" th:field="*{${name}}" class="sr-only"
+                    <input type="checkbox" th:field="*{__${name}__}" class="sr-only"
                         @change="checkboxToggle = !checkboxToggle" />
                     <div :class="checkboxToggle && 'border-primary bg-gray dark:bg-transparent'"
                         class="mr-4 flex h-5 w-5 items-center justify-center rounded border">
@@ -69,7 +69,7 @@
                     :class="isOptionSelected && 'text-black dark:text-white'" th:field="*{__${selectedValue}__}">
                     <!-- Empty option to act as placeholder -->
                     <option class="text-body" value="">
-                        Select an option
+                        All
                     </option>
                     <!-- Iterate over the list of options -->
                     <option th:each="item : ${options}" th:value="${item[fieldValue]}" th:text="${item[fieldText]}"
