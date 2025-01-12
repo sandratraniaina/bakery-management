@@ -5,6 +5,7 @@ import mg.sandratra.bakery.dto.sale.SaleDto;
 import mg.sandratra.bakery.dto.sale.SaleFilter;
 import mg.sandratra.bakery.enums.ProductType;
 import mg.sandratra.bakery.models.sale.Sale;
+import mg.sandratra.bakery.services.sale.SaleDetailsService;
 import mg.sandratra.bakery.services.sale.SaleService;
 
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import java.util.List;
 public class SaleController extends BaseController {
 
     private final SaleService saleService;
+    private final SaleDetailsService saleDetailsService;
 
     private static final String FORM_PAGE = "pages/sale/form";
     private static final String MAIN_PAGE = "sales";
@@ -51,6 +53,9 @@ public class SaleController extends BaseController {
     public ModelAndView showEditForm(@PathVariable("id") Long id) {
         Sale sale = saleService.findById(id);
         SaleDto saleDto = saleService.mapToDto(sale);
+
+        saleDto.getSaleDetails().addAll(saleDetailsService.getSaleDetailsNotAssignedProduct(id));
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("sale", saleDto);
         return redirect(modelAndView, FORM_PAGE, false); // Redirect to edit form
