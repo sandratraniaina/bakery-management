@@ -82,11 +82,11 @@ public class SaleService {
     public Long saveSale(SaleDto saleDto) {
         Sale sale = mapToModel(saleDto);
         sale.setTotalAmount(saleDto.calculateTotalAmount());
-        Long result = Long.valueOf(0);
+        Long result;
 
         if (sale.getId() != null) {
             saleRepository.update(sale);
-            result = Long.valueOf(sale.getId());
+            result = sale.getId();
         } else {
             result = saleRepository.save(sale);
         }
@@ -112,7 +112,7 @@ public class SaleService {
         if (sale.getId() == null) {
             return saleRepository.save(sale);
         } else {
-            return Long.valueOf(saleRepository.update(sale));
+            return saleRepository.update(sale);
         }
     }
 
