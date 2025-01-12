@@ -963,6 +963,28 @@ ORDER BY
     bm.production_date, 
     bm.id;
 
+CREATE OR REPLACE VIEW v_sale_product_nature AS
+SELECT 
+    s.*,
+    sd.id as detail_id,
+    sd.quantity,
+    sd.unit_price,
+    sd.subtotal,
+    vpn.name as product_name,
+    vpn.product_type,
+    vpn.price as product_price,
+    vpn.stock_quantity as product_stock,
+    vpn.recipe_id,
+    vpn.is_nature
+FROM 
+    sale s
+JOIN sale_details sd ON s.id = sd.sale_id
+JOIN v_product_nature vpn ON sd.product_id = vpn.id
+ORDER BY 
+    s.sale_date DESC,
+    s.id;
+
+
 CREATE TRIGGER trg_update_ingredient_stock_on_movement
 AFTER INSERT ON ingredient_movement
 FOR EACH ROW
