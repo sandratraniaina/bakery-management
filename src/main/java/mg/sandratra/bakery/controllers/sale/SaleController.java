@@ -2,6 +2,8 @@ package mg.sandratra.bakery.controllers.sale;
 
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.sale.SaleDto;
+import mg.sandratra.bakery.dto.sale.SaleFilter;
+import mg.sandratra.bakery.enums.ProductType;
 import mg.sandratra.bakery.models.sale.Sale;
 import mg.sandratra.bakery.services.sale.SaleService;
 
@@ -26,10 +28,13 @@ public class SaleController extends BaseController {
 
     // Display all sales
     @GetMapping
-    public ModelAndView getAllSales() {
-        List<SaleDto> sales = saleService.findAll().stream().map(saleService::mapToDto).toList();
+    public ModelAndView getAllSales(@ModelAttribute SaleFilter saleFilter) {
+        List<SaleDto> sales = saleService.search(saleFilter).stream().map(saleService::mapToDto).toList();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject(MAIN_PAGE, sales);
+        modelAndView.addObject("productType", ProductType.values());
+        modelAndView.addObject("saleFilter", saleFilter);
+        modelAndView.addObject("booleanValues", SaleFilter.getBooleanValues());
         return redirect(modelAndView, "pages/sale/list", false); // Redirect to sales list page
     }
 
