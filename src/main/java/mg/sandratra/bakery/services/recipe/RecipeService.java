@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +32,8 @@ public class RecipeService {
         List<RecipeIngredientDto> recipeIngredients = recipeIngredientService.findByRecipeId(recipe.getId()).stream()
                 .map(recipeIngredientService::mapToDto) // Map each RecipeIngredient to RecipeIngredientDto
                 .toList();
+
+            recipeIngredients = new ArrayList<>(recipeIngredients);
 
         // Map Recipe to RecipeDto
         return new RecipeDto(
