@@ -177,7 +177,7 @@ ALTER TABLE breadmaking
 
 ALTER TABLE sale
   ADD CONSTRAINT sale_created_by_fkey
-    FOREIGN KEY (created_by) REFERENCES bm_user (id);
+    FOREIGN KEY (created_by) REFERENCES bm_user (id) ON DELETE Set null;
 
 ALTER TABLE ingredient_forecast
   ADD CONSTRAINT ingredient_forecast_ingredient_id_fkey
@@ -189,15 +189,15 @@ ALTER TABLE ingredient_movement
 
 ALTER TABLE sale_details
   ADD CONSTRAINT sale_details_sale_id_fkey
-    FOREIGN KEY (sale_id) REFERENCES sale (id);
+    FOREIGN KEY (sale_id) REFERENCES sale (id) ON DELETE Cascade;
 
 ALTER TABLE sale_details
   ADD CONSTRAINT sale_details_product_id_fkey
-    FOREIGN KEY (product_id) REFERENCES product (id);
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE Cascade;
 
 ALTER TABLE product_movement
   ADD CONSTRAINT product_movement_product_id_fkey
-    FOREIGN KEY (product_id) REFERENCES product (id);
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE Set null;
 
 CREATE OR REPLACE FUNCTION update_ingredient_stock_on_movement()
 RETURNS TRIGGER AS $$ 
@@ -735,7 +735,7 @@ BEGIN
                 OLD.product_id,
                 'ENTRY',
                 OLD.quantity,
-                (SELECT sale_date FROM sale WHERE id = OLD.sale_id),
+                (SELECT sale_date FROM sale WHERE id = OLD.id),
                 OLD.unit_price
             );
             
@@ -773,7 +773,7 @@ BEGIN
             OLD.product_id,
             'ENTRY',
             OLD.quantity,
-            (SELECT sale_date FROM sale WHERE id = OLD.sale_id),
+            CURRENT_DATE,
             OLD.unit_price
         );
         
