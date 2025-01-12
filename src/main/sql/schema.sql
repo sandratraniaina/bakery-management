@@ -41,7 +41,7 @@ CREATE TABLE bm_user(
 CREATE TABLE breadmaking(
   id serial NOT NULL,
   product_id integer NOT NULL,
-  created_by integer DEFAULT 1,
+  created_by integer,
   quantity integer NOT NULL,
   production_date date NOT NULL,
   ingredient_cost numeric(10, 2) NOT NULL,
@@ -177,7 +177,7 @@ ALTER TABLE breadmaking
 
 ALTER TABLE sale
   ADD CONSTRAINT sale_created_by_fkey
-    FOREIGN KEY (created_by) REFERENCES bm_user (id);
+    FOREIGN KEY (created_by) REFERENCES bm_user (id) ON DELETE Set null;
 
 ALTER TABLE ingredient_forecast
   ADD CONSTRAINT ingredient_forecast_ingredient_id_fkey
@@ -189,15 +189,15 @@ ALTER TABLE ingredient_movement
 
 ALTER TABLE sale_details
   ADD CONSTRAINT sale_details_sale_id_fkey
-    FOREIGN KEY (sale_id) REFERENCES sale (id);
+    FOREIGN KEY (sale_id) REFERENCES sale (id) ON DELETE Cascade;
 
 ALTER TABLE sale_details
   ADD CONSTRAINT sale_details_product_id_fkey
-    FOREIGN KEY (product_id) REFERENCES product (id);
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE Cascade;
 
 ALTER TABLE product_movement
   ADD CONSTRAINT product_movement_product_id_fkey
-    FOREIGN KEY (product_id) REFERENCES product (id);
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE Set null;
 
 CREATE OR REPLACE FUNCTION update_ingredient_stock_on_movement()
 RETURNS TRIGGER AS $$ 
@@ -457,40 +457,126 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION generate_ingredient_movement_on_production() 
+CREATE OR REPLACE FUNCTION handle_ingredient_movements_on_production()
 RETURNS TRIGGER AS $$
 DECLARE
     rec_ingredient record;
-    breadmaking_ingredient_cost numeric(10, 2);
 BEGIN
-    -- Loop through each ingredient in the breadmaking recipe
-    FOR rec_ingredient IN
-        SELECT ri.ingredient_id, ri.quantity
-        FROM recipe_ingredient ri
-        JOIN breadmaking bm ON bm.product_id = ri.recipe_id
-        WHERE bm.id = NEW.id
-    LOOP
-        -- Insert a new ingredient movement for each ingredient
-        INSERT INTO ingredient_movement (
-            ingredient_id,
-            movement_type,
-            quantity,
-            supply_date,
-            cost_per_unit
-        )
-        VALUES (
-            rec_ingredient.ingredient_id,
-            'EXIT',  -- Assuming the breadmaking remove ingredients to the stock
-            rec_ingredient.quantity * NEW.quantity,  -- Quantity for the breadmaking batch
-            NEW.production_date,
-            (SELECT cost_per_unit FROM ingredient WHERE id = rec_ingredient.ingredient_id)  -- Get cost per unit
-        );
-    END LOOP;
+    -- Handle INSERT
+    IF (TG_OP = 'INSERT') THEN
+        -- Loop through each ingredient in the breadmaking recipe
+        FOR rec_ingredient IN
+            SELECT ri.ingredient_id, ri.quantity
+            FROM recipe_ingredient ri
+            JOIN product p ON p.recipe_id = ri.recipe_id
+            WHERE p.id = NEW.product_id
+        LOOP
+            -- Insert EXIT movement for each ingredient used
+            INSERT INTO ingredient_movement (
+                ingredient_id,
+                movement_type,
+                quantity,
+                supply_date,
+                cost_per_unit
+            )
+            VALUES (
+                rec_ingredient.ingredient_id,
+                'EXIT',
+                rec_ingredient.quantity * NEW.quantity,
+                NEW.production_date,
+                (SELECT cost_per_unit FROM ingredient WHERE id = rec_ingredient.ingredient_id)
+            );
+        END LOOP;
+        
+        RETURN NEW;
+        
+    -- Handle UPDATE
+    ELSIF (TG_OP = 'UPDATE') THEN
+        -- Only process if quantity changed or production_date changed
+        IF (NEW.quantity != OLD.quantity OR NEW.production_date != OLD.production_date) THEN
+            -- First, insert ENTRY movements to reverse the old production
+            FOR rec_ingredient IN
+                SELECT ri.ingredient_id, ri.quantity
+                FROM recipe_ingredient ri
+                JOIN product p ON p.recipe_id = ri.recipe_id
+                WHERE p.id = OLD.product_id
+            LOOP
+                -- Insert compensating ENTRY movement
+                INSERT INTO ingredient_movement (
+                    ingredient_id,
+                    movement_type,
+                    quantity,
+                    supply_date,
+                    cost_per_unit
+                )
+                VALUES (
+                    rec_ingredient.ingredient_id,
+                    'ENTRY',
+                    rec_ingredient.quantity * OLD.quantity,
+                    OLD.production_date,
+                    (SELECT cost_per_unit FROM ingredient WHERE id = rec_ingredient.ingredient_id)
+                );
+            END LOOP;
+
+            -- Then, insert EXIT movements for the new production quantities
+            FOR rec_ingredient IN
+                SELECT ri.ingredient_id, ri.quantity
+                FROM recipe_ingredient ri
+                JOIN product p ON p.recipe_id = ri.recipe_id
+                WHERE p.id = NEW.product_id
+            LOOP
+                -- Insert new EXIT movement
+                INSERT INTO ingredient_movement (
+                    ingredient_id,
+                    movement_type,
+                    quantity,
+                    supply_date,
+                    cost_per_unit
+                )
+                VALUES (
+                    rec_ingredient.ingredient_id,
+                    'EXIT',
+                    rec_ingredient.quantity * NEW.quantity,
+                    NEW.production_date,
+                    (SELECT cost_per_unit FROM ingredient WHERE id = rec_ingredient.ingredient_id)
+                );
+            END LOOP;
+        END IF;
+        
+        RETURN NEW;
+        
+    -- Handle DELETE
+    ELSIF (TG_OP = 'DELETE') THEN
+        -- Insert compensating ENTRY movements for all ingredients
+        FOR rec_ingredient IN
+            SELECT ri.ingredient_id, ri.quantity
+            FROM recipe_ingredient ri
+            JOIN product p ON p.recipe_id = ri.recipe_id
+            WHERE p.id = OLD.product_id
+        LOOP
+            -- Insert compensating ENTRY movement
+            INSERT INTO ingredient_movement (
+                ingredient_id,
+                movement_type,
+                quantity,
+                supply_date,
+                cost_per_unit
+            )
+            VALUES (
+                rec_ingredient.ingredient_id,
+                'ENTRY',
+                rec_ingredient.quantity * OLD.quantity,
+                OLD.production_date,
+                (SELECT cost_per_unit FROM ingredient WHERE id = rec_ingredient.ingredient_id)
+            );
+        END LOOP;
+        
+        RETURN OLD;
+    END IF;
     
-    RETURN NEW;
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-
 
 CREATE OR REPLACE FUNCTION update_product_stock_on_movement()
 RETURNS TRIGGER AS $$
@@ -519,53 +605,185 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION generate_movement_on_production()
+CREATE OR REPLACE FUNCTION handle_product_movements_on_production()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Insert a new product movement with type 'ENTRY' for the produced bread
-    INSERT INTO product_movement (
-        product_id,
-        movement_type,
-        quantity,
-        movement_date,
-        cost_per_unit
-    )
-    VALUES (
-        NEW.product_id,
-        'ENTRY',
-        NEW.quantity,
-        NEW.production_date,
-        NEW.cost_per_unit
-    );
-
-    RETURN NEW;
+    -- Handle INSERT
+    IF (TG_OP = 'INSERT') THEN
+        -- Insert a new product movement with type 'ENTRY' for the produced bread
+        INSERT INTO product_movement (
+            product_id,
+            movement_type,
+            quantity,
+            movement_date,
+            cost_per_unit
+        )
+        VALUES (
+            NEW.product_id,
+            'ENTRY',
+            NEW.quantity,
+            NEW.production_date,
+            NEW.cost_per_unit
+        );
+        
+        RETURN NEW;
+        
+    -- Handle UPDATE
+    ELSIF (TG_OP = 'UPDATE') THEN
+        -- Only process if quantity, product_id, or production_date changed
+        IF (NEW.quantity != OLD.quantity OR 
+            NEW.product_id != OLD.product_id OR 
+            NEW.production_date != OLD.production_date OR
+            NEW.cost_per_unit != OLD.cost_per_unit) THEN
+            
+            -- Insert compensating EXIT movement for old production
+            INSERT INTO product_movement (
+                product_id,
+                movement_type,
+                quantity,
+                movement_date,
+                cost_per_unit
+            )
+            VALUES (
+                OLD.product_id,
+                'EXIT',
+                OLD.quantity,
+                OLD.production_date,
+                OLD.cost_per_unit
+            );
+            
+            -- Insert new ENTRY movement for updated production
+            INSERT INTO product_movement (
+                product_id,
+                movement_type,
+                quantity,
+                movement_date,
+                cost_per_unit
+            )
+            VALUES (
+                NEW.product_id,
+                'ENTRY',
+                NEW.quantity,
+                NEW.production_date,
+                NEW.cost_per_unit
+            );
+        END IF;
+        
+        RETURN NEW;
+        
+    -- Handle DELETE
+    ELSIF (TG_OP = 'DELETE') THEN
+        -- Insert compensating EXIT movement for the deleted production
+        INSERT INTO product_movement (
+            product_id,
+            movement_type,
+            quantity,
+            movement_date,
+            cost_per_unit
+        )
+        VALUES (
+            OLD.product_id,
+            'EXIT',
+            OLD.quantity,
+            OLD.production_date,
+            OLD.cost_per_unit
+        );
+        
+        RETURN OLD;
+    END IF;
+    
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION generate_movement_on_sale()
+CREATE OR REPLACE FUNCTION handle_sale_details_changes()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Insert a new product movement with type 'EXIT' for the sold product
-    INSERT INTO product_movement (
-        product_id,
-        movement_type,
-        quantity,
-        movement_date,
-        cost_per_unit
-    )
-    VALUES (
-        NEW.product_id,               -- Product being sold
-        'EXIT',                       -- Movement type is 'EXIT'
-        NEW.quantity,                 -- Quantity sold
-        (SELECT sale_date FROM sale WHERE id = NEW.sale_id), -- Sale date
-        NEW.unit_price                -- Unit price of the product sold
-    );
-
-    RETURN NEW;
+    -- Handle INSERT
+    IF (TG_OP = 'INSERT') THEN
+        -- Insert a new product movement (EXIT) for the sold product
+        INSERT INTO product_movement (
+            product_id,
+            movement_type,
+            quantity,
+            movement_date,
+            cost_per_unit
+        )
+        VALUES (
+            NEW.product_id,
+            'EXIT',
+            NEW.quantity,
+            (SELECT sale_date FROM sale WHERE id = NEW.sale_id),
+            NEW.unit_price
+        );
+        
+        RETURN NEW;
+        
+    -- Handle UPDATE
+    ELSIF (TG_OP = 'UPDATE') THEN
+        -- Only process if quantity or unit_price changed
+        IF (NEW.quantity != OLD.quantity OR NEW.unit_price != OLD.unit_price) THEN
+            -- Insert compensating ENTRY movement for old quantity
+            INSERT INTO product_movement (
+                product_id,
+                movement_type,
+                quantity,
+                movement_date,
+                cost_per_unit
+            )
+            VALUES (
+                OLD.product_id,
+                'ENTRY',
+                OLD.quantity,
+                (SELECT sale_date FROM sale WHERE id = OLD.sale_id),
+                OLD.unit_price
+            );
+            
+            -- Insert new EXIT movement for updated quantity
+            INSERT INTO product_movement (
+                product_id,
+                movement_type,
+                quantity,
+                movement_date,
+                cost_per_unit
+            )
+            VALUES (
+                NEW.product_id,
+                'EXIT',
+                NEW.quantity,
+                (SELECT sale_date FROM sale WHERE id = NEW.sale_id),
+                NEW.unit_price
+            );
+            
+        END IF;
+        
+        RETURN NEW;
+        
+    -- Handle DELETE
+    ELSIF (TG_OP = 'DELETE') THEN
+        -- Insert compensating ENTRY movement
+        INSERT INTO product_movement (
+            product_id,
+            movement_type,
+            quantity,
+            movement_date,
+            cost_per_unit
+        )
+        VALUES (
+            OLD.product_id,
+            'ENTRY',
+            OLD.quantity,
+            CURRENT_DATE,
+            OLD.unit_price
+        );
+        
+        RETURN OLD;
+    END IF;
+    
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
--- Function to handle turnover creation on product movement
 CREATE OR REPLACE FUNCTION create_turnover_on_product_movement()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -586,7 +804,6 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 
 CREATE OR REPLACE FUNCTION create_turnover_on_ingredient_supply()
 RETURNS TRIGGER AS $$
@@ -717,6 +934,57 @@ JOIN recipe_ingredient ri ON r.id = ri.recipe_id
 JOIN ingredient i ON ri.ingredient_id = i.id
 ORDER BY bm.production_date, bm.id, i.name;
 
+CREATE OR REPLACE VIEW v_product_nature AS
+SELECT 
+    p.*,
+    NOT EXISTS (
+        SELECT 1 
+        FROM recipe_ingredient ri
+        JOIN ingredient i ON ri.ingredient_id = i.id
+        WHERE ri.recipe_id = p.recipe_id 
+        AND i.ingredient_type = 'ADD_INS'
+    ) as is_nature
+FROM product p;
+
+CREATE OR REPLACE VIEW v_breadmaking_product_nature AS
+SELECT 
+    bm.*,
+    vp.name,
+    vp.product_type,
+    vp.price,
+    vp.stock_quantity,
+    vp.recipe_id,
+    vp.created_at as product_created_at,
+    vp.is_nature
+FROM 
+    breadmaking bm
+JOIN v_product_nature vp ON bm.product_id = vp.id
+ORDER BY 
+    bm.production_date, 
+    bm.id;
+
+CREATE OR REPLACE VIEW v_sale_product_nature AS
+SELECT 
+    s.*,
+    sd.id as detail_id,
+    sd.quantity,
+    sd.unit_price,
+    sd.subtotal,
+    vpn.name as product_name,
+    vpn.product_type,
+    vpn.price as product_price,
+    vpn.stock_quantity as product_stock,
+    vpn.recipe_id,
+    vpn.is_nature
+FROM 
+    sale s
+JOIN sale_details sd ON s.id = sd.sale_id
+JOIN v_product_nature vpn ON sd.product_id = vpn.id
+ORDER BY 
+    s.sale_date DESC,
+    s.id;
+
+
 CREATE TRIGGER trg_update_ingredient_stock_on_movement
 AFTER INSERT ON ingredient_movement
 FOR EACH ROW
@@ -727,25 +995,26 @@ BEFORE INSERT ON breadmaking
 FOR EACH ROW
 EXECUTE FUNCTION validate_production_stock();
 
-CREATE TRIGGER after_breadmaking_insert
-AFTER INSERT ON breadmaking
+CREATE TRIGGER trg_handle_ingredient_movements_on_production
+AFTER INSERT OR UPDATE OR DELETE ON breadmaking
 FOR EACH ROW
-EXECUTE FUNCTION generate_ingredient_movement_on_production();
+EXECUTE FUNCTION handle_ingredient_movements_on_production();
 
 CREATE TRIGGER tgr_update_product_stock_on_movement
 AFTER INSERT ON product_movement
 FOR EACH ROW
 EXECUTE FUNCTION update_product_stock_on_movement();
 
-CREATE TRIGGER tgr_generate_movement_on_production
-AFTER INSERT ON breadmaking
+CREATE TRIGGER trg_handle_product_movements_on_production
+AFTER INSERT OR UPDATE OR DELETE ON breadmaking
 FOR EACH ROW
-EXECUTE FUNCTION generate_movement_on_production();
+EXECUTE FUNCTION handle_product_movements_on_production();
 
-CREATE TRIGGER tgr_generate_movement_on_sale
-AFTER INSERT ON sale_details
+
+CREATE TRIGGER trg_handle_sale_details_changes
+AFTER INSERT OR UPDATE OR DELETE ON sale_details
 FOR EACH ROW
-EXECUTE FUNCTION generate_movement_on_sale();
+EXECUTE FUNCTION handle_sale_details_changes();
 
 -- Trigger to call the function after a product movement is inserted
 CREATE TRIGGER trg_create_turnover_on_product_movement

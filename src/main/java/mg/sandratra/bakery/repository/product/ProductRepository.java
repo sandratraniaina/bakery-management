@@ -45,6 +45,18 @@ public class ProductRepository extends BaseRepository<Product> {
         return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
+    public List<Product> getNotAssignedProduct(Long saleId) {
+        String sql = """
+                    SELECT p.* FROM product p
+                    WHERE p.id NOT IN (
+                        SELECT sd.product_id
+                        FROM sale_details sd
+                        WHERE sd.sale_id = ?
+                    )
+                """;
+        return jdbcTemplate.query(sql, getRowMapper(), saleId);
+    }
+
     public int save(Product product) {
         String sql = "INSERT INTO product (recipe_id, name, price, stock_quantity, product_type) " +
                 "VALUES (:recipe_id, :name, :price, :stock_quantity, CAST(:product_type AS product_type))";

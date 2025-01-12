@@ -231,7 +231,49 @@
                                             <a class="group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
                                                 href="/breadmaking/form"
                                                 :class="page === 'breadmaking-form' && '!text-white'">
-                                                Add new Product</a>
+                                                Add new Breadmaking</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Dropdown Menu End -->
+                            </li>
+
+                            <!-- Sale -->
+                            <li>
+                                <a class="group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
+                                    href="#" @click.prevent="selected = (selected === 'Sales' ? '':'Sales')"
+                                    :class="{ 'bg-graydark dark:bg-meta-4': (selected === 'Sales') || (page === 'sales-list' || page === 'sales-form') }">
+
+                                    <svg class="fill-current" width="18" height="18" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                        <path
+                                            d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                                    </svg>
+
+                                    Sales
+
+                                    <svg class="absolute right-4 top-1/2 -translate-y-1/2 fill-current"
+                                        :class="{ 'rotate-180': (selected === 'Sales') }" width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M4.41107 6.9107C4.73651 6.58527 5.26414 6.58527 5.58958 6.9107L10.0003 11.3214L14.4111 6.91071C14.7365 6.58527 15.2641 6.58527 15.5896 6.91071C15.915 7.23614 15.915 7.76378 15.5896 8.08922L10.5896 13.0892C10.2641 13.4147 9.73651 13.4147 9.41107 13.0892L4.41107 8.08922C4.08563 7.76378 4.08563 7.23614 4.41107 6.9107Z"
+                                            fill="" />
+                                    </svg>
+                                </a>
+
+                                <!-- Dropdown Menu Start -->
+                                <div class="translate transform overflow-hidden"
+                                    :class="(selected === 'Sales') ? 'block' :'hidden'">
+                                    <ul class="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
+                                        <li>
+                                            <a class="group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
+                                                href="/sales" :class="page === 'sales-list' && '!text-white'">
+                                                List</a>
+                                        </li>
+                                        <li>
+                                            <a class="group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
+                                                href="/sales/form" :class="page === 'sales-form' && '!text-white'">
+                                                Add new Sale</a>
                                         </li>
                                     </ul>
                                 </div>
