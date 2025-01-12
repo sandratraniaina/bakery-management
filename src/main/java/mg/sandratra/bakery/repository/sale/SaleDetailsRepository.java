@@ -1,6 +1,7 @@
 package mg.sandratra.bakery.repository.sale;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -77,7 +78,7 @@ public class SaleDetailsRepository extends BaseRepository<SaleDetails> {
                 .addValue("product_id", saleDetails.getProductId())
                 .addValue("quantity", saleDetails.getQuantity())
                 .addValue("unit_price", saleDetails.getUnitPrice())
-                .addValue("created_at", Timestamp.valueOf(saleDetails.getCreatedAt().toLocalDateTime()));
+                .addValue("created_at", Timestamp.valueOf(LocalDateTime.now()));
 
         return namedParameterJdbcTemplate.update(sql, params);
     }

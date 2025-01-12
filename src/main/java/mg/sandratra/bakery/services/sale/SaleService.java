@@ -76,7 +76,14 @@ public class SaleService {
     public Long saveSale(SaleDto saleDto) {
         Sale sale = mapToModel(saleDto);
         sale.setTotalAmount(saleDto.calculateTotalAmount());
-        Long result = saleRepository.save(sale);
+        Long result = Long.valueOf(0);
+
+        if (sale.getId() != null) {
+            saleRepository.update(sale);
+            result = Long.valueOf(sale.getId());
+        } else {
+            result = saleRepository.save(sale);
+        }
 
         if (result > 0) {
             for (SaleDetailsDto saleDetailsDto : saleDto.getSaleDetails()) {

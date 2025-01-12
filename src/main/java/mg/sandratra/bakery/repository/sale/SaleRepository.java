@@ -67,7 +67,7 @@ public class SaleRepository extends BaseRepository<Sale> {
         return holder.getKey().longValue();
     }
 
-    public int update(Sale sale) {
+    public Long update(Sale sale) {
         String sql = "UPDATE sale SET " +
                 "created_by = :created_by, client_name = :client_name, " +
                 "total_amount = :total_amount, sale_date = :sale_date, " +
@@ -82,7 +82,7 @@ public class SaleRepository extends BaseRepository<Sale> {
                 .addValue("sale_date", sale.getSaleDate())
                 .addValue("created_at", Timestamp.valueOf(LocalDateTime.now()));
 
-        return namedParameterJdbcTemplate.update(sql, params);
+        return Long.valueOf(namedParameterJdbcTemplate.update(sql, params));
     }
 
     public int deleteById(Long id) {
