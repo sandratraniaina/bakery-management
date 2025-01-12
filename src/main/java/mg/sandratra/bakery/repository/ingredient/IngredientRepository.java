@@ -52,6 +52,16 @@ public class IngredientRepository extends BaseRepository<Ingredient> {
         return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
+    public List<Ingredient> getNotRecipeAssigned(Long recipeId) {
+        String sql = """
+                SELECT i.* FROM ingredient i
+                LEFT JOIN recipe_ingredients ri ON i.id = ri.ingredient_id
+                AND ri.recipe_id = ?
+                WHERE ri.ingredient_id IS NULL
+                """;
+        return jdbcTemplate.query(sql, getRowMapper(), recipeId);
+    }
+
     // Save method: Inserts a new ingredient record
     public int save(Ingredient ingredient) {
         String sql = "INSERT INTO ingredient (name, unit, cost_per_unit, stock_quantity, minimum_stock, ingredient_type) "
