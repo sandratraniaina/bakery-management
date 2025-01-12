@@ -8,6 +8,8 @@ import mg.sandratra.bakery.services.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,6 +42,19 @@ public class RecipeIngredientService {
 
     public int deleteById(Long recipeId, Long ingredientId) {
         return recipeIngredientDao.deleteById(recipeId, ingredientId);
+    }
+
+    public List<RecipeIngredientDto> generaIngredientDtosFromIngredients(List<Ingredient> ingredients) {
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+
+        for(Ingredient ingredient : ingredients) {
+            RecipeIngredientDto recipeIngredientDto = new RecipeIngredientDto();
+            recipeIngredientDto.setIngredient(ingredient);
+            recipeIngredientDto.setQuantity(BigDecimal.ZERO);
+            recipeIngredientDtos.add(recipeIngredientDto);   
+        }
+
+        return recipeIngredientDtos;
     }
 
     public RecipeIngredientDto mapToDto(RecipeIngredient recipeIngredient) {
