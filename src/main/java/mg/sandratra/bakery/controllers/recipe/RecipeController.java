@@ -34,7 +34,7 @@ public class RecipeController extends BaseController{
     @GetMapping("/form")
     public ModelAndView showCreateForm() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("recipe", new Recipe());
+        modelAndView.addObject("recipe", recipeService.generateRecipeDto());
         return redirect(modelAndView, "pages/recipe/form", false); // Redirect to create form
     }
 
