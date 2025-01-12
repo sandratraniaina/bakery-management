@@ -22,33 +22,34 @@ public class SaleFilter implements Filter {
 
     public static List<BooleanValue> getBooleanValues() {
         return List.of(
-            new BooleanValue("Nature", true),
-            new BooleanValue("Non-nature", false)
-        );
+                new BooleanValue("Nature", true),
+                new BooleanValue("Non-nature", false));
     }
 
     @Override
     public String buildQuery() {
         StringBuilder query = new StringBuilder();
 
-        query.append("SELECT * FROM v_sale_product_nature spn ");
+        query.append("SELECT DISTINCT s.* FROM sale s ")
+                .append("JOIN (")
+                .append("    SELECT DISTINCT spn.id ")
+                .append("    FROM v_sale_product_nature spn ")
+                .append("    WHERE 1=1 ");
 
-        if (productType != null || isNature != null) {
-            query.append("WHERE 1=1 ");
-
-            if (productType != null) {
-                query.append("AND spn.product_type = '")
-                        .append(productType.name())
-                        .append("' ");
-            }
-
-            if (isNature != null) {
-                query.append("AND spn.is_nature = ");
-                query.append(isNature + " ");
-            }
+        if (productType != null) {
+            query.append("    AND spn.product_type = '")
+                    .append(productType.name())
+                    .append("' ");
         }
 
-        System.out.println(query.toString());
+        if (isNature != null) {
+            query.append("    AND spn.is_nature = ")
+                    .append(isNature)
+                    .append(" ");
+        }
+
+        query.append(") filtered_sales ON s.id = filtered_sales.id ")
+                .append("ORDER BY s.sale_date DESC, s.id");
 
         return query.toString();
     }
