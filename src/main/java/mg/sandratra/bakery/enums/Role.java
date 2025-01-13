@@ -1,11 +1,11 @@
 package mg.sandratra.bakery.enums;
 
 public enum Role {
-    ADMIN("Admin"),
-    MANAGER("Manager"),
-    STAFF("Staff");
+    ADMIN("ADMIN"),
+    MANAGER("MANAGER"),
+    STAFF("STAFF");
 
-    private final String displayValue;
+    private String displayValue;
 
     Role(String displayValue) {
         this.displayValue = displayValue;
@@ -13,6 +13,10 @@ public enum Role {
 
     public String getRoleName() {
         return displayValue;
+    }
+
+    public String getDisplayValue() {
+        return name();
     }
 
     @Override
