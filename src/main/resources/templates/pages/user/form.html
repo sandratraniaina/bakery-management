@@ -22,7 +22,7 @@
                         </div>
                         <div th:replace="~{fragments/form-element :: text-input ('text', 'Username', 'userName')}">
                         </div>
-                        <div th:replace="~{fragments/form-element :: text-input ('text', 'Password', 'passwordHash')}">
+                        <div th:replace="~{fragments/form-element :: text-input ('password', 'Password', 'passwordHash')}">
                         </div>
                         </div>
                         <div th:replace="~{fragments/form-element :: select-option (${roles}, 'displayValue', 'displayValue', 'role', 'Role')}"></div>
