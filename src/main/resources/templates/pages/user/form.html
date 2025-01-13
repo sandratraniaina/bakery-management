@@ -17,27 +17,32 @@
             </div>
             <form method="post" th:object="${user}" th:action="@{/users/save}">
                 <div class="p-6.5">
-                    <div class="mb-6">
+                    <div class="flex flex-col gap-4 mb-6">
                         <div th:replace="~{fragments/form-element :: text-input ('hidden', '', 'id')}">
                         </div>
                         <div th:replace="~{fragments/form-element :: text-input ('text', 'Username', 'userName')}">
                         </div>
-                        <div th:replace="~{fragments/form-element :: text-input ('password', 'Password', 'passwordHash')}">
+                        <div
+                            th:replace="~{fragments/form-element :: text-input ('password', 'Password', 'passwordHash')}">
                         </div>
+                        <div th:replace="~{fragments/form-element :: checkbox ('Enable', 'enabled')}">
                         </div>
-                        <div th:replace="~{fragments/form-element :: select-option (${roles}, 'displayValue', 'displayValue', 'role', 'Role')}"></div>
                     </div>
-                    <div th:replace="~{fragments/alerts :: alert(${message}, ${error})}">
-
+                    <div
+                        th:replace="~{fragments/form-element :: select-option (${roles}, 'displayValue', 'displayValue', 'role', 'Role')}">
                     </div>
-                    <button
-                        class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90  m-2">
-                        Submit
-                    </button>
                 </div>
+                <div th:replace="~{fragments/alerts :: alert(${message}, ${error})}">
 
-            </form>
+                </div>
+                <button
+                    class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90  m-2">
+                    Submit
+                </button>
         </div>
+
+        </form>
+    </div>
     </div>
 </body>
 
