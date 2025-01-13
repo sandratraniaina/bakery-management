@@ -25,7 +25,7 @@
                         <div
                             th:replace="~{fragments/form-element :: text-input ('password', 'Password', 'passwordHash')}">
                         </div>
-                        <div th:replace="~{fragments/form-element :: checkbox ('Enable', 'enabled')}">
+                        <div th:replace="~{fragments/form-element :: checkbox ('Enable', 'enabled', ${user})}">
                         </div>
                     </div>
                     <div

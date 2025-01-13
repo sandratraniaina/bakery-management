@@ -22,10 +22,10 @@
         </div>
     </div>
 
-    <div th:fragment="checkbox(label, name)">
+    <div th:fragment="checkbox(label, name, obj)">
         <div class="flex gap-5 items-center">
             <p th:text="${label}"></p>
-            <div x-data="{ switcherToggle: false }">
+            <div th:attr="x-data='{ switcherToggle: __${obj[name]}__ }'">
                 <label th:for="${name}" class="flex cursor-pointer select-none items-center">
                     <div class="relative">
                         <input type="checkbox" th:id="${name}" th:field="*{__${name}__}" class="sr-only"
@@ -40,7 +40,6 @@
             </div>
         </div>
     </div>
-
 
     <div th:fragment="textarea (label, name)">
         <div>
