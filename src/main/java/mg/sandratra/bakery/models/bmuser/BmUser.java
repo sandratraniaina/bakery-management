@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mg.sandratra.bakery.enums.Role;
+import mg.sandratra.bakery.utils.PasswordEncoderUtil;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +18,8 @@ public class BmUser {
     private Role role;
     private boolean enabled;
     private Timestamp createdAt;
+
+    public String getEncodedPassword() {
+        return PasswordEncoderUtil.encode(getPasswordHash());
+    }
 }
