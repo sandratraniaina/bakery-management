@@ -50,7 +50,7 @@ public class BmUserRepository extends BaseRepository<BmUser> {
 
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("username", bmUser.getUserName())
-                .addValue("password_hash", bmUser.getPasswordHash())
+                .addValue("password_hash", bmUser.getEncodedPassword())
                 .addValue("role", bmUser.getRole().toString())
                 .addValue("enabled", bmUser.isEnabled());
 
@@ -68,7 +68,7 @@ public class BmUserRepository extends BaseRepository<BmUser> {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", bmUser.getId())
                 .addValue("username", bmUser.getUserName())
-                .addValue("password_hash", bmUser.getPasswordHash())
+                .addValue("password_hash", bmUser.getEncodedPassword())
                 .addValue("role", bmUser.getRole().toString())
                 .addValue("enabled", bmUser.isEnabled());
 
