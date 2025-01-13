@@ -52,7 +52,7 @@ public class BmUserRepository extends BaseRepository<BmUser> {
                 .addValue("username", bmUser.getUserName())
                 .addValue("password_hash", bmUser.getEncodedPassword())
                 .addValue("role", bmUser.getRole().toString())
-                .addValue("enabled", bmUser.isEnabled());
+                .addValue("enabled", bmUser.getEnabled());
 
         return namedParameterJdbcTemplate.update(sql, params);
     }
@@ -70,7 +70,7 @@ public class BmUserRepository extends BaseRepository<BmUser> {
                 .addValue("username", bmUser.getUserName())
                 .addValue("password_hash", bmUser.getEncodedPassword())
                 .addValue("role", bmUser.getRole().toString())
-                .addValue("enabled", bmUser.isEnabled());
+                .addValue("enabled", bmUser.getEnabled());
 
         return namedParameterJdbcTemplate.update(sql, params);
     }

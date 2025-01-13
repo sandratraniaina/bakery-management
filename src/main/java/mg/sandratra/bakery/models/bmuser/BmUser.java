@@ -22,4 +22,8 @@ public class BmUser {
     public String getEncodedPassword() {
         return PasswordEncoderUtil.encode(getPasswordHash());
     }
+
+    public boolean getEnabled() {
+        return enabled;
+    }
 }
