@@ -108,6 +108,13 @@ CREATE TABLE product_movement(
   CONSTRAINT product_movement_pkey PRIMARY KEY(id)
 );
 
+CREATE TABLE product_recommendations(
+  id serial NOT NULL,
+  product_id integer NOT NULL,
+  created_at date NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT product_recommendations_pkey PRIMARY KEY(id)
+);
+
 CREATE TABLE recipe(
   id serial NOT NULL,
   "name" varchar(100) NOT NULL,
@@ -198,6 +205,10 @@ ALTER TABLE sale_details
 ALTER TABLE product_movement
   ADD CONSTRAINT product_movement_product_id_fkey
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE Set null;
+
+ALTER TABLE product_recommendations
+  ADD CONSTRAINT product_recommendations_product_id_fkey
+    FOREIGN KEY (product_id) REFERENCES product (id);
 
 CREATE OR REPLACE FUNCTION update_ingredient_stock_on_movement()
 RETURNS TRIGGER AS $$ 
