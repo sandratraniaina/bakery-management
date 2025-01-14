@@ -3433,7 +3433,7 @@
 		"680f5afe-5fd6-48df-92b6-11899e45a646": {
 			"id": "680f5afe-5fd6-48df-92b6-11899e45a646",
 			"visible": false,
-			"name": "product_redommendations",
+			"name": "product_recommendations",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -3509,7 +3509,7 @@
 			"keys": [
 				{
 					"id": "7388f2e9-6809-473f-a3ff-435dbafc7278",
-					"name": "product_redommendations_pkey",
+					"name": "product_recommendations_pkey",
 					"isPk": true,
 					"cols": [
 						{
@@ -4093,7 +4093,7 @@
 		"a0fbb039-4405-455a-a305-402a6788e7d4": {
 			"id": "a0fbb039-4405-455a-a305-402a6788e7d4",
 			"visible": true,
-			"name": "product_redommendations_product_id_fkey",
+			"name": "product_recommendations_product_id_fkey",
 			"desc": "",
 			"type": "identifying",
 			"parent_key": "85b73c01-03b8-4a21-9c41-108bef34709e",
@@ -4183,7 +4183,7 @@
 			"relations": true
 		},
 		"connectionVersion": "",
-		"lastSaved": 1736765882242
+		"lastSaved": 1736853814671
 	},
 	"otherObjects": {
 		"e70186de-b4a2-46af-8333-f858f3cbf680": {
@@ -5799,7 +5799,7 @@
 			"id": "b5c0b5ae-3f91-4a16-8e4a-e01a67a9c4eb",
 			"keysgraphics": true,
 			"linegraphics": "basic",
-			"zoom": 0.3,
+			"zoom": 0.6,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -6473,7 +6473,7 @@
 					"x": 2417,
 					"y": 657,
 					"gHeight": 81,
-					"gWidth": 234,
+					"gWidth": 232,
 					"color": "#ffffff",
 					"background": "#03a9f4",
 					"resized": false,

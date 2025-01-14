@@ -108,7 +108,7 @@ CREATE TABLE product_movement(
   CONSTRAINT product_movement_pkey PRIMARY KEY(id)
 );
 
-CREATE TABLE product_redommendations(
+CREATE TABLE product_recommendations(
   id integer NOT NULL,
   product_id integer NOT NULL,
   created_at date NOT NULL DEFAULT CURRENT_TIMESTAMP,
