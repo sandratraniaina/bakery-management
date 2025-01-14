@@ -39,6 +39,7 @@ DROP TABLE IF EXISTS ingredient_movement;
 DROP TABLE IF EXISTS ingredient_forecast;
 DROP TABLE IF EXISTS breadmaking;
 DROP TABLE IF EXISTS recipe_ingredient;
+DROP TABLE IF EXISTS product_recommendations;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS ingredient;

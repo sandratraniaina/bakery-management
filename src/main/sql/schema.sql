@@ -109,10 +109,10 @@ CREATE TABLE product_movement(
 );
 
 CREATE TABLE product_recommendations(
-  id integer NOT NULL,
+  id serial NOT NULL,
   product_id integer NOT NULL,
   created_at date NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT product_redommendations_pkey PRIMARY KEY(id)
+  CONSTRAINT product_recommendations_pkey PRIMARY KEY(id)
 );
 
 CREATE TABLE recipe(
@@ -206,8 +206,8 @@ ALTER TABLE product_movement
   ADD CONSTRAINT product_movement_product_id_fkey
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE Set null;
 
-ALTER TABLE product_redommendations
-  ADD CONSTRAINT product_redommendations_product_id_fkey
+ALTER TABLE product_recommendations
+  ADD CONSTRAINT product_recommendations_product_id_fkey
     FOREIGN KEY (product_id) REFERENCES product (id);
 
 CREATE OR REPLACE FUNCTION update_ingredient_stock_on_movement()
