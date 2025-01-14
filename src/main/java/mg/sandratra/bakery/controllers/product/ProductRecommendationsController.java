@@ -86,7 +86,7 @@ public class ProductRecommendationsController extends BaseController {
             @PathVariable("id") Long id, 
             RedirectAttributes redirectAttributes) {
         productRecommendationsService.deleteById(id);
-        redirectAttributes.addFlashAttribute("successMessage", "Recommendation deleted successfully");
+        redirectAttributes.addFlashAttribute("message", "Recommendation deleted successfully");
         return redirect(new ModelAndView(), "product-recommendations", true); // Redirect to list after deletion
     }
 }
