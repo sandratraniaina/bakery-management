@@ -1,6 +1,7 @@
 package mg.sandratra.bakery.dto.product;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Calendar;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import mg.sandratra.bakery.utils.filter.Filter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductRecommendationsFilter implements Filter {
-    Date date;
+    Date date = Date.valueOf(LocalDate.now());
 
     @Override
     public String buildQuery() {
