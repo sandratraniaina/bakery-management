@@ -3440,7 +3440,7 @@
 				{
 					"id": "ff46c9e8-3006-4f21-9e59-a29362d78dc5",
 					"name": "id",
-					"datatype": "integer",
+					"datatype": "serial",
 					"param": "",
 					"pk": true,
 					"nn": true,
@@ -4183,7 +4183,7 @@
 			"relations": true
 		},
 		"connectionVersion": "",
-		"lastSaved": 1736853814671
+		"lastSaved": 1736856188543
 	},
 	"otherObjects": {
 		"e70186de-b4a2-46af-8333-f858f3cbf680": {
