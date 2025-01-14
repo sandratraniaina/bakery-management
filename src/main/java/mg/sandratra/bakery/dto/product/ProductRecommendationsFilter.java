@@ -27,7 +27,7 @@ public class ProductRecommendationsFilter implements Filter {
             query.append(" AND EXTRACT(YEAR FROM created_at) = ").append(year)
                     .append(" AND EXTRACT(MONTH FROM created_at) = ").append(month);
 
-            query.append(" OR created_at < '").append(date).append("'");
+            query.append(" AND created_at <= '").append(date).append("'");
         }
 
         return query.toString();
