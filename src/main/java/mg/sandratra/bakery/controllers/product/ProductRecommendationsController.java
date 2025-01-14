@@ -3,6 +3,7 @@ package mg.sandratra.bakery.controllers.product;
 import lombok.RequiredArgsConstructor;
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.product.ProductRecommendationsDto;
+import mg.sandratra.bakery.dto.product.ProductRecommendationsFilter;
 import mg.sandratra.bakery.models.product.ProductRecommendations;
 import mg.sandratra.bakery.services.product.ProductRecommendationsService;
 import mg.sandratra.bakery.services.product.ProductService;
@@ -24,14 +25,16 @@ public class ProductRecommendationsController extends BaseController {
 
     // Display all product recommendations
     @GetMapping
-    public ModelAndView getAllRecommendations() {
-        List<ProductRecommendations> recommendations = productRecommendationsService.findAll();
+    public ModelAndView getAllRecommendations(@ModelAttribute ProductRecommendationsFilter filter) {
+        List<ProductRecommendations> recommendations = productRecommendationsService.search(filter);
+
         List<ProductRecommendationsDto> recommendationDtos = recommendations.stream()
                 .map(productRecommendationsService::mapToDto)
                 .toList();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("recommendations", recommendationDtos);
+        modelAndView.addObject("filter", filter);
         return redirect(modelAndView, "pages/recommendation/list", false); // Redirect to recommendation list page
     }
 
