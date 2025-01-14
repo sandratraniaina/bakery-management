@@ -1,7 +1,6 @@
 package mg.sandratra.bakery.dto.product;
 
-import java.time.Month;
-import java.util.List;
+import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +11,7 @@ import mg.sandratra.bakery.models.product.Product;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductRecommendationsDto {
-    private Month month;
-    private List<Product> products;
+    private Long id;
+    private Date createdAt;
+    private Product product;
 }
