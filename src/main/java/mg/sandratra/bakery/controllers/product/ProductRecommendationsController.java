@@ -39,7 +39,7 @@ public class ProductRecommendationsController extends BaseController {
     @GetMapping("/form")
     public ModelAndView showCreateForm() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("recommendation", new ProductRecommendationsDto());
+        modelAndView.addObject("recommendation", new ProductRecommendations());
         modelAndView.addObject("products", productService.findAll());
         return redirect(modelAndView, "pages/recommendation/form", false); // Redirect to recommendation creation form
     }
@@ -48,29 +48,27 @@ public class ProductRecommendationsController extends BaseController {
     @GetMapping("/edit/{id}")
     public ModelAndView showEditForm(@PathVariable("id") Long id) {
         ProductRecommendations recommendation = productRecommendationsService.findById(id);
-        ProductRecommendationsDto recommendationDto = productRecommendationsService.mapToDto(recommendation);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("recommendation", recommendationDto);
+        modelAndView.addObject("recommendation", recommendation);
         return redirect(modelAndView, "pages/recommendation/form", false); // Redirect to recommendation edit form
     }
 
     // Handle form submission to save or update a recommendation
     @PostMapping("/save")
     public ModelAndView saveRecommendation(
-            @ModelAttribute ProductRecommendationsDto recommendationDto, 
+            @ModelAttribute ProductRecommendations recommendation, 
             RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
 
         String page = "product-recommendations";
         boolean isRedirect = true;
         try {
-            ProductRecommendations recommendation = productRecommendationsService.mapToModel(recommendationDto);
             productRecommendationsService.saveOrUpdate(recommendation);
             redirectAttributes.addFlashAttribute("message", "Recommendation saved successfully");
         } catch (Exception e) {
             modelAndView.addObject("error", e.getMessage()); // Handle validation error
-            modelAndView.addObject("recommendation", recommendationDto); // Preserve submitted data
+            modelAndView.addObject("recommendation", recommendation); // Preserve submitted data
             modelAndView.addObject("products", productService.findAll());
 
             page = "pages/recommendation/form";
