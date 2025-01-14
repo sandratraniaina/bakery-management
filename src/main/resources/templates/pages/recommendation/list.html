@@ -10,6 +10,28 @@
 <body>
     <div th:fragment="content">
 
+        <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+                <h3 class="font-medium text-black dark:text-white">
+                    Filter monthly recommendation
+                </h3>
+            </div>
+            <form method="get" th:object="${filter}" th:action="@{/product-recommendations}"
+                class="flex items-center justify-center">
+                <div class="p-2">
+                    <div class="mb-6">
+                        <div th:replace="~{fragments/form-element :: text-input ('date', 'Range date', 'date')}">
+                        </div>
+                    </div>
+                </div>
+                <button
+                    class="flex flex-grow-0 items-center rounded bg-primary h-12 px-6 font-medium text-gray hover:bg-opacity-90 m-2">
+                    Search
+                </button>
+
+            </form>
+        </div>
+
         <div class="flex flex-col gap-3">
             <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 class="text-title-md2 font-bold text-black dark:text-white">
@@ -46,10 +68,12 @@
                                 <p th:text="${recommendation.id}" class="text-black dark:text-white">Jan 13,2023</p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p th:text="${recommendation.getMonth()}" class="text-black dark:text-white">Jan 13,2023</p>
+                                <p th:text="${recommendation.getMonth()}" class="text-black dark:text-white">Jan 13,2023
+                                </p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p th:text="${recommendation.getYear()}" class="text-black dark:text-white">Jan 13,2023</p>
+                                <p th:text="${recommendation.getYear()}" class="text-black dark:text-white">Jan 13,2023
+                                </p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                                 <p th:text="${recommendation.getProductName()}" class="text-black dark:text-white">Jan
