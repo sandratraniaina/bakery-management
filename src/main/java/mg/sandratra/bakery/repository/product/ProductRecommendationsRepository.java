@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import mg.sandratra.bakery.models.product.ProductRecommendations;
 import mg.sandratra.bakery.repository.BaseRepository;
+import mg.sandratra.bakery.utils.filter.Filter;
 
 @Repository
 public class ProductRecommendationsRepository extends BaseRepository<ProductRecommendations> {
@@ -32,6 +33,11 @@ public class ProductRecommendationsRepository extends BaseRepository<ProductReco
 
     public List<ProductRecommendations> findAll() {
         String sql = "SELECT * FROM product_recommendations";
+        return jdbcTemplate.query(sql, getRowMapper());
+    }
+
+    public List<ProductRecommendations> search(Filter filter) {
+        String sql = filter.buildQuery();
         return jdbcTemplate.query(sql, getRowMapper());
     }
 
