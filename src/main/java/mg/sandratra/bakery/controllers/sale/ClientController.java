@@ -21,7 +21,7 @@ public class ClientController extends BaseController {
     private final SaleService saleService;
 
     @GetMapping
-    public ModelAndView getAllSalesClient(@RequestParam(value = "date", required=false) Date date) {
+    public ModelAndView getAllSalesClient(@RequestParam(value = "date", required = false) Date date) {
         List<SaleDto> sales = saleService.findByDate(date).stream().map(saleService::mapToDto).toList();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("sales", sales);
