@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+
+        <div class="flex flex-col gap-3">
+            <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <h2 class="text-title-md2 font-bold text-black dark:text-white">
+                    List of Sales
+                </h2>
+            </div>
+            <div th:replace="~{fragments/alerts :: alert(${message}, ${error})}">
+
+            </div>
+            <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+                    <h3 class="font-medium text-black dark:text-white">
+                        Client filter
+                    </h3>
+                </div>
+                <form method="get" th:action="@{/clients}" class="flex items-center justify-center gap-10 p-6.5">
+                    <div>
+                        <!-- Dynamically set 'for' and 'text' in the label -->
+                        <label for="date"
+                            class="mb-3 block text-sm font-medium text-black dark:text-white">
+                            Date
+                        </label>
+
+                        <!-- Dynamically bind the form input to the 'name' property of the form object -->
+                        <input autocomplete="off" type="date" name="date" id="date"
+                            class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+                    </div>
+                    <button
+                        class="flex flex-grow-0 items-center rounded bg-primary h-12 px-6 font-medium text-gray hover:bg-opacity-90 m-2">
+                        Search
+                    </button>
+
+                </form>
+            </div>
+
+            <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-2 text-left dark:bg-meta-4">
+                            <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                                Client Name
+                            </th>
+                            <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                                Products
+                            </th>
+                            <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                                Sale date
+                            </th>
+                            <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                                Total amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="sale : ${sales}">
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${sale.clientName}" class="text-black dark:text-white">Jan 13,2023</p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${sale.getProductNamesWithTypes()}" class="text-black dark:text-white">Jan
+                                    13,2023</p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${sale.totalAmount}" class="text-black dark:text-white">Jan
+                                    13,2023</p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${sale.saleDate}" class="text-black dark:text-white">Jan
+                                    13,2023</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
