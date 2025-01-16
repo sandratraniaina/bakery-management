@@ -17,7 +17,7 @@ import mg.sandratra.bakery.models.product.Product;
 public class SaleDto {
     private Long id;
     private Long createdBy;
-    private String clientName;
+    private String clientName = "Anonymous";
     private List<SaleDetailsDto> saleDetails;
     private BigDecimal totalAmount;
     private Date saleDate;

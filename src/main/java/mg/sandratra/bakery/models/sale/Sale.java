@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Sale {
     private Long id;
     private Long createdBy;
-    private String clientName;
+    private String clientName = "Anonymous";
     private BigDecimal totalAmount;
     private Date saleDate;
     private Timestamp createdAt;

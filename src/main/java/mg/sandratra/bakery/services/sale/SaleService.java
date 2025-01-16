@@ -61,7 +61,7 @@ public class SaleService {
 
         List<SaleDetailsDto> saleDetails = saleDetailsService.generateSaleDetailsDtoFromProducts(products);
 
-        return new SaleDto(null, null, "A client", saleDetails, null, null, null);
+        return new SaleDto(null, null, "Anonymous", saleDetails, null, null, null);
     }
 
     public List<Sale> findAll() {
