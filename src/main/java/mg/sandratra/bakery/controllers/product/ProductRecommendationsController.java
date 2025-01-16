@@ -64,7 +64,7 @@ public class ProductRecommendationsController extends BaseController {
             RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
 
-        String page = "product-recommendations";
+        String page = "recommendations";
         boolean isRedirect = true;
         try {
             productRecommendationsService.saveOrUpdate(recommendation);
@@ -87,6 +87,6 @@ public class ProductRecommendationsController extends BaseController {
             RedirectAttributes redirectAttributes) {
         productRecommendationsService.deleteById(id);
         redirectAttributes.addFlashAttribute("message", "Recommendation deleted successfully");
-        return redirect(new ModelAndView(), "product-recommendations", true); // Redirect to list after deletion
+        return redirect(new ModelAndView(), "recommendations", true); // Redirect to list after deletion
     }
 }
