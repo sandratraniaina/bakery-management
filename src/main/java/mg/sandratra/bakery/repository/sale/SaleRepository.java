@@ -1,5 +1,6 @@
 package mg.sandratra.bakery.repository.sale;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,6 +55,11 @@ public class SaleRepository extends BaseRepository<Sale> {
     public Sale findById(Long id) {
         String sql = "SELECT * FROM sale WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
+    }
+
+    public List<Sale> findByDate(Date date) {
+        String sql = "SELECT * FROM sale WHERE sale_date = ?";
+        return jdbcTemplate.query(sql, getRowMapper(), date);
     }
 
     public Long save(Sale sale) {
