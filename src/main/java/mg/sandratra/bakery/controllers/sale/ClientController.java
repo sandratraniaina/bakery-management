@@ -21,10 +21,10 @@ public class ClientController extends BaseController {
     private final SaleService saleService;
 
     @GetMapping
-    public ModelAndView getAllSalesClient(@RequestParam("name") Date date) {
+    public ModelAndView getAllSalesClient(@RequestParam(value = "date", required=false) Date date) {
         List<SaleDto> sales = saleService.findByDate(date).stream().map(saleService::mapToDto).toList();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("sales", sales);
-        return redirect(modelAndView, "pages/client/list", false); // Redirect to sales list page
+        return redirect(modelAndView, "pages/sale/client-list", false); // Redirect to sales list page
     }
 }
