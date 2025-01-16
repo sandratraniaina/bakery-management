@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/product-recommendations")
+@RequestMapping("/recommendations")
 public class ProductRecommendationsController extends BaseController {
 
     private final ProductRecommendationsService productRecommendationsService;

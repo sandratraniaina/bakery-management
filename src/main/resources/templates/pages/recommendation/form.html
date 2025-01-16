@@ -15,7 +15,7 @@
                     Add or update recommendation
                 </h3>
             </div>
-            <form method="post" th:object="${recommendation}" th:action="@{/product-recommendations/save}">
+            <form method="post" th:object="${recommendation}" th:action="@{/recommendations/save}">
                 <div class="p-6.5">
                     <div class="mb-6">
                         <div th:replace="~{fragments/form-element :: text-input ('hidden', '', 'id')}">
