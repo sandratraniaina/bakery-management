@@ -102,8 +102,8 @@ public class SaleService {
     }
 
     public List<Sale> findByDate(Date date) {
-        if(date==null){
-            date=Date.valueOf(LocalDate.now());
+        if (date == null) {
+            date = Date.valueOf(LocalDate.now());
         }
         return saleRepository.findByDate(date);
     }
