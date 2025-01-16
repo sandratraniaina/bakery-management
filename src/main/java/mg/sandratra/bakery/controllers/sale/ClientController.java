@@ -25,6 +25,7 @@ public class ClientController extends BaseController {
         List<SaleDto> sales = saleService.findByDate(date).stream().map(saleService::mapToDto).toList();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("sales", sales);
+        modelAndView.addObject("date", date);
         return redirect(modelAndView, "pages/sale/client-list", false); // Redirect to sales list page
     }
 }
