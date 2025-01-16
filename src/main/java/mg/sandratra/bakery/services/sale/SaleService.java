@@ -1,6 +1,8 @@
 package mg.sandratra.bakery.services.sale;
 
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +99,13 @@ public class SaleService {
 
     public Sale findById(Long id) {
         return saleRepository.findById(id);
+    }
+
+    public List<Sale> findByDate(Date date) {
+        if(date==null){
+            date=Date.valueOf(LocalDate.now());
+        }
+        return saleRepository.findByDate(date);
     }
 
     public Long saveOrUpdate(Sale sale) {

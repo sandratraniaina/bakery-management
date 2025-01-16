@@ -40,6 +40,8 @@ public class SaleController extends BaseController {
         return redirect(modelAndView, "pages/sale/list", false); // Redirect to sales list page
     }
 
+    
+
     // Display form to create a new sale
     @GetMapping("/form")
     public ModelAndView showCreateForm() {
