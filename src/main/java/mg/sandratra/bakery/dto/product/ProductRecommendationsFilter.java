@@ -14,12 +14,15 @@ import mg.sandratra.bakery.utils.filter.Filter;
 @NoArgsConstructor
 public class ProductRecommendationsFilter implements Filter {
     Date date = Date.valueOf(LocalDate.now());
+    int year;
 
     @Override
     public String buildQuery() {
         StringBuilder query = new StringBuilder("SELECT * FROM product_recommendations WHERE 1=1");
-
-        if (date != null) {
+        if(year!=0){
+            query.append(" AND EXTRACT(YEAR FROM created_at)= ").append(year);
+        }
+        if (date != null && year==0) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             int year = calendar.get(Calendar.YEAR);
