@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+
+        <div class="flex flex-col gap-3">
+            <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <h2 class="text-title-md2 font-bold text-black dark:text-white">
+                    List of User commissions
+                </h2>
+            </div>
+            <div th:replace="~{fragments/alerts :: alert(${message}, ${error})}">
+
+            </div>
+            <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-2 text-left dark:bg-meta-4">
+                            <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                                Username
+                            </th>
+                            <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                                Total commission
+                            </th>
+                            <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                                Total sales
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="commission : ${commissions}">
+                            <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                                <p th:text="${bmuser.employee.userName}" class="text-black dark:text-white">Jan 13,2023</p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${bmuser.totalCommission}" class="text-black dark:text-white">Jan 13,2023</p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${bmuser.totalSale}" class="text-black dark:text-white">Jan 13,2023</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
