@@ -26,6 +26,6 @@ public class CustomerActivitiesController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("sales", sales);
         modelAndView.addObject("filter", customerFilter);
-        return redirect(modelAndView, "pages/sale/client-list", false); // Redirect to sales list page
+        return redirect(modelAndView, "pages/sale/customers/list", false); // Redirect to sales list page
     }
 }
