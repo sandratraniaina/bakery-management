@@ -33,6 +33,10 @@
                     Search
                 </button>
 
+                <a href="http://localhost:8080/users/commissions" class="inline-flex items-center justify-center rounded-md border border-primary px-10 py-4 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10">
+                    Clear
+                  </a>
+
             </form>
         </div>
         <div class="flex flex-col gap-3">
@@ -62,15 +66,15 @@
                     <tbody>
                         <tr th:each="commission : ${commissions}">
                             <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                                <p th:text="${bmuser.employee.userName}" class="text-black dark:text-white">Jan 13,2023
+                                <p th:text="${commission.employee.userName}" class="text-black dark:text-white">Jan 13,2023
                                 </p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p th:text="${bmuser.totalCommission}" class="text-black dark:text-white">Jan 13,2023
+                                <p th:text="${commission.totalCommission}" class="text-black dark:text-white">Jan 13,2023
                                 </p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p th:text="${bmuser.totalSale}" class="text-black dark:text-white">Jan 13,2023</p>
+                                <p th:text="${commission.totalSale}" class="text-black dark:text-white">Jan 13,2023</p>
                             </td>
                         </tr>
                     </tbody>
