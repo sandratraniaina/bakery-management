@@ -6,6 +6,8 @@ import mg.sandratra.bakery.dto.product.ProductDto;
 import mg.sandratra.bakery.models.breadmaking.Breadmaking;
 import mg.sandratra.bakery.repository.breadmaking.BreadmakingRepository;
 import mg.sandratra.bakery.services.product.ProductService;
+import mg.sandratra.bakery.utils.filter.Filter;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -56,6 +58,10 @@ public class BreadmakingService {
 
     public Breadmaking findById(Long id) {
         return breadmakingDao.findById(id);
+    }
+
+    public List<BreadmakingDto> search(Filter filter) {
+        return breadmakingDao.search(filter).stream().map(this::mapToDto).toList();
     }
 
     public List<BreadmakingDto> findByIngredientId(Long ingredientId) {

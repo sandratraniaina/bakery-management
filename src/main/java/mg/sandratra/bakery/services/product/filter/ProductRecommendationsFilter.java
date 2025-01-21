@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.dto.product;
+package mg.sandratra.bakery.services.product.filter;
 
 import java.sql.Date;
 import java.time.LocalDate;

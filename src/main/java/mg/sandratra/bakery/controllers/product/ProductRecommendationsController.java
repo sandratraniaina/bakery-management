@@ -3,10 +3,10 @@ package mg.sandratra.bakery.controllers.product;
 import lombok.RequiredArgsConstructor;
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.product.ProductRecommendationsDto;
-import mg.sandratra.bakery.dto.product.ProductRecommendationsFilter;
 import mg.sandratra.bakery.models.product.ProductRecommendations;
 import mg.sandratra.bakery.services.product.ProductRecommendationsService;
 import mg.sandratra.bakery.services.product.ProductService;
+import mg.sandratra.bakery.services.product.filter.ProductRecommendationsFilter;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

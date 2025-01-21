@@ -4,6 +4,7 @@ import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.breadmaking.BreadmakingDto;
 import mg.sandratra.bakery.models.breadmaking.Breadmaking;
 import mg.sandratra.bakery.services.breadmaking.BreadmakingService;
+import mg.sandratra.bakery.services.breadmaking.filter.BreadkmakingFilter;
 import mg.sandratra.bakery.services.ingredient.IngredientService;
 import mg.sandratra.bakery.services.product.ProductService;
 
@@ -27,13 +28,13 @@ public class BreadmakingController extends BaseController {
 
     // Display all breadmaking records
     @GetMapping
-    public ModelAndView getAllBreadmakings(@RequestParam(required = false, name = "ingredient-id") Long ingredientId) {
-        List<BreadmakingDto> breadmakings = breadmakingService.findByIngredientId(ingredientId);
+    public ModelAndView getAllBreadmakings(@ModelAttribute BreadkmakingFilter filter) {
+        List<BreadmakingDto> breadmakings = breadmakingService.search(filter);
         
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("breadmakings", breadmakings);
         modelAndView.addObject("ingredients", ingredientService.findAll());
-        modelAndView.addObject("ingredientId", ingredientId);
+        modelAndView.addObject("filter", filter);
         return redirect(modelAndView, "pages/breadmaking/list", false); // Redirect to breadmaking list page
     }
 

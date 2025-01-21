@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import mg.sandratra.bakery.models.breadmaking.Breadmaking;
 import mg.sandratra.bakery.repository.BaseRepository;
+import mg.sandratra.bakery.utils.filter.Filter;
 
 @Repository
 public class BreadmakingRepository extends BaseRepository<Breadmaking> {
@@ -50,6 +51,11 @@ public class BreadmakingRepository extends BaseRepository<Breadmaking> {
     public List<Breadmaking> findByIngredientId(Long ingredientId) {
         String sql = "SELECT * FROM v_breadmaking_ingredients WHERE ingredient_id = ?";
         return jdbcTemplate.query(sql, getRowMapper(), ingredientId);
+    }
+
+    public List<Breadmaking> search(Filter filter) {
+        String sql = filter.buildQuery();
+        return jdbcTemplate.query(sql, getRowMapper());
     }
 
     // Save method: Inserts a new breadmaking record

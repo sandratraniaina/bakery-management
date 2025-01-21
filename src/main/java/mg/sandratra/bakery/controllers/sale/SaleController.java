@@ -2,11 +2,11 @@ package mg.sandratra.bakery.controllers.sale;
 
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.sale.SaleDto;
-import mg.sandratra.bakery.dto.sale.SaleFilter;
 import mg.sandratra.bakery.enums.ProductType;
 import mg.sandratra.bakery.models.sale.Sale;
 import mg.sandratra.bakery.services.sale.SaleDetailsService;
 import mg.sandratra.bakery.services.sale.SaleService;
+import mg.sandratra.bakery.services.sale.filter.SaleFilter;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
