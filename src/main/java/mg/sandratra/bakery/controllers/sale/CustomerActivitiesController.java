@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/sales/customers")
 
-public class ClientController extends BaseController {
+public class CustomerActivitiesController extends BaseController {
 
     private final SaleService saleService;
 
