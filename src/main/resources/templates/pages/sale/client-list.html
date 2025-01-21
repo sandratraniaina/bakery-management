@@ -13,7 +13,7 @@
         <div class="flex flex-col gap-3">
             <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 class="text-title-md2 font-bold text-black dark:text-white">
-                    List of Sales
+                    Customers
                 </h2>
             </div>
             <div th:replace="~{fragments/alerts :: alert(${message}, ${error})}">
@@ -22,7 +22,7 @@
             <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
                     <h3 class="font-medium text-black dark:text-white">
-                        Client filter
+                        Customer filter
                     </h3>
                 </div>
                 <form method="get" th:action="@{/clients}" class="flex items-center justify-center gap-10 p-6.5">
