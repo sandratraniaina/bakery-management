@@ -3,7 +3,8 @@ package mg.sandratra.bakery.repository.bmuser;
 import mg.sandratra.bakery.models.bmuser.BmUser;
 import mg.sandratra.bakery.models.bmuser.Commission;
 import mg.sandratra.bakery.repository.BaseRepository;
-import mg.sandratra.bakery.services.bmuser.filter.CommissionFilter;
+import mg.sandratra.bakery.utils.filter.Filter;
+
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,7 @@ public class CommissionRepository extends BaseRepository<Commission> {
         super(dataSource);
     }
 
-    public List<Commission> search(CommissionFilter filter) {
+    public List<Commission> search(Filter filter) {
         String query = filter.buildQuery();
 
         return jdbcTemplate.query(query, getRowMapper());
