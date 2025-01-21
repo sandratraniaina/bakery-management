@@ -18,8 +18,8 @@ public class SaleCustomerFilter implements Filter {
         StringBuilder builder = new StringBuilder("SELECT * FROM sale WHERE 1 = 1");
 
         if (saleDate != null) {
-            builder.append(" AND sale_date = ");
-            builder.append(saleDate.toString());
+            builder.append(" AND sale_date = '");
+            builder.append(saleDate.toString() + "'");
         }
 
         return builder.toString();
