@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.dto.sale;
+package mg.sandratra.bakery.services.sale.filter;
 
 import java.util.List;
 

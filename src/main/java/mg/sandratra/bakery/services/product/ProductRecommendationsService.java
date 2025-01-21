@@ -2,11 +2,12 @@ package mg.sandratra.bakery.services.product;
 
 import lombok.RequiredArgsConstructor;
 import mg.sandratra.bakery.dto.product.ProductRecommendationsDto;
-import mg.sandratra.bakery.dto.product.ProductRecommendationsFilter;
 import mg.sandratra.bakery.models.product.Product;
 import mg.sandratra.bakery.models.product.ProductRecommendations;
 import mg.sandratra.bakery.repository.product.ProductRecommendationsRepository;
 import mg.sandratra.bakery.repository.product.ProductRepository;
+import mg.sandratra.bakery.services.product.filter.ProductRecommendationsFilter;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
