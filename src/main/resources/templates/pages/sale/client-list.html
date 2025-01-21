@@ -25,18 +25,11 @@
                         Customer filter
                     </h3>
                 </div>
-                <form method="get" th:action="@{/clients}" class="flex items-center justify-center gap-10 p-6.5">
-                    <div>
-                        <!-- Dynamically set 'for' and 'text' in the label -->
-                        <label for="date"
-                            class="mb-3 block text-sm font-medium text-black dark:text-white">
-                            Date
-                        </label>
+                <form method="get" th:object="${filter}" th:action="@{/sales/customers}" class="flex items-center justify-center gap-10 p-6.5">
 
-                        <!-- Dynamically bind the form input to the 'name' property of the form object -->
-                        <input autocomplete="off" type="date" name="date" id="date" th:value="${param.date}"
-                            class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+                    <div th:replace="~{fragments/form-element :: text-input ('date', 'Sale date', 'saleDate')}">
                     </div>
+
                     <button
                         class="flex flex-grow-0 items-center rounded bg-primary h-12 px-6 font-medium text-gray hover:bg-opacity-90 m-2">
                         Search
