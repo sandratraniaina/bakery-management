@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
-import java.util.logging.Filter;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +29,7 @@ public class ProductRecommendationsService {
         return new ProductRecommendationsDto(
                 recommendation.getId(),
                 recommendation.getCreatedAt(),
-                product
-        );
+                product);
     }
 
     // Map ProductRecommendationsDto to ProductRecommendations
@@ -39,16 +37,11 @@ public class ProductRecommendationsService {
         return new ProductRecommendations(
                 recommendationDto.getId(),
                 recommendationDto.getProduct().getId(),
-                recommendationDto.getCreatedAt()
-        );
+                recommendationDto.getCreatedAt());
     }
 
     public List<ProductRecommendations> search(ProductRecommendationsFilter filter) {
-        if (filter.getDate() == null) {
-            return productRecommendationsRepository.findAll();
-        } else {
-            return productRecommendationsRepository.search(filter);
-        }
+        return productRecommendationsRepository.search(filter);
     }
 
     public List<ProductRecommendations> findAll() {
