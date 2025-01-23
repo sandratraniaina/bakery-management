@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
+public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, 
                                         Authentication authentication) throws IOException, ServletException {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         
         // Store user ID in session
         request.getSession().setAttribute("userId", userDetails.getId());
