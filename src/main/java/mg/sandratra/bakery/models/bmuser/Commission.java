@@ -17,4 +17,6 @@ public class Commission {
     private BigDecimal totalCommission;
     private BigDecimal totalSale;
     private List<Sale> sales;
+
+    public static final BigDecimal COMMISSION_THREESHOLD = BigDecimal.valueOf(200000);
 }

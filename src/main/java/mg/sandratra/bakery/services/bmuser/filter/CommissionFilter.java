@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.StringUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mg.sandratra.bakery.models.bmuser.Commission;
 import mg.sandratra.bakery.utils.filter.Filter;
 
 @Data
@@ -14,6 +15,8 @@ public class CommissionFilter implements Filter {
     
     private Date minDate;
     private Date maxDate;
+
+    private Long genderId;
     
     // Remove @DateTimeFormat from the fields and only use it in the setter methods
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -44,32 +47,41 @@ public class CommissionFilter implements Filter {
     }
 
     @Override
-    public String buildQuery() {
-        // Rest of your buildQuery implementation remains the same
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT u.id AS user_id, u.username, ")
-                .append("SUM(s.total_amount) AS total_sale, ")
-                .append("SUM(s.total_amount * 0.05) AS total_commission ")
-                .append("FROM bm_user u ")
-                .append("JOIN sale s ON u.id = s.created_by ");
+public String buildQuery() {
+    StringBuilder query = new StringBuilder();
+    query.append("SELECT u.user_id AS user_id, u.username, ")
+            .append("SUM(s.total_amount) AS total_sale, ")
+            .append("SUM(s.total_amount * 0.05) AS total_commission ")
+            .append("FROM v_user_gender u ")
+            .append("JOIN sale s ON u.user_id = s.created_by ");
 
-        boolean hasCondition = false;
+    boolean hasCondition = false;
 
-        if (userId != null) {
-            query.append("WHERE u.id = ").append(userId).append(" ");
-            hasCondition = true;
-        }
-        if (minDate != null) {
-            query.append(hasCondition ? "AND " : "WHERE ")
-                    .append("s.sale_date >= '").append(minDate).append("' ");
-            hasCondition = true;
-        }
-        if (maxDate != null) {
-            query.append(hasCondition ? "AND " : "WHERE ")
-                    .append("s.sale_date <= '").append(maxDate).append("' ");
-        }
+    // Add the condition for total_amount > 200000
+    query.append("WHERE s.total_amount > " + Commission.COMMISSION_THREESHOLD + " ");
+    hasCondition = true;
 
-        query.append("GROUP BY u.id, u.username");
-        return query.toString();
+    if (userId != null) {
+        query.append(hasCondition ? "AND " : "WHERE ")
+                .append("u.user_id = ").append(userId).append(" ");
+        hasCondition = true;
     }
+    if (minDate != null) {
+        query.append(hasCondition ? "AND " : "WHERE ")
+                .append("s.sale_date >= '").append(minDate).append("' ");
+        hasCondition = true;
+    }
+    if (maxDate != null) {
+        query.append(hasCondition ? "AND " : "WHERE ")
+                .append("s.sale_date <= '").append(maxDate).append("' ");
+        hasCondition = true;
+    }
+    if (genderId != null) {
+        query.append(hasCondition ? "AND " : "WHERE ")
+                .append("u.gender_id = ").append(genderId).append(" ");
+    }
+
+    query.append("GROUP BY u.user_id, u.username");
+    return query.toString();
+}
 }
