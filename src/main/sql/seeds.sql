@@ -34,14 +34,21 @@ ALTER SEQUENCE bm_user_id_seq RESTART WITH 1;
 -- Re-enable triggers
 SET session_replication_role = 'origin';
 
+-- Genders
+INSERT INTO gender (name)
+VALUES 
+    ('Male'),
+    ('Female');
+
 -- 1. Create users with different roles
 INSERT INTO
-    bm_user (username, password_hash, role, created_at)
+    bm_user (username, password_hash, role, gender_id, created_at)
 VALUES
     (   
         'aina',
         '$2a$10$WJTut1yB6q6.ql3cUIyxGuhruO/uOhCHadQPeEYq5FrzxVUFv4M6G',
         'ADMIN',
+        1, 
         CURRENT_TIMESTAMP
     );
 

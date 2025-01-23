@@ -28,8 +28,14 @@ CREATE TYPE movement_type AS ENUM (
 );
  
 
+CREATE TABLE gender(
+  id serial NOT NULL, "name" varchar NOT NULL,
+  CONSTRAINT gender_pkey PRIMARY KEY(id)
+);
+
 CREATE TABLE bm_user(
   id serial NOT NULL,
+  gender_id integer NOT NULL,
   username varchar(50) NOT NULL UNIQUE,
   password_hash text NOT NULL,
   "role" "role" NOT NULL,
@@ -209,6 +215,10 @@ ALTER TABLE product_movement
 ALTER TABLE product_recommendations
   ADD CONSTRAINT product_recommendations_product_id_fkey
     FOREIGN KEY (product_id) REFERENCES product (id);
+
+ALTER TABLE bm_user
+  ADD CONSTRAINT bm_user_gender_id_fkey
+    FOREIGN KEY (gender_id) REFERENCES gender (id);
 
 CREATE OR REPLACE FUNCTION update_ingredient_stock_on_movement()
 RETURNS TRIGGER AS $$ 

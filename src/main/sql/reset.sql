@@ -14,6 +14,9 @@ DROP VIEW IF EXISTS v_weekly_ingredient_usage;
 DROP VIEW IF EXISTS v_yearly_ingredient_usage;
 DROP VIEW IF EXISTS v_ingredients_to_reorder;
 DROP VIEW IF EXISTS v_breadmaking_ingredients;
+DROP VIEW IF EXISTS v_product_nature;
+DROP VIEW IF EXISTS v_breadmaking_product_nature;
+DROP VIEW IF EXISTS v_sale_product_nature;
 
 -- Drop all functions
 DROP FUNCTION IF EXISTS update_ingredient_stock_on_movement();
@@ -45,6 +48,7 @@ DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS turnover;
 DROP TABLE IF EXISTS bm_user;
+DROP TABLE IF EXISTS gender;
 
 -- Drop all custom ENUMs
 DROP TYPE IF EXISTS role;

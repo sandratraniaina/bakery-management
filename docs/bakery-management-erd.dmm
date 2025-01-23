@@ -1294,6 +1294,28 @@
 					"estimatedSize": ""
 				},
 				{
+					"id": "942e5685-67d7-45fb-ab0c-49192435c531",
+					"name": "gender_id",
+					"datatype": "integer",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"list": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"pg": {
+						"generatedIdentity": "no",
+						"generated": "",
+						"storage": "",
+						"compression": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				},
+				{
 					"id": "05eaef5e-bbcf-4785-902a-9ebf94af2a34",
 					"name": "username",
 					"datatype": "varchar",
@@ -1401,7 +1423,8 @@
 			],
 			"relations": [
 				"760c6245-9889-4fca-a116-b4b5bcff7eed",
-				"2795bf69-43ec-48ff-976d-797f1d127689"
+				"2795bf69-43ec-48ff-976d-797f1d127689",
+				"add72c74-f12c-4a56-b075-813e7dbe324f"
 			],
 			"lines": [],
 			"keys": [
@@ -3536,6 +3559,91 @@
 				"partition": "",
 				"partitionNames": []
 			}
+		},
+		"c27aa21e-f54b-4c5e-826f-d9a5ba554412": {
+			"id": "c27aa21e-f54b-4c5e-826f-d9a5ba554412",
+			"visible": false,
+			"name": "gender",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "6608f734-7c3b-4947-93f1-8f5130971afe",
+					"name": "id",
+					"datatype": "serial",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"list": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"pg": {
+						"generatedIdentity": "no",
+						"generated": "",
+						"storage": "",
+						"compression": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "7bd679a9-5ccc-45db-8b7a-82ec5749f477",
+					"name": "name",
+					"datatype": "varchar",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"list": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"pg": {
+						"generatedIdentity": "no",
+						"generated": "",
+						"storage": "",
+						"compression": ""
+					},
+					"estimatedSize": ""
+				}
+			],
+			"relations": [
+				"add72c74-f12c-4a56-b075-813e7dbe324f"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "e09962b0-d977-490d-b8db-b8e7fafad5b6",
+					"name": "gender_pkey",
+					"isPk": true,
+					"cols": [
+						{
+							"id": "7db3822b-97f9-42d0-9a25-0fc8b5e65d85",
+							"colid": "6608f734-7c3b-4947-93f1-8f5130971afe"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"beforeScript": "",
+			"afterScript": "",
+			"objectType": "table",
+			"pg": {
+				"rowsecurity": false,
+				"schema": "",
+				"tablespace": "",
+				"inherits": "",
+				"storageParameters": "",
+				"partition": "",
+				"partitionNames": []
+			}
 		}
 	},
 	"relations": {
@@ -4116,6 +4224,33 @@
 			"generateCustomCode": true,
 			"customCode": "",
 			"relationColor": "transparent"
+		},
+		"add72c74-f12c-4a56-b075-813e7dbe324f": {
+			"id": "add72c74-f12c-4a56-b075-813e7dbe324f",
+			"visible": true,
+			"name": "bm_user_gender_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "e09962b0-d977-490d-b8db-b8e7fafad5b6",
+			"parent": "c27aa21e-f54b-4c5e-826f-d9a5ba554412",
+			"child": "d91de2f6-195a-4469-9132-5ca9933d1af4",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "4363209a-754b-4656-907d-d5608e63db3a",
+					"parentcol": "6608f734-7c3b-4947-93f1-8f5130971afe",
+					"childcol": "942e5685-67d7-45fb-ab0c-49192435c531"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
 		}
 	},
 	"notes": {
@@ -4183,7 +4318,7 @@
 			"relations": true
 		},
 		"connectionVersion": "",
-		"lastSaved": 1736856188543
+		"lastSaved": 1737456700517
 	},
 	"otherObjects": {
 		"e70186de-b4a2-46af-8333-f858f3cbf680": {
@@ -5758,6 +5893,19 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"c27aa21e-f54b-4c5e-826f-d9a5ba554412": {
+					"referencedItemId": "c27aa21e-f54b-4c5e-826f-d9a5ba554412",
+					"x": 1471,
+					"y": 683,
+					"gHeight": 60,
+					"gWidth": 200,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -5799,7 +5947,7 @@
 			"id": "b5c0b5ae-3f91-4a16-8e4a-e01a67a9c4eb",
 			"keysgraphics": true,
 			"linegraphics": "basic",
-			"zoom": 0.6,
+			"zoom": 1.2,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -5809,7 +5957,7 @@
 					"referencedItemId": "d91de2f6-195a-4469-9132-5ca9933d1af4",
 					"x": 1416,
 					"y": 964,
-					"gHeight": 135,
+					"gHeight": 153,
 					"gWidth": 216,
 					"color": "#ffffff",
 					"background": "#03a9f4",
@@ -6480,6 +6628,19 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"c27aa21e-f54b-4c5e-826f-d9a5ba554412": {
+					"referencedItemId": "c27aa21e-f54b-4c5e-826f-d9a5ba554412",
+					"x": 1433,
+					"y": 797,
+					"gHeight": 63,
+					"gWidth": 172,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -6529,6 +6690,7 @@
 		"4c18cf35-d84a-4f7d-b57f-09c7f6ad78a3",
 		"da94c549-cf71-47ea-b304-6a2e04df4f82",
 		"a716e8b2-5e8a-4d14-b0d1-028cbc79ff9a",
+		"c27aa21e-f54b-4c5e-826f-d9a5ba554412",
 		"d91de2f6-195a-4469-9132-5ca9933d1af4",
 		"8195a27a-5283-4fc1-af5b-04a289549e08",
 		"88bd5192-11dc-4baa-a515-aff4fc75605e",
@@ -6573,6 +6735,7 @@
 		"a4fd266d-1aab-4e29-aa52-d367f20d75ef",
 		"8eddff6b-9f19-4a63-b996-ac29a3d2984d",
 		"a0fbb039-4405-455a-a305-402a6788e7d4",
+		"add72c74-f12c-4a56-b075-813e7dbe324f",
 		"a96d28f2-b7c4-44c9-84b8-fcce4c71ed5b",
 		"b9597b78-a881-4210-864b-c05279674c8c",
 		"7f5f4042-638d-47dc-afd2-81de57c51ad1",
