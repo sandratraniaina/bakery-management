@@ -18,6 +18,7 @@ public class BmUser {
     private Role role;
     private boolean enabled;
     private Timestamp createdAt;
+    private Gender gender;
 
     public String getEncodedPassword() {
         return PasswordEncoderUtil.encode(getPasswordHash());
