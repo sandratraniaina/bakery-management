@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.Month;
 import java.util.List;
 
 @Controller
@@ -35,6 +36,7 @@ public class ProductRecommendationsController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("recommendations", recommendationDtos);
         modelAndView.addObject("filter", filter);
+        modelAndView.addObject("months", Month.values());
         return redirect(modelAndView, "pages/recommendation/list", false); // Redirect to recommendation list page
     }
 
