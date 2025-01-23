@@ -19,6 +19,10 @@
                 class="flex items-center justify-center gap-10 p-6.5">
 
                 <div
+                    th:replace="~{fragments/form-element :: select-option(${genders}, 'id', 'name', 'genderId', 'Select gender')}">
+                </div>
+
+                <div
                     th:replace="~{fragments/form-element :: select-option(${users}, 'id', 'userName', 'userId', 'Select user')}">
                 </div>
 
@@ -33,11 +37,47 @@
                     Search
                 </button>
 
-                <a href="http://localhost:8080/users/commissions" class="inline-flex items-center justify-center rounded-md border border-primary px-10 py-4 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10">
+                <a href="http://localhost:8080/users/commissions"
+                    class="inline-flex items-center justify-center rounded-md border border-primary px-10 py-4 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10">
                     Clear
-                  </a>
+                </a>
 
             </form>
+        </div>
+        <div class="flex flex-col gap-3">
+            <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <h2 class="text-title-md2 font-bold text-black dark:text-white">
+                    Total of commissions
+                </h2>
+            </div>
+            <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-2 text-left dark:bg-meta-4">
+                            <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                                Gender name
+                            </th>
+                            <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                                Total commission
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="summary : ${summaries}">
+                            <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                                <p th:text="${summary.gender.name}" class="text-black dark:text-white">Jan
+                                    13,2023
+                                </p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${summary.totalCommission}" class="text-black dark:text-white">Jan
+                                    13,2023
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="flex flex-col gap-3">
             <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -66,11 +106,13 @@
                     <tbody>
                         <tr th:each="commission : ${commissions}">
                             <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                                <p th:text="${commission.employee.userName}" class="text-black dark:text-white">Jan 13,2023
+                                <p th:text="${commission.employee.userName}" class="text-black dark:text-white">Jan
+                                    13,2023
                                 </p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p th:text="${commission.totalCommission}" class="text-black dark:text-white">Jan 13,2023
+                                <p th:text="${commission.totalCommission}" class="text-black dark:text-white">Jan
+                                    13,2023
                                 </p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
