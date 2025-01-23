@@ -1,6 +1,6 @@
 package mg.sandratra.bakery.controllers.sale;
 
-import mg.sandratra.bakery.config.CustomUserDetails;
+import mg.sandratra.bakery.config.UserDetails;
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.sale.SaleDto;
 import mg.sandratra.bakery.enums.ProductType;
@@ -67,7 +67,7 @@ public class SaleController extends BaseController {
 
     // Handle the form submission to save or update a sale
     @PostMapping("/save")
-    public ModelAndView saveSale(@ModelAttribute SaleDto saleDto, RedirectAttributes redirectAttributes, @AuthenticationPrincipal CustomUserDetails user) {
+    public ModelAndView saveSale(@ModelAttribute SaleDto saleDto, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails user) {
         ModelAndView modelAndView = new ModelAndView();
         String page = MAIN_PAGE;
         boolean isRedirect = true;
