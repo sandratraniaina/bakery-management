@@ -19,9 +19,9 @@
             <form method="get" th:object="${filter}" th:action="@{/recommendations}"
                 class="flex items-center justify-center">
                 <div class="p-2">
-                    <div class="mb-6">
-                        <div th:replace="~{fragments/form-element :: text-input ('date', 'Range date', 'date')}">
-                        </div>
+                    <div class="mb-6 flex justify-center gap-5">
+                        <div th:replace="~{fragments/form-element :: select-option (${months}, 'value', 'name', 'month', 'Select Month')}"></div>
+
                         <div th:replace="~{fragments/form-element :: text-input ('number', 'Filter by year', 'year')}">
                         </div>
                     </div>
