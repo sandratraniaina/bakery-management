@@ -29,7 +29,7 @@ CREATE TYPE movement_type AS ENUM (
  
 
 CREATE TABLE gender(
-  id serial NOT NULL, "name" varchar NOT NULL,
+id serial NOT NULL, "name" varchar NOT NULL,
   CONSTRAINT gender_pkey PRIMARY KEY(id)
 );
 
@@ -1005,6 +1005,21 @@ ORDER BY
     s.sale_date DESC,
     s.id;
 
+
+CREATE OR REPLACE VIEW v_user_gender AS
+SELECT 
+    u.id AS user_id,
+    u.username,
+    u.password_hash,
+    u.role,
+    u.enabled,
+    u.created_at AS user_created_at,
+    g.id AS gender_id,
+    g.name AS gender_name
+FROM 
+    bm_user u
+JOIN 
+    gender g ON u.gender_id = g.id;
 
 CREATE TRIGGER trg_update_ingredient_stock_on_movement
 AFTER INSERT ON ingredient_movement

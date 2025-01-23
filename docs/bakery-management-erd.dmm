@@ -4277,7 +4277,7 @@
 		"replaceSpace": "_",
 		"color": "transparent",
 		"sideSelections": true,
-		"isDirty": true,
+		"isDirty": false,
 		"storedin": {
 			"major": 8,
 			"minor": 5,
@@ -4318,7 +4318,7 @@
 			"relations": true
 		},
 		"connectionVersion": "",
-		"lastSaved": 1737456700517
+		"lastSaved": 1737633313874
 	},
 	"otherObjects": {
 		"e70186de-b4a2-46af-8333-f858f3cbf680": {
@@ -5000,6 +5000,22 @@
 			"desc": "",
 			"type": "View",
 			"code": "CREATE OR REPLACE VIEW v_sale_product_nature AS\nSELECT \n    s.*,\n    sd.id as detail_id,\n    sd.quantity,\n    sd.unit_price,\n    sd.subtotal,\n    vpn.name as product_name,\n    vpn.product_type,\n    vpn.price as product_price,\n    vpn.stock_quantity as product_stock,\n    vpn.recipe_id,\n    vpn.is_nature\nFROM \n    sale s\nJOIN sale_details sd ON s.id = sd.sale_id\nJOIN v_product_nature vpn ON sd.product_id = vpn.id\nORDER BY \n    s.sale_date DESC,\n    s.id;\n",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"typeExpression": "",
+			"pg": {
+				"schema": ""
+			}
+		},
+		"bf43fff8-41cb-4921-b5be-663ba9fad638": {
+			"id": "bf43fff8-41cb-4921-b5be-663ba9fad638",
+			"visible": false,
+			"name": "v_user_gender",
+			"desc": "",
+			"type": "View",
+			"code": "CREATE OR REPLACE VIEW v_user_gender AS\nSELECT \n    u.id AS user_id,\n    u.username,\n    u.password_hash,\n    u.role,\n    u.enabled,\n    u.created_at AS user_created_at,\n    g.id AS gender_id,\n    g.name AS gender_name\nFROM \n    bm_user u\nJOIN \n    gender g ON u.gender_id = g.id;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -5906,6 +5922,19 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"bf43fff8-41cb-4921-b5be-663ba9fad638": {
+					"referencedItemId": "bf43fff8-41cb-4921-b5be-663ba9fad638",
+					"x": 1120,
+					"y": 121,
+					"gHeight": 40,
+					"gWidth": 120,
+					"color": "#eee",
+					"background": "#3f51b5",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -5947,7 +5976,7 @@
 			"id": "b5c0b5ae-3f91-4a16-8e4a-e01a67a9c4eb",
 			"keysgraphics": true,
 			"linegraphics": "basic",
-			"zoom": 1.2,
+			"zoom": 1.1,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -6631,12 +6660,25 @@
 				},
 				"c27aa21e-f54b-4c5e-826f-d9a5ba554412": {
 					"referencedItemId": "c27aa21e-f54b-4c5e-826f-d9a5ba554412",
-					"x": 1433,
-					"y": 797,
+					"x": 1437,
+					"y": 796,
 					"gHeight": 63,
 					"gWidth": 172,
 					"color": "#ffffff",
 					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"bf43fff8-41cb-4921-b5be-663ba9fad638": {
+					"referencedItemId": "bf43fff8-41cb-4921-b5be-663ba9fad638",
+					"x": 482,
+					"y": 725,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#3f51b5",
 					"resized": false,
 					"autoExpand": true,
 					"backgroundOpacity": "10",
@@ -6761,6 +6803,7 @@
 		"0d84417d-1430-42ac-96f6-b20d63940394",
 		"f443d635-9d42-443e-8ac9-314edf3f2bf4",
 		"191baac0-1ab1-461f-9a69-691777c34b5a",
+		"bf43fff8-41cb-4921-b5be-663ba9fad638",
 		"83e023ad-e46f-4af5-9600-8e7a6fbb9d06",
 		"d6ad8143-f692-4f67-b3ae-177927482ea6",
 		"af4526fc-a217-44a1-8696-bdfd90469731",

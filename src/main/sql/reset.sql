@@ -17,6 +17,7 @@ DROP VIEW IF EXISTS v_breadmaking_ingredients;
 DROP VIEW IF EXISTS v_product_nature;
 DROP VIEW IF EXISTS v_breadmaking_product_nature;
 DROP VIEW IF EXISTS v_sale_product_nature;
+DROP VIEW IF EXISTS v_user_gender;
 
 -- Drop all functions
 DROP FUNCTION IF EXISTS update_ingredient_stock_on_movement();
