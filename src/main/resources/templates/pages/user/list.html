@@ -52,8 +52,18 @@
                                 <p th:text="${bmuser.role}" class="text-black dark:text-white">Jan 13,2023</p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p th:text="${bmuser.enabled}" class="text-black dark:text-white">Jan
-                                    13,2023</p>
+                                <div th:if="${bmuser.enabled}">
+                                    <p
+                                        class="inline-flex rounded-full bg-success bg-opacity-10 px-3 py-1 text-sm font-medium text-success">
+                                        Enabled
+                                    </p>
+                                </div>
+                                <div th:if="${!bmuser.enabled}">
+                                    <p
+                                        class="inline-flex rounded-full bg-danger bg-opacity-10 px-3 py-1 text-sm font-medium text-danger">
+                                        Disabled
+                                    </p>
+                                </div>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                                 <div class="flex items-center space-x-3.5">
