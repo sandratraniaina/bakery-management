@@ -3,7 +3,6 @@ package mg.sandratra.bakery.controllers.recipe;
 import mg.sandratra.bakery.controllers.BaseController;
 import mg.sandratra.bakery.dto.recipe.RecipeDto;
 import mg.sandratra.bakery.models.recipe.Recipe;
-import mg.sandratra.bakery.services.ingredient.IngredientService;
 import mg.sandratra.bakery.services.recipe.RecipeIngredientService;
 import mg.sandratra.bakery.services.recipe.RecipeService;
 
