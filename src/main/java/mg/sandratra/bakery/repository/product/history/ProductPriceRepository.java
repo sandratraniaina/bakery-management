@@ -1,6 +1,7 @@
 package mg.sandratra.bakery.repository.product.history;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import mg.sandratra.bakery.models.product.Product;
 import mg.sandratra.bakery.models.product.history.ProductPrice;
 import mg.sandratra.bakery.repository.BaseRepository;
+import mg.sandratra.bakery.services.product.filter.ProductPriceHistoryFilter;
 
 @Repository
 public class ProductPriceRepository extends BaseRepository<ProductPrice> {
@@ -25,15 +27,21 @@ public class ProductPriceRepository extends BaseRepository<ProductPrice> {
         return (rs, rowNum) -> {
             ProductPrice productPrice = new ProductPrice();
             productPrice.setId(rs.getLong("id"));
-            
+
             Product product = new Product();
             product.setId(rs.getLong("product_id"));
             productPrice.setProduct(product);
-            
+
             productPrice.setValue(rs.getBigDecimal("value"));
             productPrice.setPriceDate(rs.getTimestamp("price_date"));
             return productPrice;
         };
+    }
+
+    public List<ProductPrice> filterProductPrices(ProductPriceHistoryFilter filter) {
+        String sql = filter.buildQuery();
+        Map<String, Object> parameters = filter.getParameters();
+        return namedParameterJdbcTemplate.query(sql, parameters, getRowMapper());
     }
 
     public List<ProductPrice> findAll() {

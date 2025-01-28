@@ -2,6 +2,7 @@ package mg.sandratra.bakery.services.product.history;
 
 import mg.sandratra.bakery.models.product.history.ProductPrice;
 import mg.sandratra.bakery.repository.product.history.ProductPriceRepository;
+import mg.sandratra.bakery.services.product.filter.ProductPriceHistoryFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -24,6 +25,10 @@ public class ProductPriceService {
 
     public List<ProductPrice> findByProductId(Long productId) {
         return productPriceRepository.findByProductId(productId);
+    }
+
+    public List<ProductPrice> filterProductPrices(ProductPriceHistoryFilter filter) {
+        return productPriceRepository.filterProductPrices(filter);
     }
 
     public int saveOrUpdate(ProductPrice productPrice) {
