@@ -28,11 +28,6 @@ CREATE TYPE movement_type AS ENUM (
 );
  
 
-CREATE TABLE gender(
-id serial NOT NULL, "name" varchar NOT NULL,
-  CONSTRAINT gender_pkey PRIMARY KEY(id)
-);
-
 CREATE TABLE bm_user(
   id serial NOT NULL,
   gender_id integer NOT NULL,
@@ -56,6 +51,11 @@ CREATE TABLE breadmaking(
   GENERATED ALWAYS AS (ingredient_cost + other_cost) STORED,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT breadmaking_pkey PRIMARY KEY(id)
+);
+
+CREATE TABLE gender(
+id serial NOT NULL, "name" varchar NOT NULL,
+  CONSTRAINT gender_pkey PRIMARY KEY(id)
 );
 
 CREATE TABLE ingredient(
@@ -112,6 +112,14 @@ CREATE TABLE product_movement(
   total_cost numeric(10, 2) GENERATED ALWAYS AS (quantity * cost_per_unit) STORED,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT product_movement_pkey PRIMARY KEY(id)
+);
+
+CREATE TABLE product_price_history(
+  id integer NOT NULL,
+  product_id integer NOT NULL,
+  "value" numeric(10, 2) NOT NULL,
+  price_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT product_price_history_pkey PRIMARY KEY(id)
 );
 
 CREATE TABLE product_recommendations(
@@ -219,6 +227,10 @@ ALTER TABLE product_recommendations
 ALTER TABLE bm_user
   ADD CONSTRAINT bm_user_gender_id_fkey
     FOREIGN KEY (gender_id) REFERENCES gender (id);
+
+ALTER TABLE product_price_history
+  ADD CONSTRAINT product_price_history_product_id_fkey
+    FOREIGN KEY (product_id) REFERENCES product (id);
 
 CREATE OR REPLACE FUNCTION update_ingredient_stock_on_movement()
 RETURNS TRIGGER AS $$ 
