@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import mg.sandratra.bakery.enums.Role;
 import mg.sandratra.bakery.models.bmuser.BmUser;
+import mg.sandratra.bakery.models.bmuser.Gender;
 import mg.sandratra.bakery.repository.BaseRepository;
 
 @Repository
@@ -24,23 +25,29 @@ public class BmUserRepository extends BaseRepository<BmUser> {
     protected RowMapper<BmUser> getRowMapper() {
         return (rs, rowNum) -> {
             BmUser bmUser = new BmUser();
-            bmUser.setId(rs.getLong("id"));
+
+            Gender gender = new Gender();
+
+            gender.setId(rs.getLong("gender_id"));
+            gender.setName(rs.getString("gender_name"));
+
+            bmUser.setId(rs.getLong("user_id"));
             bmUser.setUserName(rs.getString("username"));
             bmUser.setPasswordHash(rs.getString("password_hash"));
             bmUser.setRole(Role.valueOf(rs.getString("role").toUpperCase()));
             bmUser.setEnabled(rs.getBoolean("enabled"));
-            bmUser.setCreatedAt(rs.getTimestamp("created_at"));
+            bmUser.setCreatedAt(rs.getTimestamp("user_created_at"));
             return bmUser;
         };
     }
 
     public List<BmUser> findAll() {
-        String sql = "SELECT * FROM bm_user";
+        String sql = "SELECT * FROM v_user_gender";
         return jdbcTemplate.query(sql, getRowMapper());
     }
 
     public BmUser findById(Long id) {
-        String sql = "SELECT * FROM bm_user WHERE id = ?";
+        String sql = "SELECT * FROM v_user_gender WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
