@@ -3656,7 +3656,7 @@
 				{
 					"id": "cedda342-6986-42dc-841e-e755a96f7726",
 					"name": "id",
-					"datatype": "integer",
+					"datatype": "serial",
 					"param": "",
 					"pk": true,
 					"nn": true,
@@ -4433,7 +4433,7 @@
 		"replaceSpace": "_",
 		"color": "transparent",
 		"sideSelections": true,
-		"isDirty": false,
+		"isDirty": true,
 		"storedin": {
 			"major": 8,
 			"minor": 5,
@@ -4474,7 +4474,7 @@
 			"relations": true
 		},
 		"connectionVersion": "",
-		"lastSaved": 1738064425502
+		"lastSaved": 1738064425645
 	},
 	"otherObjects": {
 		"e70186de-b4a2-46af-8333-f858f3cbf680": {

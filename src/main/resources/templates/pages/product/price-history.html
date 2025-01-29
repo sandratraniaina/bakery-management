@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Price History</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+                <h3 class="font-medium text-black dark:text-white">
+                    Search Product Price History
+                </h3>
+            </div>
+            <form method="get" th:object="${filter}" th:action="@{/products/history}" 
+                class="flex items-center justify-center gap-10 p-6.5">
+
+                <div th:replace="~{fragments/form-element :: select-option(${products}, 'id', 'name', 'productId', 'Select product')}">
+                </div>
+
+                <!-- <div th:replace="~{fragments/form-element :: text-input('date', 'Min date', 'minDate')}">
+                </div>
+
+                <div th:replace="~{fragments/form-element :: text-input('date', 'Max date', 'maxDate')}">
+                </div> -->
+
+                <button
+                    class="flex flex-grow-0 items-center rounded bg-primary h-12 px-6 font-medium text-gray hover:bg-opacity-90 m-2">
+                    Search
+                </button>
+
+                <a href="http://localhost:8080/products/history"
+                    class="inline-flex items-center justify-center rounded-md border border-primary px-10 py-4 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10">
+                    Clear
+                </a>
+            </form>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <h2 class="text-title-md2 font-bold text-black dark:text-white">
+                    Product Price History
+                </h2>
+            </div>
+            <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-2 text-left dark:bg-meta-4">
+                            <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                                Product Name
+                            </th>
+                            <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                                Price
+                            </th>
+                            <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                                Price Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <p th:text="${error}"></p>
+                        <tr th:if="${history == null or history.productPrices == null}">
+                            <td colspan="3" class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11 text-center">
+                                <p class="text-black dark:text-white">No history found</p>
+                            </td>
+                        </tr>
+                        <tr th:each="price : ${history.productPrices}" th:if="${history != null and not history.productPrices.isEmpty()}">
+                            <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                                <p th:text="${history.product.name}" class="text-black dark:text-white">Product Name</p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${price.value}" class="text-black dark:text-white">Price</p>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <p th:text="${price.priceDate}" class="text-black dark:text-white">Date</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
