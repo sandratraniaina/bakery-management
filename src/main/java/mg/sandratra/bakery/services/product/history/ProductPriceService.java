@@ -45,7 +45,7 @@ public class ProductPriceService {
     }
 
     public void validateProductPrice(ProductPriceHistory productPrice) {
-        Assert.notNull(productPrice.getProduct(), "Product must not be null");
+        Assert.notNull(productPrice.getProductId(), "Product must not be null");
         Assert.notNull(productPrice.getValue(), "Price value must not be null");
         Assert.notNull(productPrice.getPriceDate(), "Price date must not be null");
     }

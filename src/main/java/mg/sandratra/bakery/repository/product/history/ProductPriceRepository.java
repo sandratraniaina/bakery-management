@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import mg.sandratra.bakery.models.product.Product;
 import mg.sandratra.bakery.models.product.history.ProductPriceHistory;
 import mg.sandratra.bakery.repository.BaseRepository;
 import mg.sandratra.bakery.services.product.filter.ProductPriceHistoryFilter;
@@ -28,9 +27,7 @@ public class ProductPriceRepository extends BaseRepository<ProductPriceHistory> 
             ProductPriceHistory productPrice = new ProductPriceHistory();
             productPrice.setId(rs.getLong("id"));
 
-            Product product = new Product();
-            product.setId(rs.getLong("product_id"));
-            productPrice.setProduct(product);
+            productPrice.setProductId(rs.getLong("product_id"));
 
             productPrice.setValue(rs.getBigDecimal("value"));
             productPrice.setPriceDate(rs.getTimestamp("price_date"));
@@ -64,7 +61,7 @@ public class ProductPriceRepository extends BaseRepository<ProductPriceHistory> 
                 "VALUES (:product_id, :value, :price_date)";
 
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("product_id", productPrice.getProduct().getId())
+                .addValue("product_id", productPrice.getProductId())
                 .addValue("value", productPrice.getValue())
                 .addValue("price_date", productPrice.getPriceDate());
 
@@ -78,7 +75,7 @@ public class ProductPriceRepository extends BaseRepository<ProductPriceHistory> 
 
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", productPrice.getId())
-                .addValue("product_id", productPrice.getProduct().getId())
+                .addValue("product_id", productPrice.getProductId())
                 .addValue("value", productPrice.getValue())
                 .addValue("price_date", productPrice.getPriceDate());
 

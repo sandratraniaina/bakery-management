@@ -7,14 +7,13 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mg.sandratra.bakery.models.product.Product;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductPriceHistory {
     private Long id;
-    private Product product;
+    private Long productId;
     private BigDecimal value;
     private Timestamp priceDate = Timestamp.valueOf(LocalDateTime.now());
 }
