@@ -1,6 +1,7 @@
 package mg.sandratra.bakery.repository.product;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -38,7 +39,8 @@ public class ProductRecommendationsRepository extends BaseRepository<ProductReco
 
     public List<ProductRecommendations> search(Filter filter) {
         String sql = filter.buildQuery();
-        return jdbcTemplate.query(sql, getRowMapper());
+        Map<String, Object> parameters = filter.getParameters();
+        return namedParameterJdbcTemplate.query(sql, parameters, getRowMapper());
     }
 
     public ProductRecommendations findById(Long id) {

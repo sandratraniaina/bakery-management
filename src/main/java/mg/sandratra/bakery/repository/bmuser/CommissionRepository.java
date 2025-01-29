@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -21,8 +22,8 @@ public class CommissionRepository extends BaseRepository<Commission> {
 
     public List<Commission> search(Filter filter) {
         String query = filter.buildQuery();
-
-        return jdbcTemplate.query(query, getRowMapper());
+        Map<String, Object> parameters = filter.getParameters();
+        return namedParameterJdbcTemplate.query(query, parameters, getRowMapper());
     }
 
     @Override

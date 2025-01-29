@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -49,7 +50,8 @@ public class SaleRepository extends BaseRepository<Sale> {
 
     public List<Sale> search(Filter filter) {
         String sql = filter.buildQuery();
-        return jdbcTemplate.query(sql, getRowMapper());
+        Map<String, Object> parameters = filter.getParameters();
+        return namedParameterJdbcTemplate.query(sql,parameters, getRowMapper());
     }
 
     public Sale findById(Long id) {
