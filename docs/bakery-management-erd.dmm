@@ -4433,7 +4433,7 @@
 		"replaceSpace": "_",
 		"color": "transparent",
 		"sideSelections": true,
-		"isDirty": true,
+		"isDirty": false,
 		"storedin": {
 			"major": 8,
 			"minor": 5,
@@ -4474,7 +4474,7 @@
 			"relations": true
 		},
 		"connectionVersion": "",
-		"lastSaved": 1738064425645
+		"lastSaved": 1738171678363
 	},
 	"otherObjects": {
 		"e70186de-b4a2-46af-8333-f858f3cbf680": {
@@ -5172,6 +5172,38 @@
 			"desc": "",
 			"type": "View",
 			"code": "CREATE OR REPLACE VIEW v_user_gender AS\nSELECT \n    u.id AS user_id,\n    u.username,\n    u.password_hash,\n    u.role,\n    u.enabled,\n    u.created_at AS user_created_at,\n    g.id AS gender_id,\n    g.name AS gender_name\nFROM \n    bm_user u\nJOIN \n    gender g ON u.gender_id = g.id;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"typeExpression": "",
+			"pg": {
+				"schema": ""
+			}
+		},
+		"4d447442-ba1b-46ac-b1a1-e512fd7d139e": {
+			"id": "4d447442-ba1b-46ac-b1a1-e512fd7d139e",
+			"visible": false,
+			"name": "add_price_history_on_product_update",
+			"desc": "",
+			"type": "Function",
+			"code": "CREATE OR REPLACE FUNCTION add_price_history_on_product_update()\nRETURNS TRIGGER AS $$\nBEGIN\n  -- Insert a price history record when a new product is inserted\n  IF TG_OP = 'INSERT' THEN\n    INSERT INTO product_price_history (product_id, \"value\", price_date)\n    VALUES (NEW.id, NEW.price, NOW());\n  END IF;\n\n  -- Insert a price history record when the product price is updated\n  IF TG_OP = 'UPDATE' AND NEW.price <> OLD.price THEN\n    INSERT INTO product_price_history (product_id, \"value\", price_date)\n    VALUES (NEW.id, NEW.price, NOW());\n  END IF;\n\n  RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"typeExpression": "",
+			"pg": {
+				"schema": ""
+			}
+		},
+		"4f4f3fd3-3671-4c6b-9dec-f66c54327f64": {
+			"id": "4f4f3fd3-3671-4c6b-9dec-f66c54327f64",
+			"visible": false,
+			"name": "tgr_add_price_history_on_product_update",
+			"desc": "",
+			"type": "Trigger",
+			"code": "CREATE OR REPLACE TRIGGER tgr_add_price_history_on_product_update\nAFTER INSERT OR UPDATE OF price ON product\nFOR EACH ROW\nEXECUTE FUNCTION add_price_history_on_product_update();",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -6104,6 +6136,32 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"4d447442-ba1b-46ac-b1a1-e512fd7d139e": {
+					"referencedItemId": "4d447442-ba1b-46ac-b1a1-e512fd7d139e",
+					"x": 845,
+					"y": 471,
+					"gHeight": 40,
+					"gWidth": 120,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"4f4f3fd3-3671-4c6b-9dec-f66c54327f64": {
+					"referencedItemId": "4f4f3fd3-3671-4c6b-9dec-f66c54327f64",
+					"x": 780,
+					"y": 532,
+					"gHeight": 40,
+					"gWidth": 120,
+					"color": "#eee",
+					"background": "#9c27b0",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -6145,7 +6203,7 @@
 			"id": "b5c0b5ae-3f91-4a16-8e4a-e01a67a9c4eb",
 			"keysgraphics": true,
 			"linegraphics": "basic",
-			"zoom": 0.8,
+			"zoom": 1,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -6865,6 +6923,32 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"4d447442-ba1b-46ac-b1a1-e512fd7d139e": {
+					"referencedItemId": "4d447442-ba1b-46ac-b1a1-e512fd7d139e",
+					"x": 748,
+					"y": 458,
+					"gHeight": 44,
+					"gWidth": 263,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": true,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"4f4f3fd3-3671-4c6b-9dec-f66c54327f64": {
+					"referencedItemId": "4f4f3fd3-3671-4c6b-9dec-f66c54327f64",
+					"x": 749,
+					"y": 522,
+					"gHeight": 44,
+					"gWidth": 262,
+					"color": "#eee",
+					"background": "#9c27b0",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -6976,6 +7060,7 @@
 		"84d0a52c-32d7-4885-834f-ddfae872362a",
 		"f7c55758-9bf0-4d6b-88f0-5d6e19126eac",
 		"744df5cd-5ea2-48e4-98dd-651bfd2a4cc2",
+		"4d447442-ba1b-46ac-b1a1-e512fd7d139e",
 		"e70186de-b4a2-46af-8333-f858f3cbf680",
 		"a5cb51be-b550-49ff-8180-6a4f2b470b76",
 		"8ef657b9-7839-4388-b9e6-c2c828b69040",
@@ -6996,6 +7081,7 @@
 		"f11a3351-aff6-4591-af26-150453e9fc42",
 		"310adeb8-89e3-430e-bc8c-abfbff36009e",
 		"e007ac9f-f3a3-4218-aa9f-aca4d7fdd7e4",
+		"4f4f3fd3-3671-4c6b-9dec-f66c54327f64",
 		"591976f6-0e95-4389-b233-fc50a756a3f9"
 	],
 	"collapsedTreeItems": [],
