@@ -31,9 +31,9 @@ public class ProductPriceHistoryController extends BaseController {
                 .toList();
         
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("priceHistories", priceHistoryDtos);
+        modelAndView.addObject("histories", priceHistoryDtos);
         modelAndView.addObject("filter", filter);
         modelAndView.addObject("products", productService.findAll()); // Populate products for filtering
-        return redirect(modelAndView, "pages/price-history/list", false); // Redirect to price history list page
+        return redirect(modelAndView, "pages/product/price-history/list", false); // Redirect to price history list page
     }
 }
