@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.models.product.history;
+package mg.sandratra.bakery.models.product;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
