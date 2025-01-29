@@ -1,6 +1,8 @@
 package mg.sandratra.bakery.services.sale.filter;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,20 +39,31 @@ public class SaleFilter implements Filter {
                 .append("    WHERE 1=1 ");
 
         if (productType != null) {
-            query.append("    AND spn.product_type = '")
-                    .append(productType.name())
-                    .append("' ");
+            query.append("    AND spn.product_type = CAST(:productType AS product_type) ");
         }
 
         if (isNature != null) {
-            query.append("    AND spn.is_nature = ")
-                    .append(isNature)
-                    .append(" ");
+            query.append("    AND spn.is_nature = :isNature ");
         }
 
         query.append(") filtered_sales ON s.id = filtered_sales.id ")
                 .append("ORDER BY s.sale_date DESC, s.id");
 
         return query.toString();
+    }
+
+    @Override
+    public Map<String, Object> getParameters() {
+        Map<String, Object> params = new HashMap<>();
+
+        if (productType != null) {
+            params.put("productType", productType.name());
+        }
+
+        if (isNature != null) {
+            params.put("isNature", isNature);
+        }
+
+        return params;
     }
 }
