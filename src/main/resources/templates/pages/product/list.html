@@ -41,6 +41,9 @@
                             <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
                                 Action
                             </th>
+                            <th class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                                Other
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,7 +52,8 @@
                                 <p th:text="${product.id}" class="text-black dark:text-white">Jan 13,2023</p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p th:text="${product.productType.name()}" class="text-black dark:text-white">Jan 13,2023</p>
+                                <p th:text="${product.productType.name()}" class="text-black dark:text-white">Jan
+                                    13,2023</p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                                 <p th:text="${product.name}" class="text-black dark:text-white">Jan 13,2023</p>
@@ -92,6 +96,13 @@
                                         </svg>
                                     </a>
                                 </div>
+                            </td>
+                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                <a th:href="@{'/products/price-history?productId=' + ${product.id}}"
+                                    class="hover:text-success inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium text-success">
+
+                                    View price history
+                                </a>
                             </td>
                         </tr>
                     </tbody>

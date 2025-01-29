@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.models.product.history;
+package mg.sandratra.bakery.dto.product;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -12,7 +12,7 @@ import mg.sandratra.bakery.models.product.Product;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductPrice {
+public class ProductPriceHistoryDto {
     private Long id;
     private Product product;
     private BigDecimal value;

@@ -1,41 +1,77 @@
 package mg.sandratra.bakery.services.product.history;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
+import mg.sandratra.bakery.dto.product.ProductPriceHistoryDto;
 import mg.sandratra.bakery.models.product.Product;
-import mg.sandratra.bakery.models.product.history.ProductPrice;
 import mg.sandratra.bakery.models.product.history.ProductPriceHistory;
+import mg.sandratra.bakery.repository.product.history.ProductPriceRepository;
 import mg.sandratra.bakery.services.product.ProductService;
 import mg.sandratra.bakery.services.product.filter.ProductPriceHistoryFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductPriceHistoryService {
 
-    private final ProductService productService;
-    private final ProductPriceService productPriceService;
+    private final ProductPriceRepository productPriceRepository;
+    private final ProductService productService; // To fetch Product details
 
-    public ProductPriceHistory mapToProductPriceHistory(List<ProductPrice> productPrices) {
-        Long productId = Long.valueOf(0);
-        Product product = new Product();
-        product.setId(Long.valueOf(1));
-        if (!productPrices.isEmpty()) {
-            productId = productPrices.get(0).getProduct().getId();
-            product = productService.findById(productId);
-        }
+    // Map ProductPriceHistory to ProductPriceHistoryDto
+    public ProductPriceHistoryDto mapToDto(ProductPriceHistory productPriceHistory) {
+        Product product = productService.findById(productPriceHistory.getProductId());
 
-        // Set the Product object in each ProductPrice
-        List<ProductPrice> updatedProductPrices = productPrices;
-
-        // Create and return the ProductPriceHistory object
-        return new ProductPriceHistory(product, updatedProductPrices);
+        return new ProductPriceHistoryDto(
+                productPriceHistory.getId(),
+                product,
+                productPriceHistory.getValue(),
+                productPriceHistory.getPriceDate()
+        );
     }
 
-    public ProductPriceHistory fitlerHistory(ProductPriceHistoryFilter filter) {
-        List<ProductPrice> productPrices = productPriceService.filterProductPrices(filter);
-        return mapToProductPriceHistory(productPrices);
+    // Map ProductPriceHistoryDto to ProductPriceHistory
+    public ProductPriceHistory mapToModel(ProductPriceHistoryDto dto) {
+        return new ProductPriceHistory(
+                dto.getId(),
+                dto.getProduct().getId(), // Extract productId from Product
+                dto.getValue(),
+                dto.getPriceDate()
+        );
+    }
+
+    public List<ProductPriceHistory> findAll() {
+        return productPriceRepository.findAll();
+    }
+
+    public ProductPriceHistory findById(Long id) {
+        return productPriceRepository.findById(id);
+    }
+
+    public List<ProductPriceHistory> findByProductId(Long productId) {
+        return productPriceRepository.findByProductId(productId);
+    }
+
+    public List<ProductPriceHistory> filter(ProductPriceHistoryFilter filter) {
+        return productPriceRepository.filterProductPrices(filter);
+    }
+
+    public int saveOrUpdate(ProductPriceHistory productPriceHistory) {
+        validateProductPriceHistory(productPriceHistory);
+        if (productPriceHistory.getId() == null) {
+            return productPriceRepository.save(productPriceHistory);
+        } else {
+            return productPriceRepository.update(productPriceHistory);
+        }
+    }
+
+    public int deleteById(Long id) {
+        return productPriceRepository.deleteById(id);
+    }
+
+    public void validateProductPriceHistory(ProductPriceHistory productPriceHistory) {
+        Assert.notNull(productPriceHistory.getProductId(), "Product ID must not be null");
+        Assert.notNull(productPriceHistory.getValue(), "Price value must not be null");
     }
 }
