@@ -10,6 +10,8 @@ TRUNCATE TABLE ingredient_movement CASCADE;
 TRUNCATE TABLE ingredient_forecast CASCADE;
 TRUNCATE TABLE breadmaking CASCADE;
 TRUNCATE TABLE recipe_ingredient CASCADE;
+TRUNCATE TABLE product_recommendations CASCADE;
+TRUNCATE TABLE product_price_history CASCADE;
 
 -- Then clear main tables
 TRUNCATE TABLE product CASCADE;
@@ -17,6 +19,7 @@ TRUNCATE TABLE recipe CASCADE;
 TRUNCATE TABLE ingredient CASCADE;
 TRUNCATE TABLE turnover CASCADE;
 TRUNCATE TABLE bm_user CASCADE;
+TRUNCATE TABLE gender CASCADE;
 
 -- Reset all sequences
 ALTER SEQUENCE sale_details_id_seq RESTART WITH 1;
@@ -30,6 +33,9 @@ ALTER SEQUENCE recipe_id_seq RESTART WITH 1;
 ALTER SEQUENCE ingredient_id_seq RESTART WITH 1;
 ALTER SEQUENCE turnover_id_seq RESTART WITH 1;
 ALTER SEQUENCE bm_user_id_seq RESTART WITH 1;
+ALTER SEQUENCE gender_id_seq RESTART WITH 1;
+ALTER SEQUENCE product_price_history_id_seq RESTART WITH 1;
+ALTER SEQUENCE product_recommendations_id_seq RESTART WITH 1;
 
 -- Re-enable triggers
 SET session_replication_role = 'origin';
