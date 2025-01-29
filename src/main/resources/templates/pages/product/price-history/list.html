@@ -15,7 +15,7 @@
                     Search Product Price History
                 </h3>
             </div>
-            <form method="get" th:object="${filter}" th:action="@{/products/history}" 
+            <form method="get" th:object="${filter}" th:action="@{/products/price-history}" 
                 class="flex items-center justify-center gap-10 p-6.5">
 
                 <div th:replace="~{fragments/form-element :: select-option(${products}, 'id', 'name', 'productId', 'Select product')}">
@@ -62,20 +62,20 @@
                     </thead>
                     <tbody>
                         <p th:text="${error}"></p>
-                        <tr th:if="${history == null or history.productPrices == null}">
+                        <tr th:if="${histories.isEmpty()}">
                             <td colspan="3" class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11 text-center">
                                 <p class="text-black dark:text-white">No history found</p>
                             </td>
                         </tr>
-                        <tr th:each="price : ${history.productPrices}" th:if="${history != null and not history.productPrices.isEmpty()}">
+                        <tr th:each="history : ${histories}">
                             <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                                 <p th:text="${history.product.name}" class="text-black dark:text-white">Product Name</p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p th:text="${price.value}" class="text-black dark:text-white">Price</p>
+                                <p th:text="${history.value}" class="text-black dark:text-white">Price</p>
                             </td>
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p th:text="${price.priceDate}" class="text-black dark:text-white">Date</p>
+                                <p th:text="${history.priceDate}" class="text-black dark:text-white">Date</p>
                             </td>
                         </tr>
                     </tbody>
