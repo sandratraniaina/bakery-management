@@ -4474,7 +4474,7 @@
 			"relations": true
 		},
 		"connectionVersion": "",
-		"lastSaved": 1738171678363
+		"lastSaved": 1738172916674
 	},
 	"otherObjects": {
 		"e70186de-b4a2-46af-8333-f858f3cbf680": {
@@ -5204,6 +5204,54 @@
 			"desc": "",
 			"type": "Trigger",
 			"code": "CREATE OR REPLACE TRIGGER tgr_add_price_history_on_product_update\nAFTER INSERT OR UPDATE OF price ON product\nFOR EACH ROW\nEXECUTE FUNCTION add_price_history_on_product_update();",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"typeExpression": "",
+			"pg": {
+				"schema": ""
+			}
+		},
+		"b176b8d1-bbf2-4eb2-8424-3c612e00818e": {
+			"id": "b176b8d1-bbf2-4eb2-8424-3c612e00818e",
+			"visible": false,
+			"name": "get_product_price",
+			"desc": "",
+			"type": "Function",
+			"code": "CREATE OR REPLACE FUNCTION get_product_price(sale_date DATE, product_id_param INTEGER)\nRETURNS NUMERIC AS $$\nDECLARE\n    historical_price NUMERIC;\nBEGIN\n    -- Get the most recent price before or equal to the sale date\n    SELECT value INTO historical_price\n    FROM product_price_history\n    WHERE product_id = product_id_param\n        AND price_date <= sale_date::timestamp\n    ORDER BY price_date DESC\n    LIMIT 1;\n\n    -- If no historical price found, get the current product price\n    IF historical_price IS NULL THEN\n        SELECT price INTO historical_price\n        FROM product\n        WHERE id = product_id_param;\n    END IF;\n\n    RETURN historical_price;\nEND;\n$$ LANGUAGE plpgsql;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"typeExpression": "",
+			"pg": {
+				"schema": ""
+			}
+		},
+		"a18649b3-def7-488b-959a-491095eea8d9": {
+			"id": "a18649b3-def7-488b-959a-491095eea8d9",
+			"visible": false,
+			"name": "handle_sale_details_price",
+			"desc": "",
+			"type": "Function",
+			"code": "CREATE OR REPLACE FUNCTION handle_sale_details_price()\nRETURNS TRIGGER AS $$\nDECLARE\n    sale_date_val DATE;\nBEGIN\n    -- Get the sale date from the sale table\n    SELECT sale_date INTO sale_date_val\n    FROM sale\n    WHERE id = NEW.sale_id;\n\n    -- Set the unit_price to the historical price\n    NEW.unit_price = get_product_price(sale_date_val, NEW.product_id);\n    \n    -- Calculate subtotal is handled by the GENERATED ALWAYS AS clause\n    \n    RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"typeExpression": "",
+			"pg": {
+				"schema": ""
+			}
+		},
+		"c23d02b4-6417-4f85-ab1f-84b0780a3294": {
+			"id": "c23d02b4-6417-4f85-ab1f-84b0780a3294",
+			"visible": false,
+			"name": "trg_handle_sale_details_price",
+			"desc": "",
+			"type": "Trigger",
+			"code": "CREATE OR REPLACE TRIGGER trg_handle_sale_details_price\nBEFORE INSERT ON sale_details\nFOR EACH ROW\nEXECUTE FUNCTION handle_sale_details_price();",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -6162,6 +6210,45 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"b176b8d1-bbf2-4eb2-8424-3c612e00818e": {
+					"referencedItemId": "b176b8d1-bbf2-4eb2-8424-3c612e00818e",
+					"x": 1157,
+					"y": 126,
+					"gHeight": 40,
+					"gWidth": 120,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"a18649b3-def7-488b-959a-491095eea8d9": {
+					"referencedItemId": "a18649b3-def7-488b-959a-491095eea8d9",
+					"x": 1236,
+					"y": 442,
+					"gHeight": 40,
+					"gWidth": 120,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"c23d02b4-6417-4f85-ab1f-84b0780a3294": {
+					"referencedItemId": "c23d02b4-6417-4f85-ab1f-84b0780a3294",
+					"x": 1110,
+					"y": 527,
+					"gHeight": 40,
+					"gWidth": 120,
+					"color": "#eee",
+					"background": "#9c27b0",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -6949,6 +7036,45 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"b176b8d1-bbf2-4eb2-8424-3c612e00818e": {
+					"referencedItemId": "b176b8d1-bbf2-4eb2-8424-3c612e00818e",
+					"x": 1100,
+					"y": 116,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"a18649b3-def7-488b-959a-491095eea8d9": {
+					"referencedItemId": "a18649b3-def7-488b-959a-491095eea8d9",
+					"x": 1084,
+					"y": 456,
+					"gHeight": 44,
+					"gWidth": 184,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": true,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"c23d02b4-6417-4f85-ab1f-84b0780a3294": {
+					"referencedItemId": "c23d02b4-6417-4f85-ab1f-84b0780a3294",
+					"x": 1085,
+					"y": 527,
+					"gHeight": 44,
+					"gWidth": 184,
+					"color": "#eee",
+					"background": "#9c27b0",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -7061,6 +7187,8 @@
 		"f7c55758-9bf0-4d6b-88f0-5d6e19126eac",
 		"744df5cd-5ea2-48e4-98dd-651bfd2a4cc2",
 		"4d447442-ba1b-46ac-b1a1-e512fd7d139e",
+		"b176b8d1-bbf2-4eb2-8424-3c612e00818e",
+		"a18649b3-def7-488b-959a-491095eea8d9",
 		"e70186de-b4a2-46af-8333-f858f3cbf680",
 		"a5cb51be-b550-49ff-8180-6a4f2b470b76",
 		"8ef657b9-7839-4388-b9e6-c2c828b69040",
@@ -7082,6 +7210,7 @@
 		"310adeb8-89e3-430e-bc8c-abfbff36009e",
 		"e007ac9f-f3a3-4218-aa9f-aca4d7fdd7e4",
 		"4f4f3fd3-3671-4c6b-9dec-f66c54327f64",
+		"c23d02b4-6417-4f85-ab1f-84b0780a3294",
 		"591976f6-0e95-4389-b233-fc50a756a3f9"
 	],
 	"collapsedTreeItems": [],

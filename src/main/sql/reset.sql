@@ -8,6 +8,7 @@ DROP TRIGGER IF EXISTS trg_handle_sale_details_changes ON sale_details CASCADE;
 DROP TRIGGER IF EXISTS trg_create_turnover_on_product_movement ON product_movement CASCADE;
 DROP TRIGGER IF EXISTS trigger_create_turnover_on_ingredient_supply ON ingredient_movement CASCADE;
 DROP TRIGGER IF EXISTS tgr_add_price_history_on_product_update ON product CASCADE;
+DROP TRIGGER IF EXISTS trg_handle_sale_details_price ON product CASCADE;
 
 -- Drop all views
 DROP VIEW IF EXISTS v_daily_ingredient_usage CASCADE;
@@ -36,6 +37,8 @@ DROP FUNCTION IF EXISTS handle_sale_details_changes() CASCADE;
 DROP FUNCTION IF EXISTS create_turnover_on_product_movement() CASCADE;
 DROP FUNCTION IF EXISTS create_turnover_on_ingredient_supply() CASCADE;
 DROP FUNCTION IF EXISTS add_price_history_on_product_update() CASCADE;
+DROP FUNCTION IF EXISTS handle_sale_details_price() CASCADE;
+DROP FUNCTION IF EXISTS get_product_price(DATE, INTEGER) CASCADE;
 
 -- Drop all tables (order doesn't matter now due to CASCADE)
 DROP TABLE IF EXISTS product_price_history CASCADE;
