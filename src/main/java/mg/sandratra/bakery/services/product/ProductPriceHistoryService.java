@@ -1,10 +1,9 @@
-package mg.sandratra.bakery.services.product.history;
+package mg.sandratra.bakery.services.product;
 
 import mg.sandratra.bakery.dto.product.ProductPriceHistoryDto;
 import mg.sandratra.bakery.models.product.Product;
-import mg.sandratra.bakery.models.product.history.ProductPriceHistory;
-import mg.sandratra.bakery.repository.product.history.ProductPriceRepository;
-import mg.sandratra.bakery.services.product.ProductService;
+import mg.sandratra.bakery.models.product.ProductPriceHistory;
+import mg.sandratra.bakery.repository.product.ProductPriceRepository;
 import mg.sandratra.bakery.services.product.filter.ProductPriceHistoryFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

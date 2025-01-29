@@ -1,4 +1,4 @@
-package mg.sandratra.bakery.repository.product.history;
+package mg.sandratra.bakery.repository.product;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import mg.sandratra.bakery.models.product.history.ProductPriceHistory;
+import mg.sandratra.bakery.models.product.ProductPriceHistory;
 import mg.sandratra.bakery.repository.BaseRepository;
 import mg.sandratra.bakery.services.product.filter.ProductPriceHistoryFilter;
 
