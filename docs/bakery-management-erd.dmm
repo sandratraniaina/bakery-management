@@ -2073,7 +2073,8 @@
 				"a11c652e-497f-4cc9-a045-eb40590ff18f",
 				"a4fd266d-1aab-4e29-aa52-d367f20d75ef",
 				"8eddff6b-9f19-4a63-b996-ac29a3d2984d",
-				"a0fbb039-4405-455a-a305-402a6788e7d4"
+				"a0fbb039-4405-455a-a305-402a6788e7d4",
+				"38cef8be-1150-4918-a599-46b01cbb5be9"
 			],
 			"lines": [],
 			"keys": [
@@ -3644,6 +3645,134 @@
 				"partition": "",
 				"partitionNames": []
 			}
+		},
+		"5f3e1e7e-78df-449e-9bfb-ef330d03f631": {
+			"id": "5f3e1e7e-78df-449e-9bfb-ef330d03f631",
+			"visible": false,
+			"name": "product_price_history",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "cedda342-6986-42dc-841e-e755a96f7726",
+					"name": "id",
+					"datatype": "serial",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"list": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"pg": {
+						"generatedIdentity": "no",
+						"generated": "",
+						"storage": "",
+						"compression": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "771e3ecb-bf63-4b34-beb0-789888af5d2f",
+					"name": "product_id",
+					"datatype": "integer",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"list": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"pg": {
+						"generatedIdentity": "no",
+						"generated": "",
+						"storage": "",
+						"compression": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				},
+				{
+					"id": "c73d35e6-b772-4704-a9bd-ca82b3adf836",
+					"name": "value",
+					"datatype": "numeric",
+					"param": "10, 2",
+					"pk": false,
+					"nn": true,
+					"list": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"pg": {
+						"generatedIdentity": "no",
+						"generated": "",
+						"storage": "",
+						"compression": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "d8f9ec5b-3a31-4ca6-a779-97d8ed187acc",
+					"name": "price_date",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"list": false,
+					"comment": "",
+					"defaultvalue": "CURRENT_TIMESTAMP",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"pg": {
+						"generatedIdentity": "no",
+						"generated": "",
+						"storage": "",
+						"compression": ""
+					},
+					"estimatedSize": ""
+				}
+			],
+			"relations": [
+				"38cef8be-1150-4918-a599-46b01cbb5be9"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "5e2905d0-0ce1-4a10-ac48-5bffdb04a421",
+					"name": "product_price_history_pkey",
+					"isPk": true,
+					"cols": [
+						{
+							"id": "1d2f6c15-c8a9-4003-9788-4a32082b5029",
+							"colid": "cedda342-6986-42dc-841e-e755a96f7726"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"beforeScript": "",
+			"afterScript": "",
+			"objectType": "table",
+			"pg": {
+				"rowsecurity": false,
+				"schema": "",
+				"tablespace": "",
+				"inherits": "",
+				"storageParameters": "",
+				"partition": "",
+				"partitionNames": []
+			}
 		}
 	},
 	"relations": {
@@ -4251,6 +4380,33 @@
 			"generateCustomCode": true,
 			"customCode": "",
 			"relationColor": "transparent"
+		},
+		"38cef8be-1150-4918-a599-46b01cbb5be9": {
+			"id": "38cef8be-1150-4918-a599-46b01cbb5be9",
+			"visible": true,
+			"name": "product_price_history_product_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "85b73c01-03b8-4a21-9c41-108bef34709e",
+			"parent": "ef3aa5cd-ae02-4000-9a38-78f24c1385ff",
+			"child": "5f3e1e7e-78df-449e-9bfb-ef330d03f631",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "b402e4c6-41de-4275-996f-ff50bc8b45fc",
+					"parentcol": "9cac408b-049f-4cc9-a7c4-2e32f28ba624",
+					"childcol": "771e3ecb-bf63-4b34-beb0-789888af5d2f"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
 		}
 	},
 	"notes": {
@@ -4318,7 +4474,7 @@
 			"relations": true
 		},
 		"connectionVersion": "",
-		"lastSaved": 1737633313874
+		"lastSaved": 1738171678363
 	},
 	"otherObjects": {
 		"e70186de-b4a2-46af-8333-f858f3cbf680": {
@@ -5016,6 +5172,38 @@
 			"desc": "",
 			"type": "View",
 			"code": "CREATE OR REPLACE VIEW v_user_gender AS\nSELECT \n    u.id AS user_id,\n    u.username,\n    u.password_hash,\n    u.role,\n    u.enabled,\n    u.created_at AS user_created_at,\n    g.id AS gender_id,\n    g.name AS gender_name\nFROM \n    bm_user u\nJOIN \n    gender g ON u.gender_id = g.id;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"typeExpression": "",
+			"pg": {
+				"schema": ""
+			}
+		},
+		"4d447442-ba1b-46ac-b1a1-e512fd7d139e": {
+			"id": "4d447442-ba1b-46ac-b1a1-e512fd7d139e",
+			"visible": false,
+			"name": "add_price_history_on_product_update",
+			"desc": "",
+			"type": "Function",
+			"code": "CREATE OR REPLACE FUNCTION add_price_history_on_product_update()\nRETURNS TRIGGER AS $$\nBEGIN\n  -- Insert a price history record when a new product is inserted\n  IF TG_OP = 'INSERT' THEN\n    INSERT INTO product_price_history (product_id, \"value\", price_date)\n    VALUES (NEW.id, NEW.price, NOW());\n  END IF;\n\n  -- Insert a price history record when the product price is updated\n  IF TG_OP = 'UPDATE' AND NEW.price <> OLD.price THEN\n    INSERT INTO product_price_history (product_id, \"value\", price_date)\n    VALUES (NEW.id, NEW.price, NOW());\n  END IF;\n\n  RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"typeExpression": "",
+			"pg": {
+				"schema": ""
+			}
+		},
+		"4f4f3fd3-3671-4c6b-9dec-f66c54327f64": {
+			"id": "4f4f3fd3-3671-4c6b-9dec-f66c54327f64",
+			"visible": false,
+			"name": "tgr_add_price_history_on_product_update",
+			"desc": "",
+			"type": "Trigger",
+			"code": "CREATE OR REPLACE TRIGGER tgr_add_price_history_on_product_update\nAFTER INSERT OR UPDATE OF price ON product\nFOR EACH ROW\nEXECUTE FUNCTION add_price_history_on_product_update();",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -5935,6 +6123,45 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"5f3e1e7e-78df-449e-9bfb-ef330d03f631": {
+					"referencedItemId": "5f3e1e7e-78df-449e-9bfb-ef330d03f631",
+					"x": 2474,
+					"y": 805,
+					"gHeight": 60,
+					"gWidth": 200,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"4d447442-ba1b-46ac-b1a1-e512fd7d139e": {
+					"referencedItemId": "4d447442-ba1b-46ac-b1a1-e512fd7d139e",
+					"x": 845,
+					"y": 471,
+					"gHeight": 40,
+					"gWidth": 120,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"4f4f3fd3-3671-4c6b-9dec-f66c54327f64": {
+					"referencedItemId": "4f4f3fd3-3671-4c6b-9dec-f66c54327f64",
+					"x": 780,
+					"y": 532,
+					"gHeight": 40,
+					"gWidth": 120,
+					"color": "#eee",
+					"background": "#9c27b0",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -5976,7 +6203,7 @@
 			"id": "b5c0b5ae-3f91-4a16-8e4a-e01a67a9c4eb",
 			"keysgraphics": true,
 			"linegraphics": "basic",
-			"zoom": 1.1,
+			"zoom": 1,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -6683,6 +6910,45 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"5f3e1e7e-78df-449e-9bfb-ef330d03f631": {
+					"referencedItemId": "5f3e1e7e-78df-449e-9bfb-ef330d03f631",
+					"x": 2425,
+					"y": 847,
+					"gHeight": 99,
+					"gWidth": 215,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"4d447442-ba1b-46ac-b1a1-e512fd7d139e": {
+					"referencedItemId": "4d447442-ba1b-46ac-b1a1-e512fd7d139e",
+					"x": 748,
+					"y": 458,
+					"gHeight": 44,
+					"gWidth": 263,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": true,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"4f4f3fd3-3671-4c6b-9dec-f66c54327f64": {
+					"referencedItemId": "4f4f3fd3-3671-4c6b-9dec-f66c54327f64",
+					"x": 749,
+					"y": 522,
+					"gHeight": 44,
+					"gWidth": 262,
+					"color": "#eee",
+					"background": "#9c27b0",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -6732,9 +6998,9 @@
 		"4c18cf35-d84a-4f7d-b57f-09c7f6ad78a3",
 		"da94c549-cf71-47ea-b304-6a2e04df4f82",
 		"a716e8b2-5e8a-4d14-b0d1-028cbc79ff9a",
-		"c27aa21e-f54b-4c5e-826f-d9a5ba554412",
 		"d91de2f6-195a-4469-9132-5ca9933d1af4",
 		"8195a27a-5283-4fc1-af5b-04a289549e08",
+		"c27aa21e-f54b-4c5e-826f-d9a5ba554412",
 		"88bd5192-11dc-4baa-a515-aff4fc75605e",
 		"f261a3af-3fc4-4dd7-8586-bbffb60c6510",
 		"9fd772eb-eedf-4503-a8ec-bee7c1d6d02d",
@@ -6746,6 +7012,7 @@
 		"9e687cb0-70d4-4a8a-b6da-744fff80ab40",
 		"ef3aa5cd-ae02-4000-9a38-78f24c1385ff",
 		"dccd8a63-50aa-4d8f-bdbc-3d1a24ee644f",
+		"5f3e1e7e-78df-449e-9bfb-ef330d03f631",
 		"680f5afe-5fd6-48df-92b6-11899e45a646",
 		"655a32eb-2cfa-411d-b203-73fb074bb770",
 		"ecb72297-060a-462a-bca8-41d0bb0d1ade",
@@ -6778,6 +7045,7 @@
 		"8eddff6b-9f19-4a63-b996-ac29a3d2984d",
 		"a0fbb039-4405-455a-a305-402a6788e7d4",
 		"add72c74-f12c-4a56-b075-813e7dbe324f",
+		"38cef8be-1150-4918-a599-46b01cbb5be9",
 		"a96d28f2-b7c4-44c9-84b8-fcce4c71ed5b",
 		"b9597b78-a881-4210-864b-c05279674c8c",
 		"7f5f4042-638d-47dc-afd2-81de57c51ad1",
@@ -6792,6 +7060,7 @@
 		"84d0a52c-32d7-4885-834f-ddfae872362a",
 		"f7c55758-9bf0-4d6b-88f0-5d6e19126eac",
 		"744df5cd-5ea2-48e4-98dd-651bfd2a4cc2",
+		"4d447442-ba1b-46ac-b1a1-e512fd7d139e",
 		"e70186de-b4a2-46af-8333-f858f3cbf680",
 		"a5cb51be-b550-49ff-8180-6a4f2b470b76",
 		"8ef657b9-7839-4388-b9e6-c2c828b69040",
@@ -6812,6 +7081,7 @@
 		"f11a3351-aff6-4591-af26-150453e9fc42",
 		"310adeb8-89e3-430e-bc8c-abfbff36009e",
 		"e007ac9f-f3a3-4218-aa9f-aca4d7fdd7e4",
+		"4f4f3fd3-3671-4c6b-9dec-f66c54327f64",
 		"591976f6-0e95-4389-b233-fc50a756a3f9"
 	],
 	"collapsedTreeItems": [],
