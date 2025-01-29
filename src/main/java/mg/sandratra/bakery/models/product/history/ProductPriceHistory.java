@@ -12,7 +12,7 @@ import mg.sandratra.bakery.models.product.Product;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductPrice {
+public class ProductPriceHistory {
     private Long id;
     private Product product;
     private BigDecimal value;
