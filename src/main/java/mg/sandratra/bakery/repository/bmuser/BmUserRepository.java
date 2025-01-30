@@ -47,7 +47,7 @@ public class BmUserRepository extends BaseRepository<BmUser> {
     }
 
     public BmUser findById(Long id) {
-        String sql = "SELECT * FROM v_user_gender WHERE id = ?";
+        String sql = "SELECT * FROM v_user_gender WHERE user_id = ?";
         return jdbcTemplate.queryForObject(sql, getRowMapper(), id);
     }
 
