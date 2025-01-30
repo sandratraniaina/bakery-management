@@ -310,6 +310,54 @@
                         <h3 class="mb-4 ml-4 text-sm font-medium text-bodydark2">OTHERS</h3>
 
                         <ul class="mb-6 flex flex-col gap-1.5">
+
+                            <!-- Users -->
+                            <li>
+                                <a class="group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
+                                    href="#" @click.prevent="selected = (selected === 'Users' ? '':'Users')"
+                                    :class="{ 'bg-graydark dark:bg-meta-4': (selected === 'Users') || (page === 'users-list' || page === 'users-form') }">
+
+                                    <svg class="fill-current" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 512 512">
+                                        <path
+                                            d="M406.5 399.6C387.4 352.9 341.5 320 288 320H224c-53.5 0-99.4 32.9-118.5 79.6C69.9 362.2 48 311.7 48 256C48 141.1 141.1 48 256 48s208 93.1 208 208c0 55.7-21.9 106.2-57.5 143.6zm-40.1 32.7C334.4 452.4 296.6 464 256 464s-78.4-11.6-110.5-31.7c7.3-36.7 39.7-64.3 78.5-64.3h64c38.8 0 71.2 27.6 78.5 64.3zM256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-272a40 40 0 1 1 0-80 40 40 0 1 1 0 80zm-88-40a88 88 0 1 0 176 0 88 88 0 1 0 -176 0z" />
+                                    </svg>
+
+                                    Users
+
+                                    <svg class="absolute right-4 top-1/2 -translate-y-1/2 fill-current"
+                                        :class="{ 'rotate-180': (selected === 'Users') }" width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M4.41107 6.9107C4.73651 6.58527 5.26414 6.58527 5.58958 6.9107L10.0003 11.3214L14.4111 6.91071C14.7365 6.58527 15.2641 6.58527 15.5896 6.91071C15.915 7.23614 15.915 7.76378 15.5896 8.08922L10.5896 13.0892C10.2641 13.4147 9.73651 13.4147 9.41107 13.0892L4.41107 8.08922C4.08563 7.76378 4.08563 7.23614 4.41107 6.9107Z"
+                                            fill="" />
+                                    </svg>
+                                </a>
+
+                                <!-- Dropdown Menu Start -->
+                                <div class="translate transform overflow-hidden"
+                                    :class="(selected === 'Users') ? 'block' :'hidden'">
+                                    <ul class="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
+                                        <li>
+                                            <a class="group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
+                                                href="/users" :class="page === 'users-list' && '!text-white'">
+                                                List</a>
+                                        </li>
+                                        <li>
+                                            <a class="group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
+                                                href="/users/form" :class="page === 'users-form' && '!text-white'">
+                                                Add new user</a>
+                                        </li>
+                                        <li>
+                                            <a class="group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
+                                                href="/users/commissions" :class="page === 'users-form' && '!text-white'">
+                                                User commissions</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Dropdown Menu End -->
+                            </li>
+
                             <li>
                                 <a class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
                                     href="/logout" @click="selected = (selected === 'Signout' ? '':'Signout')"
