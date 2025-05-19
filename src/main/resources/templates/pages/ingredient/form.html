@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Ingredient</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+                <h3 class="font-medium text-black dark:text-white">
+                    Add or update ingredient
+                </h3>
+            </div>
+            <form method="post" th:object="${ingredient}" th:action="@{/ingredients/save}">
+                <div class="p-6.5">
+                    <div class="mb-6">
+                        <div th:replace="~{fragments/form-element :: text-input('text', 'Name', 'name')}">
+                        </div>
+                        <div th:replace="~{fragments/form-element :: text-input('hidden', '', 'id')}">
+                        </div>
+                        <div
+                            th:replace="~{fragments/form-element :: text-input('text', 'Cost Per Unit', 'costPerUnit')}">
+                        </div>
+                        <div
+                            th:replace="~{fragments/form-element :: text-input('text', 'Stock Quantity', 'stockQuantity')}">
+                        </div>
+                        <div
+                            th:replace="~{fragments/form-element :: text-input('text', 'Minimum Stock', 'minimumStock')}">
+                        </div>
+                        <div th:replace="~{fragments/form-element :: select-option (${units}, 'value', 'value', 'unit', 'Unit')}"></div>
+                        <div th:replace="~{fragments/form-element :: select-option (${ingredientTypes}, 'value', 'displayValue', 'ingredientType', 'Ingredient Type')}"></div>
+                    </div>
+                    <button
+                        class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90  m-2">
+                        Submit
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

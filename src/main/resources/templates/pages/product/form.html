@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Product</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+                <h3 class="font-medium text-black dark:text-white">
+                    Add or update product
+                </h3>
+            </div>
+            <form method="post" th:object="${product}" th:action="@{/products/save}">
+                <div class="p-6.5">
+                    <div class="mb-6">
+                        <div th:replace="~{fragments/form-element :: text-input ('hidden', '', 'id')}">
+                        </div>
+                        <div th:replace="~{fragments/form-element :: text-input ('text', 'Name', 'name')}">
+                        </div>
+                        <div th:replace="~{fragments/form-element :: text-input ('number', 'Price', 'price')}">
+                        </div>
+                        <div th:replace="~{fragments/form-element :: text-input ('number', 'Stock Quantity', 'stockQuantity')}">
+                        </div>
+                        <div th:replace="~{fragments/form-element :: select-option (${recipes}, 'id', 'name', 'recipeId', 'Recipe')}"></div>
+                        <div th:replace="~{fragments/form-element :: select-option (${productTypes}, 'value', 'value', 'productType', 'Product Type')}"></div>
+                    </div>
+                    <div th:replace="~{fragments/alerts :: alert(${message}, ${error})}">
+
+                    </div>
+                    <button
+                        class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90  m-2">
+                        Submit
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

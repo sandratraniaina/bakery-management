@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Ingredient</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+                <h3 class="font-medium text-black dark:text-white">
+                    Add or update recipe
+                </h3>
+            </div>
+            <form method="post" th:object="${recipe}" th:action="@{/recipes/save}">
+                <div class="p-6.5">
+                    <div class="mb-6">
+                        <div th:replace="~{fragments/form-element :: text-input ('text', 'Name', 'name')}">
+                        </div>
+                        <div th:replace="~{fragments/form-element :: text-input ('hidden', '', 'id')}">
+                        </div>
+                        <div th:replace="~{fragments/form-element :: textarea ('Description', 'description')}">
+                        </div>
+                        <button
+                            class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90  m-2">
+                            Submit
+                        </button>
+                    </div>
+                    <div th:replace="~{fragments/alerts :: alert(${message}, ${error})}">
+
+                    </div>
+
+                    <div class="flex flex-col gap-3 mt-10">
+                        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <h2 class="p-5 text-title-md2 font-bold text-black dark:text-white">
+                                Recipe details
+                            </h2>
+                        </div>
+                        <div
+                            class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark flex justify-center items-center">
+                            <table class="w-full table-auto">
+                                <thead>
+                                    <tr class="bg-gray-2 text-left dark:bg-meta-4">
+                                        <th
+                                            class="min-w-[50px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
+                                            Product
+                                        </th>
+                                        <th class="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                                            Quantity
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="detail, iterStat : *{recipeIngredients}">
+                                        <input type="hidden"
+                                            th:field="*{recipeIngredients[__${iterStat.index}__].ingredient.id}">
+                                        <input type="hidden"
+                                            th:field="*{recipeIngredients[__${iterStat.index}__].ingredient.name}">
+                                        <div th:replace="~{fragments/form-element :: text-input ('hidden', '', 'id')}">
+                                        </div>
+
+                                        <td
+                                            class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                                            <p th:text="*{recipeIngredients[__${iterStat.index}__].ingredient.name}">
+                                                Ingredient
+                                                name</p>
+                                        </td>
+                                        <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                                            <div class="flex items-center gap-3">
+                                                <input 
+                                                    autocomplete="off" 
+                                                    type="number" 
+                                                    step="0.01"
+                                                    min="0"
+                                                    th:field="*{recipeIngredients[__${iterStat.index}__].quantity}"
+                                                    class="w-m rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" 
+                                                />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

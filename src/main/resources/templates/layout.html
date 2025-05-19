@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bakery Management</title>
+
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+
+<body
+    x-data="{ page: 'ecommerce', 'loaded': true, 'darkMode': true, 'stickyMenu': false, 'sidebarToggle': false, 'scrollTop': false }"
+    x-init="
+       darkMode = JSON.parse(localStorage.getItem('darkMode'));
+       $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
+    :class="{'dark text-bodydark bg-boxdark-2': darkMode === true}">
+    <div x-show="loaded"
+        x-init="window.addEventListener('DOMContentLoaded', () => {setTimeout(() => loaded = false, 500)})"
+        class="fixed left-0 top-0 z-999999 flex h-screen w-screen items-center justify-center bg-white dark:bg-black">
+        <div class="h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent">
+        </div>
+    </div>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Include Sidebar -->
+        <div th:replace="~{fragments/sidebar :: content}"></div>
+
+        <!-- Main Content Area -->
+        <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+            <!-- Include Header -->
+            <div th:replace="~{fragments/header :: content}"></div>
+
+            <!-- Page Content -->
+            <main>
+                <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                    <div th:insert="~{${content}}"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bundle.js}" type="text/javascript"></script>
+</body>
+
+</html>
